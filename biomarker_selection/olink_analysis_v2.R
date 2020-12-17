@@ -1,37 +1,41 @@
 ##################################################
 ## Project: MIRIADE
-## Script purpose: Combine expression levels from Olink tables, integrate it with 
+## Script purpose: Combine expression levels from Olink tables, integrate prior knowledge
 ## Date: 17.07.2020
-## Author: Marek Ostaszewski
+## Author: Marek Ostaszewski, Felicia Burtscher
 ##################################################
 
+setwd("~/Documents/_PhD/UNILUX/src/miriade/biomarker_selection/Olink_priorisation")
+
 library(reshape2)
+library("scales")
 
 options(stringsAsFactors = F)
 
 ### Read the olink mapping file
-olp <- read.csv("Olink_proteins_list_Marek.csv", sep = ";")
+#olp <- read.csv("Data/Olink_proteins_list_Marek.csv", sep = ";")
+olp <- read.csv("Data/Olink_proteins_list_Marek.csv")
 
 ### Read the datasets, add a position to each
 ### the Alzheimers dataset
-alzp <- read.csv("FVOL_AD_CON.csv", sep = ",", 
+alzp <- read.csv("Data/FVOL_AD_CON.csv", sep = ",", 
                  col.names = c("Name", "Eff.ALZ", "p.val.ALZ", "adj.p.ALZ"))
 alzp <- cbind(alzp, pos.AlZ = 1:nrow(alzp))
 
 ### the Frontotemporal Dementia dataset
-ftdp <- read.csv("FVOL_FTD_CON.csv", sep = ",",
+ftdp <- read.csv("Data/FVOL_FTD_CON.csv", sep = ",",
                  col.names = c("Name", "Eff.FTD", "p.val.FTD", "adj.p.FTD"))
 ftdp <- cbind(ftdp, pos.FTD = 1:nrow(ftdp))
 
 ### the Dementia with Lewy Bodies dataset
-dlbp <- read.csv("FVOL_DLB_CON.csv", sep = ",",
+dlbp <- read.csv("Data/FVOL_DLB_CON.csv", sep = ",",
                  col.names = c("Name", "Eff.DLB", "p.val.DLB", "adj.p.DLB"))
 dlbp <- cbind(dlbp, pos.DLB = 1:nrow(dlbp))
 
 all <- merge(merge(alzp, ftdp, by = "Name"), dlbp, by = "Name")
 to_change <- which(!(all$Name %in% olp$Assay))
 
-### A conveninence function to help split multiple ids in the dataset
+### A convenience function to help split multiple ids in the dataset
 split_multi_id <- function(ftab, multi_id, split_ids) {
   row <- which(ftab$Name == multi_id)
   ftab$Name[row] <- split_ids[1]
@@ -57,7 +61,7 @@ all_up <- merge(x = all, y = unique(olp[,c("Assay", "UniProt")]), by.x = "Name",
 all_up <- all_up[!is.na(all_up$UniProt),]
 
 ### Read cutoffs file, get UniProts that have less than 20% LOD percentage
-cutoffs <- read.csv("Perc_below_LOD_per_assay.csv", sep = ";")
+cutoffs <- read.csv("Data/Perc_below_LOD_per_assay.csv", sep = ";")
 cutoff_ups <- unique(cutoffs[cutoffs$percentage_above_LOD < 20, "UniProt"])
 ### Exclude low LOD UniProt ids from the dataset
 all_up <- all_up[!(all_up$UniProt %in% cutoff_ups),]
@@ -69,10 +73,10 @@ all_up <- all_up[pass,]
 ### DisGeNet
 message("DisGeNET integration...")
 ### Add DisGeNet gene mapping to the main table
-up2dgn <- read.table("mapa_geneid_4_uniprot_crossref.tsv", header = T)
-all_up_dgn <- merge(all_up, up2dgn, by.x = "UniProt", by.y = "UniProtKB", all.x = F, all.y = F)
-### Read the DisGeNET file, can be replaced with an API call for better reproducibility
-dgn <- read.table("curated_gene_disease_associations.tsv", sep = "\t", quote = "", comment.char = "", header = T)
+up2dgn <- read.table("Data/mapa_geneid_4_uniprot_crossref.tsv", header = T)
+all_up_dgn <- merge(all_up, up2dgn, by.x = "UniProt", by.y = "UniProtKB", all.x = F, all.y = F) ## 2 entries get lost??
+### Read the DisGeNET file, can be replaced with an API call for better reproducibility (as any changes are not captured in .tsv file)
+dgn <- read.table("Data/curated_gene_disease_associations.tsv", sep = "\t", quote = "", comment.char = "", header = T)
 ### Use only the C10 mapping, "Neurological disorders"
 dgn_c10 <- dgn[grep("(^C10;)|(^C10$)|(;C10$)|(;C10;)", dgn$diseaseClass),]
 ### Integrate with the main table
@@ -83,7 +87,7 @@ message("PathwayStudio integration...")
 library(xml2)
 ### RNEF is the native XML format of the PathwayStudio
 message("Loading RNEF")
-miriade_rnef <- read_xml("PathwayStudio_protein_disease_associations.rnef")
+miriade_rnef <- read_xml("Data/PathwayStudio_protein_disease_associations.rnef")
 ### Reducing the size of the file
 invisible(sapply(xml_find_all(miriade_rnef, "//attr[@index]"), xml_remove))
 
@@ -196,9 +200,12 @@ floor_pvals <- function(fvec) {
 ### for rank-based sorts
 treat_pvals <- function(ftab, scale) {
   if(scale == 0) {
-    data.frame(ALZ = floor_pvals(ftab$adj.p.ALZ),
+    ## ADDED "RETURN" HERE
+    return(
+      data.frame(ALZ = floor_pvals(ftab$adj.p.ALZ),
                FTD = floor_pvals(ftab$adj.p.FTD),
                DLB = floor_pvals(ftab$adj.p.DLB))
+    )
   } else {
     return(
       data.frame(ALZ = signif(ftab$adj.p.ALZ, scale),
@@ -218,21 +225,37 @@ simple_sort <- function(ftab) {
 }
 
 ### Adj.p-based sort, ALZ specific
+## sort in ascending alz position, higher positions tops in , sum of knowlege, third column only if conflict with 2nd column (ties) 
+## -- primarily sorted by importance in databases, 
+#alz_p_sort <- function(ftab, scale = 1) {
+#  sort <- treat_pvals(ftab, scale)
+#  ftab[order(sort$ALZ, -sort$FTD*sort$DLB, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
+#}
 alz_p_sort <- function(ftab, scale = 1) {
   sort <- treat_pvals(ftab, scale)
-  ftab[order(sort$ALZ, -sort$FTD*sort$DLB, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
+  ftab[order(sort$ALZ, -(sort$FTD+sort$DLB), -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 }
 
+#### Adj.p-based sort, FTD specific
+#ftd_p_sort <- function(ftab, scale = 1) {
+#  sort <- treat_pvals(ftab, scale)
+#  ftab[order(sort$FTD, -sort$ALZ*sort$DLB, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
+#}
 ### Adj.p-based sort, FTD specific
 ftd_p_sort <- function(ftab, scale = 1) {
   sort <- treat_pvals(ftab, scale)
-  ftab[order(sort$FTD, -sort$ALZ*sort$DLB, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
+  ftab[order(sort$FTD, -(sort$ALZ+sort$DLB), -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 }
 
+#### Adj.p-based sort, DLB specific
+#dlb_p_sort <- function(ftab, scale = 1) {
+#  sort <- treat_pvals(ftab, scale)
+#  ftab[order(sort$DLB, -sort$FTD*sort$ALZ, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
+#}
 ### Adj.p-based sort, DLB specific
 dlb_p_sort <- function(ftab, scale = 1) {
   sort <- treat_pvals(ftab, scale)
-  ftab[order(sort$DLB, sort$FTD*sort$ALZ, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
+  ftab[order(sort$DLB, -(sort$FTD+sort$ALZ), -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 }
 
 ### Display results
@@ -246,22 +269,22 @@ head(dlb_p_sort(all_up_dgn_c10_ps_dmaps[,-masked_columns], scale = 1), n = 15)
 ### Write results to file
 
 write.table(simple_sort(all_up_dgn_c10_ps_dmaps),
-            file = "across_diseases_sorted.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+            file = "Data/across_diseases_sorted.txt", sep = "\t", quote = F, row.names = F, col.names = T)
 
 write.table(alz_p_sort(all_up_dgn_c10_ps_dmaps, scale = 1),
-            file = "ALZ_sorted_strict.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+            file = "Data/ALZ_sorted_strict.txt", sep = "\t", quote = F, row.names = F, col.names = T)
 write.table(alz_p_sort(all_up_dgn_c10_ps_dmaps, scale = 0),
-            file = "ALZ_sorted_relaxed.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+            file = "Data/ALZ_sorted_relaxed.txt", sep = "\t", quote = F, row.names = F, col.names = T)
 
 write.table(ftd_p_sort(all_up_dgn_c10_ps_dmaps, scale = 1),
-            file = "FTD_sorted_strict.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+            file = "Data/FTD_sorted_strict.txt", sep = "\t", quote = F, row.names = F, col.names = T)
 write.table(ftd_p_sort(all_up_dgn_c10_ps_dmaps, scale = 0),
-            file = "FTD_sorted_relaxed.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+            file = "Data/FTD_sorted_relaxed.txt", sep = "\t", quote = F, row.names = F, col.names = T)
 
 write.table(dlb_p_sort(all_up_dgn_c10_ps_dmaps, scale = 1),
-            file = "DLB_sorted_strict.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+            file = "Data/DLB_sorted_strict.txt", sep = "\t", quote = F, row.names = F, col.names = T)
 write.table(dlb_p_sort(all_up_dgn_c10_ps_dmaps, scale = 0),
-            file = "DLB_sorted_relaxed.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+            file = "Data/DLB_sorted_relaxed.txt", sep = "\t", quote = F, row.names = F, col.names = T)
 
 ### Generate Excel files from the sorting results
 library(openxlsx)
@@ -314,6 +337,62 @@ add_sorted_data <- function(fwb, ftab, fname) {
 ### Skip the last column
 all_excel <- all_up_dgn_c10_ps_dmaps[,-15]
 
+# ####-------------------------------------------------------
+# ### Choice of biomarker
+# # 1st criterium: low p-value
+# # 2nd criterium: lots of hits/ known + in lots of pathways
+# # 3rd criterium: dicriminating between diseases
+# 
+# # initialise normed all matrix
+# all_norm <- all_up_dgn
+# 
+# # 1. Normalise adjusted p-values to range (0,1)
+# all_norm$adj.p.ALZ <- sapply(data.frame(all_norm$adj.p.ALZ), rescale, to = c(0, 1))
+# all_norm$adj.p.FTD <- sapply(data.frame(all_norm$adj.p.FTD), rescale, to = c(0, 1))
+# all_norm$adj.p.DLB <- sapply(data.frame(all_norm$adj.p.DLB), rescale, to = c(0, 1))
+# 
+# ## normalize(all_norm$adj.p.ALZ, method = "standardize", range = c(0, 1), margin = 2)
+# ##nf_ALZ <- sum(all_norm$adj.p.ALZ) 
+# ##nf_FTD <- sum(all_norm$adj.p.FTD)
+# ##nf_DLB <- sum(all_norm$adj.p.DLB)
+# ##apply(all_norm$adj.p.ALZ, 2, function(x) {(x / nf_ALZ)})
+# 
+# 
+# # 2. Calculate distinctiveness score using p-values
+# # TODO: might want to use some other (exponential function) instead of mean
+# all_norm$distinct <- abs(all_norm$adj.p.ALZ - all_norm$adj.p.FTD)/2  + abs(all_norm$adj.p.ALZ - all_norm$adj.p.DLB)/2 + abs(all_norm$adj.p.FTD - all_norm$adj.p.DLB)/2
+# # normalise distinctiveness score
+# all_norm$distinct_norm <- sapply(data.frame(all_norm$distinct), rescale, to = c(0, 1))
+# 
+# # 3. Calculate hits count as average normalised hit counts from all 3 databases
+# # TODO: CREATE DATFRAME OUT OF TABLES, load it in workspace
+# # Read a txt files
+# hits_data <- read.delim("ALZ_sorted_strict.txt")
+# #hits_data <- read.delim("across_diseases_sorted.txt")
+# all_norm$DGN_norm <- sapply(data.frame(hits_data$DGN_hits), rescale, to = c(0, 1))
+# all_norm$PS_norm <- sapply(data.frame(hits_data$PS_hits), rescale, to = c(0, 1))
+# all_norm$DMaps_norm <- sapply(data.frame(hits_data$DMaps_hits), rescale, to = c(0, 1))
+# # weight the hits accordingly
+# hwDGN <- 1
+# hwPS <- 1
+# hwDMaps <- 1
+# all_norm$hitstotal_norm <- (hwDGN * all_norm$DGN_norm + hwPS * all_norm$PS_norm + hwDMaps * all_norm$DMaps_norm) / (hwDGN + hwPS + hwDMaps)
+# 
+# ## calculate biomarker score bm_score: we want to minimise p-value, maximise the distinctiveness score and maximise the hits count
+# # choose weights/ covariates for bm_score
+# w_pv <- 1
+# w_distinct <- 1
+# w_hits <- 1
+# 
+# bm_score_ALZ <- data.frame(all_norm$UniProt)
+# bm_score_ALZ$Name <- all_norm$Name
+# bm_score_ALZ$bm <- w_pv * (1 - all_norm$adj.p.ALZ) + w_distinct * all_norm$distinct_norm + w_hits * all_norm$hitstotal_norm
+# # bm_score_FTD <- w_pv * (1 - all_norm$adj.p.FTD) + w_distinct * all_norm$distinct_norm + w_hits * all_norm$hitstotal_norm
+# # bm_score_DLB <- w_pv * (1 - all_norm$adj.p.DLB) + w_distinct * all_norm$distinct_norm + w_hits * all_norm$hitstotal_norm
+# # NOW PICK BIOMARKERS WITH HIGHEST SCORE
+# 
+# ####---------------------------------------
+##### TODO: ADJUST subfolders
 ## Create a new workbook
 wb <- createWorkbook("Olink MIRIADE biomarker priorisation")
 modifyBaseFont(wb, fontSize = 13, fontColour = "black", fontName = "Calibri")
@@ -326,4 +405,6 @@ wb <- add_sorted_data(wb, ftd_p_sort(all_excel, scale = 0), "FTD-specific, relax
 wb <- add_sorted_data(wb, dlb_p_sort(all_excel, scale = 1), "DLB-specific, strict")
 wb <- add_sorted_data(wb, dlb_p_sort(all_excel, scale = 1), "DLB-specific, relaxed")
 
-saveWorkbook(wb, file = "MIRIADE_Olink_sorted_biomarkers.xlsx", overwrite = TRUE)
+#saveWorkbook(wb, file = "MIRIADE_Olink_sorted_biomarkers.xlsx", overwrite = TRUE)
+saveWorkbook(wb, file = "MIRIADE_Olink_sorted_biomarkers_v2.xlsx", overwrite = TRUE)
+
