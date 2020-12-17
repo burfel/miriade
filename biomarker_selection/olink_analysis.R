@@ -200,9 +200,12 @@ floor_pvals <- function(fvec) {
 ### for rank-based sorts
 treat_pvals <- function(ftab, scale) {
   if(scale == 0) {
+    ## ADDED "RETURN" HERE (v.3)
+    return(
       data.frame(ALZ = floor_pvals(ftab$adj.p.ALZ),
                FTD = floor_pvals(ftab$adj.p.FTD),
                DLB = floor_pvals(ftab$adj.p.DLB))
+    )
   } else {
     return(
       data.frame(ALZ = signif(ftab$adj.p.ALZ, scale),
