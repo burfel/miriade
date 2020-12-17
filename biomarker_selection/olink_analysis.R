@@ -1,11 +1,11 @@
 ##################################################
 ## Project: MIRIADE
 ## Script purpose: Combine expression levels from Olink tables, integrate prior knowledge
-## Date: 17.07.2020
+## Date: 15.12.2020
 ## Author: Marek Ostaszewski, Felicia Burtscher
 ##################################################
 
-setwd("~/Documents/_PhD/UNILUX/src/miriade/biomarker_selection/Olink_priorisation")
+setwd("~/Documents/_PhD/UNILUX/CODING/miriade/biomarker_selection")
 
 library(reshape2)
 library("scales")
@@ -200,12 +200,9 @@ floor_pvals <- function(fvec) {
 ### for rank-based sorts
 treat_pvals <- function(ftab, scale) {
   if(scale == 0) {
-    ## ADDED "RETURN" HERE
-    return(
       data.frame(ALZ = floor_pvals(ftab$adj.p.ALZ),
                FTD = floor_pvals(ftab$adj.p.FTD),
                DLB = floor_pvals(ftab$adj.p.DLB))
-    )
   } else {
     return(
       data.frame(ALZ = signif(ftab$adj.p.ALZ, scale),
@@ -225,33 +222,31 @@ simple_sort <- function(ftab) {
 }
 
 ### Adj.p-based sort, ALZ specific
-## sort in ascending alz position, higher positions tops in , sum of knowlege, third column only if conflict with 2nd column (ties) 
-## -- primarily sorted by importance in databases, 
-#alz_p_sort <- function(ftab, scale = 1) {
+# alz_p_sort <- function(ftab, scale = 1) {
 #  sort <- treat_pvals(ftab, scale)
 #  ftab[order(sort$ALZ, -sort$FTD*sort$DLB, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
-#}
+# }
 alz_p_sort <- function(ftab, scale = 1) {
   sort <- treat_pvals(ftab, scale)
   ftab[order(sort$ALZ, -(sort$FTD+sort$DLB), -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 }
 
-#### Adj.p-based sort, FTD specific
-#ftd_p_sort <- function(ftab, scale = 1) {
+### Adj.p-based sort, FTD specific
+# ftd_p_sort <- function(ftab, scale = 1) {
 #  sort <- treat_pvals(ftab, scale)
 #  ftab[order(sort$FTD, -sort$ALZ*sort$DLB, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
-#}
+# }
 ### Adj.p-based sort, FTD specific
 ftd_p_sort <- function(ftab, scale = 1) {
   sort <- treat_pvals(ftab, scale)
   ftab[order(sort$FTD, -(sort$ALZ+sort$DLB), -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 }
 
-#### Adj.p-based sort, DLB specific
-#dlb_p_sort <- function(ftab, scale = 1) {
+### Adj.p-based sort, DLB specific
+# dlb_p_sort <- function(ftab, scale = 1) {
 #  sort <- treat_pvals(ftab, scale)
 #  ftab[order(sort$DLB, -sort$FTD*sort$ALZ, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
-#}
+# }
 ### Adj.p-based sort, DLB specific
 dlb_p_sort <- function(ftab, scale = 1) {
   sort <- treat_pvals(ftab, scale)
