@@ -243,9 +243,14 @@ simple_sort <- function(ftab) {
 #  sort <- treat_pvals(ftab, scale)
 #  ftab[order(sort$ALZ, -sort$FTD*sort$DLB, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 # }
+### Searching for more stable sorting:
+# alz_p_sort <- function(ftab, scale = 1) {
+#   sort <- treat_pvals(ftab, scale)
+#   ftab[order(sort$ALZ, -(sort$FTD+sort$DLB), -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
+# }
 alz_p_sort <- function(ftab, scale = 1) {
   sort <- treat_pvals(ftab, scale)
-  ftab[order(sort$ALZ, -(sort$FTD+sort$DLB), -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
+  ftab[order(sort$ALZ / sort$FTD + sort$ALZ / sort$DLB, sort$ALZ, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 }
 
 ### Adj.p-based sort, FTD specific
@@ -253,22 +258,25 @@ alz_p_sort <- function(ftab, scale = 1) {
 #  sort <- treat_pvals(ftab, scale)
 #  ftab[order(sort$FTD, -sort$ALZ*sort$DLB, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 # }
-### Adj.p-based sort, FTD specific
+### Searching for more stable sorting:
 ftd_p_sort <- function(ftab, scale = 1) {
   sort <- treat_pvals(ftab, scale)
   ftab[order(sort$FTD, -(sort$ALZ+sort$DLB), -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 }
+
+
 
 ### Adj.p-based sort, DLB specific
 # dlb_p_sort <- function(ftab, scale = 1) {
 #  sort <- treat_pvals(ftab, scale)
 #  ftab[order(sort$DLB, -sort$FTD*sort$ALZ, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 # }
-### Adj.p-based sort, DLB specific
+### Searching for more stable sorting:
 dlb_p_sort <- function(ftab, scale = 1) {
   sort <- treat_pvals(ftab, scale)
   ftab[order(sort$DLB, -(sort$FTD+sort$ALZ), -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 }
+
 
 ### Display results
 ### Simple sort
