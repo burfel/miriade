@@ -16,11 +16,11 @@ options(stringsAsFactors = F)
 #olp <- read.csv("Data/Olink_proteins_list_Marek.csv", sep = ";")
 olp <- read.csv("Data/Olink_proteins_list_Marek.csv")
 
-### Read the datasets, add a position to each
+### Read the datasets (sorted by increasing adj. p-values), add a position to each
 ### the Alzheimers dataset
 alzp <- read.csv("Data/FVOL_AD_CON.csv", sep = ",", 
                  col.names = c("Name", "Eff.ALZ", "p.val.ALZ", "adj.p.ALZ"))
-alzp <- cbind(alzp, pos.AlZ = 1:nrow(alzp))
+alzp <- cbind(alzp, pos.ALZ = 1:nrow(alzp)) # fixed from pos.AlZ to pos.ALZ 17.12.2020 23:29
 
 ### the Frontotemporal Dementia dataset
 ftdp <- read.csv("Data/FVOL_FTD_CON.csv", sep = ",",
@@ -33,7 +33,9 @@ dlbp <- read.csv("Data/FVOL_DLB_CON.csv", sep = ",",
 dlbp <- cbind(dlbp, pos.DLB = 1:nrow(dlbp))
 
 all <- merge(merge(alzp, ftdp, by = "Name"), dlbp, by = "Name")
+# Which of the names in all are not in the protein list?
 to_change <- which(!(all$Name %in% olp$Assay))
+# None  -- all good.
 
 ### A convenience function to help split multiple ids in the dataset
 split_multi_id <- function(ftab, multi_id, split_ids) {
@@ -51,15 +53,17 @@ split_multi_id <- function(ftab, multi_id, split_ids) {
 ### ids to split are: "FUT3/FUT5" "IL-27"     "IL12"      "MIC-A/B"
 ### here handled in-code, for bigger instances it should be a mapping file
 all <- split_multi_id(all, "FUT3/FUT5", c("FUT3", "FUT5"))
-all <- split_multi_id(all, "IL-27", c("IL-27A", "IL-27B"))
+all <- split_multi_id(all, "IL-27", c("IL-27A", "IL-27B")) ## different isoforms??
 all <- split_multi_id(all, "IL12", c("IL12A", "IL12B"))
 all <- split_multi_id(all, "MIC-A/B", c("MIC-A", "MIC-B"))
 
-### Add UniProt ids
+### 0. Add UniProt ids
 all_up <- merge(x = all, y = unique(olp[,c("Assay", "UniProt")]), by.x = "Name", by.y = "Assay")
-### Prune NA UniProts
+
+### 1. Prune NA UniProts
 all_up <- all_up[!is.na(all_up$UniProt),]
 
+### 2. Cleaning
 ### Read cutoffs file, get UniProts that have less than 20% LOD percentage
 cutoffs <- read.csv("Data/Perc_below_LOD_per_assay.csv", sep = ";")
 cutoff_ups <- unique(cutoffs[cutoffs$percentage_above_LOD < 20, "UniProt"])
@@ -70,7 +74,9 @@ all_up <- all_up[!(all_up$UniProt %in% cutoff_ups),]
 pass <- rowSums(all_up[,c("adj.p.ALZ", "adj.p.FTD", "adj.p.DLB")] < 0.1) > 0
 all_up <- all_up[pass,]
 
-### DisGeNet
+### 3. Merging with prior knowledge
+###
+### 3.1 DisGeNet
 message("DisGeNET integration...")
 ### Add DisGeNet gene mapping to the main table
 up2dgn <- read.table("Data/mapa_geneid_4_uniprot_crossref.tsv", header = T)
@@ -82,7 +88,7 @@ dgn_c10 <- dgn[grep("(^C10;)|(^C10$)|(;C10$)|(;C10;)", dgn$diseaseClass),]
 ### Integrate with the main table
 all_up_dgn_c10 <- cbind(all_up_dgn, DGN_hits = sapply(all_up_dgn$GENEID, function(x) sum(dgn_c10$geneId == x)))
 
-### PathwayStudio
+### 3.2 PathwayStudio
 message("PathwayStudio integration...")
 library(xml2)
 ### RNEF is the native XML format of the PathwayStudio
@@ -114,7 +120,7 @@ all_up_dgn_c10_ps <- cbind(all_up_dgn_c10,
                            PS_hits = sapply(all_up_dgn$UniProt, function(x) miriade_rnef_links[x]))
 
 
-### Disease Maps
+### 3.3 Disease Maps
 message("Disease maps integration...")
 library(jsonlite)
 ### A convenience function to handle API queries
@@ -184,6 +190,8 @@ all_up_dgn_c10_ps_dmaps <- cbind(all_up_dgn_c10_ps, DMaps_hits = across_dmaps)
 
 ### Integration ends here, afterwards it's sorting and positioning of proteins based on their pvals/hits and disease association
 
+### 4. Rank proteins based on their p-values and sum of prior knowledge hits
+###
 ### A convenience function to simplify pvals, pooling them into fixed ranges;
 ### for rank-based sorts
 floor_pvals <- function(fvec) {
@@ -199,6 +207,7 @@ floor_pvals <- function(fvec) {
 ### A convenience function to simplify adj pvals, either based on fixed ranges (above) or by their significant value
 ### for rank-based sorts
 treat_pvals <- function(ftab, scale) {
+# for scale=0, we use the bins above (coarse sorting) 
   if(scale == 0) {
     ## ADDED "RETURN" HERE (v.3)
     return(
@@ -216,12 +225,17 @@ treat_pvals <- function(ftab, scale) {
 }
 
 ### For better display, columns that can be omitted
+## TODO: CREATE A FUNCTION INSTEAD (taking column names and returning indices)
 masked_columns <- c(3,4,7,8,11,12,15)
 
 ### Position-based sort, across diseases
 simple_sort <- function(ftab) {
-  ftab[order(ftab$pos.ALZ + ftab$pos.FTD + ftab$pos.DLB, flat),
-             -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits),]
+ # ftab[order(ftab$pos.ALZ + ftab$pos.FTD + ftab$pos.DLB,
+#             -(type.convert(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits))),]
+  ## added the temp variables 17.12.2020 23:09
+  position_vector <- ftab$pos.ALZ + ftab$pos.FTD + ftab$pos.DLB
+  hits_vector <- -(type.convert(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits))
+  ftab[order(position_vector, hits_vector),]
 }
 
 ### Adj.p-based sort, ALZ specific
@@ -267,22 +281,22 @@ head(dlb_p_sort(all_up_dgn_c10_ps_dmaps[,-masked_columns], scale = 1), n = 15)
 ### Write results to file
 
 write.table(simple_sort(all_up_dgn_c10_ps_dmaps),
-            file = "Data/across_diseases_sorted.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+            file = "Results/across_diseases_sorted.txt", sep = "\t", quote = F, row.names = F, col.names = T)
 
 write.table(alz_p_sort(all_up_dgn_c10_ps_dmaps, scale = 1),
-            file = "Data/ALZ_sorted_strict.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+            file = "Results/ALZ_sorted_strict.txt", sep = "\t", quote = F, row.names = F, col.names = T)
 write.table(alz_p_sort(all_up_dgn_c10_ps_dmaps, scale = 0),
-            file = "Data/ALZ_sorted_relaxed.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+            file = "Results/ALZ_sorted_relaxed.txt", sep = "\t", quote = F, row.names = F, col.names = T)
 
 write.table(ftd_p_sort(all_up_dgn_c10_ps_dmaps, scale = 1),
-            file = "Data/FTD_sorted_strict.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+            file = "Results/FTD_sorted_strict.txt", sep = "\t", quote = F, row.names = F, col.names = T)
 write.table(ftd_p_sort(all_up_dgn_c10_ps_dmaps, scale = 0),
-            file = "Data/FTD_sorted_relaxed.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+            file = "Results/FTD_sorted_relaxed.txt", sep = "\t", quote = F, row.names = F, col.names = T)
 
 write.table(dlb_p_sort(all_up_dgn_c10_ps_dmaps, scale = 1),
-            file = "Data/DLB_sorted_strict.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+            file = "Results/DLB_sorted_strict.txt", sep = "\t", quote = F, row.names = F, col.names = T)
 write.table(dlb_p_sort(all_up_dgn_c10_ps_dmaps, scale = 0),
-            file = "Data/DLB_sorted_relaxed.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+            file = "Results/DLB_sorted_relaxed.txt", sep = "\t", quote = F, row.names = F, col.names = T)
 
 ### Generate Excel files from the sorting results
 library(openxlsx)
@@ -392,7 +406,7 @@ all_excel <- all_up_dgn_c10_ps_dmaps[,-15]
 # ####---------------------------------------
 ##### TODO: ADJUST subfolders
 ## Create a new workbook
-wb <- createWorkbook("Olink MIRIADE biomarker priorisation")
+wb <- createWorkbook("Results/Olink MIRIADE biomarker priorisation")
 modifyBaseFont(wb, fontSize = 13, fontColour = "black", fontName = "Calibri")
 ### Add sheets with different tables
 wb <- add_sorted_data(wb, simple_sort(all_excel), "Cross-disease")
@@ -401,8 +415,9 @@ wb <- add_sorted_data(wb, alz_p_sort(all_excel, scale = 0), "ALZ-specific, relax
 wb <- add_sorted_data(wb, ftd_p_sort(all_excel, scale = 1), "FTD-specific, strict")
 wb <- add_sorted_data(wb, ftd_p_sort(all_excel, scale = 0), "FTD-specific, relaxed")
 wb <- add_sorted_data(wb, dlb_p_sort(all_excel, scale = 1), "DLB-specific, strict")
-wb <- add_sorted_data(wb, dlb_p_sort(all_excel, scale = 1), "DLB-specific, relaxed")
+# FIXED MISTAKE scale=0
+wb <- add_sorted_data(wb, dlb_p_sort(all_excel, scale = 0), "DLB-specific, relaxed")
 
-#saveWorkbook(wb, file = "MIRIADE_Olink_sorted_biomarkers.xlsx", overwrite = TRUE)
-saveWorkbook(wb, file = "MIRIADE_Olink_sorted_biomarkers_v2.xlsx", overwrite = TRUE)
+#saveWorkbook(wb, file = "Results/MIRIADE_Olink_sorted_biomarkers.xlsx", overwrite = TRUE)
+saveWorkbook(wb, file = "Results/MIRIADE_Olink_sorted_biomarkers_v2.xlsx", overwrite = TRUE)
 
