@@ -447,5 +447,6 @@ wb <- add_sorted_data(wb, dlb_p_sort(all_excel, scale = 1), "DLB-specific, stric
 wb <- add_sorted_data(wb, dlb_p_sort(all_excel, scale = 0), "DLB-specific, relaxed")
 
 #saveWorkbook(wb, file = "Results/MIRIADE_Olink_sorted_biomarkers.xlsx", overwrite = TRUE)
-saveWorkbook(wb, file = "Results/MIRIADE_Olink_sorted_biomarkers_v2.xlsx", overwrite = TRUE)
+#saveWorkbook(wb, file = "Results/MIRIADE_Olink_sorted_biomarkers_v2.xlsx", overwrite = TRUE)
+saveWorkbook(wb, file = "Results/MIRIADE_Olink_sorted_biomarkers_v3.xlsx", overwrite = TRUE)
 
