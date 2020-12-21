@@ -248,15 +248,15 @@ simple_sort <- function(ftab) {
 #   sort <- treat_pvals(ftab, scale)
 #   ftab[order(sort$ALZ, -(sort$FTD+sort$DLB), -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 # }
-alz_p_sort <- function(ftab, scale = 1) {
-  sort <- treat_pvals(ftab, scale)
-  ftab[order(sort$ALZ / sort$FTD + sort$ALZ / sort$DLB, sort$ALZ, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
-}
-# improve discrimination between diseases even further
 # alz_p_sort <- function(ftab, scale = 1) {
 #   sort <- treat_pvals(ftab, scale)
-#   ftab[order((sort$FTD / sort$DLB + sort$DLB / sort$FTD)*(sort$ALZ / sort$FTD + sort$ALZ / sort$DLB), sort$ALZ, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
+#   ftab[order(sort$ALZ / sort$FTD + sort$ALZ / sort$DLB, sort$ALZ, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 # }
+# improve discrimination between diseases even further
+alz_p_sort <- function(ftab, scale = 1) {
+  sort <- treat_pvals(ftab, scale)
+  ftab[order((sort$FTD / sort$DLB + sort$DLB / sort$FTD)*(sort$ALZ / sort$FTD + sort$ALZ / sort$DLB), sort$ALZ, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
+}
 
 ### Adj.p-based sort, FTD specific
 # ftd_p_sort <- function(ftab, scale = 1) {
@@ -268,15 +268,15 @@ alz_p_sort <- function(ftab, scale = 1) {
 #   sort <- treat_pvals(ftab, scale)
 #   ftab[order(sort$FTD, -(sort$ALZ+sort$DLB), -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 # }
-ftd_p_sort <- function(ftab, scale = 1) {
-  sort <- treat_pvals(ftab, scale)
-  ftab[order(sort$FTD / sort$ALZ + sort$FTD / sort$DLB, sort$FTD, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
-}
-# improve discrimination between diseases even further
 # ftd_p_sort <- function(ftab, scale = 1) {
 #   sort <- treat_pvals(ftab, scale)
-#   ftab[order((sort$ALZ / sort$DLB + sort$DLB / sort$ALZ)*(sort$FTD / sort$ALZ + sort$FTD / sort$DLB), sort$FTD, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
+#   ftab[order(sort$FTD / sort$ALZ + sort$FTD / sort$DLB, sort$FTD, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 # }
+# improve discrimination between diseases even further
+ftd_p_sort <- function(ftab, scale = 1) {
+  sort <- treat_pvals(ftab, scale)
+  ftab[order((sort$ALZ / sort$DLB + sort$DLB / sort$ALZ)*(sort$FTD / sort$ALZ + sort$FTD / sort$DLB), sort$FTD, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
+}
 
 ### Adj.p-based sort, DLB specific
 # dlb_p_sort <- function(ftab, scale = 1) {
@@ -288,15 +288,15 @@ ftd_p_sort <- function(ftab, scale = 1) {
 #   sort <- treat_pvals(ftab, scale)
 #   ftab[order(sort$DLB, -(sort$FTD+sort$ALZ), -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 # }
-dlb_p_sort <- function(ftab, scale = 1) {
-  sort <- treat_pvals(ftab, scale)
-  ftab[order(sort$DLB / sort$ALZ + sort$DLB / sort$FTD, sort$DLB, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
-}
-# improve discrimination between diseases even further
 # dlb_p_sort <- function(ftab, scale = 1) {
 #   sort <- treat_pvals(ftab, scale)
-#   ftab[order((sort$ALZ / sort$FTD + sort$FTD / sort$ALZ)*(sort$DLB / sort$ALZ + sort$DLB / sort$FTD), sort$DLB, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
+#   ftab[order(sort$DLB / sort$ALZ + sort$DLB / sort$FTD, sort$DLB, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 # }
+# improve discrimination between diseases even further
+dlb_p_sort <- function(ftab, scale = 1) {
+  sort <- treat_pvals(ftab, scale)
+  ftab[order((sort$ALZ / sort$FTD + sort$FTD / sort$ALZ)*(sort$DLB / sort$ALZ + sort$DLB / sort$FTD), sort$DLB, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
+}
 
 ### Display results
 ### Simple sort
