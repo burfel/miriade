@@ -4,9 +4,9 @@ image: git-r3lab.uni.lu:4567/r3/docker/jekyll-lcsb:1.4
 build the website:
   stage: build
   before_script:
-  - gem install bundler -v2.0.2
+  - gem install bundler -v2.1.4
+  - bundle install && bundle update jekyll-theme-lcsb-frozen-components
   - bundle install && bundle update jekyll-theme-lcsb-default 
-  #- bundle install && bundle update jekyll-theme-lcsb-frozen-components
   script:
   - 'echo "baseurl: /$CI_PROJECT_NAME" >> $JEKYLL_PATH/_config_ci.yml'
   - 'echo "url: https://$CI_PROJECT_NAMESPACE.$CI_PAGES_DOMAIN" >> $JEKYLL_PATH/_config_ci.yml'
