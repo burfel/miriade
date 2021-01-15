@@ -8,9 +8,9 @@ build the website:
   - bundle install && bundle update jekyll-theme-lcsb-default 
   #- bundle install && bundle update jekyll-theme-lcsb-frozen-components
   script:
-  - 'echo "baseurl: /$CI_PROJECT_NAME" >> _config_ci.yml'
-  - 'echo "url: https://$CI_PROJECT_NAMESPACE.$CI_PAGES_DOMAIN" >> _config_ci.yml'
-  - bundle exec jekyll build -d test --config "_config.yml,_config_ci.yml"
+  - 'echo "baseurl: /$CI_PROJECT_NAME" >> $JEKYLL_PATH/_config_ci.yml'
+  - 'echo "url: https://$CI_PROJECT_NAMESPACE.$CI_PAGES_DOMAIN" >> $JEKYLL_PATH/_config_ci.yml'
+  - bundle exec jekyll build -d test --config "$JEKYLL_PATH/_config.yml,$JEKYLL_PATH/_config_ci.yml"
   - 'echo $CI_COMMIT_SHA > test/version'
   artifacts:
     expire_in: 3 days
@@ -18,6 +18,7 @@ build the website:
     - test
   variables:
     JEKYLL_ENV: production
+    JEKYLL_PATH: data-integration-website/pages-jekyll-lcsb-template
 
 pages:
   stage: deploy
