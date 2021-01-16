@@ -5,7 +5,7 @@ build the website:
   stage: build
   before_script:
   - gem install bundler -v2.1.4
-  - bundle install && bundle update jekyll-theme-lcsb-frozen-components
+  - bundle update jekyll-theme-lcsb-frozen-components
   - bundle install && bundle update jekyll-theme-lcsb-default 
   script:
   - 'echo "baseurl: /$CI_PROJECT_NAME" >> $JEKYLL_PATH/_config_ci.yml'
