@@ -8,7 +8,7 @@ build the website:
   - bundle install && bundle update jekyll-theme-lcsb-default && bundle update jekyll-theme-lcsb-frozen-components
   script:
   - 'echo "baseurl: /$CI_PROJECT_NAME" >> $JEKYLL_PATH/_config_ci.yml'
-  - 'echo "url: https://$CI_PROJECT_NAMESPACE.$CI_PAGES_DOMAIN" >> $JEKYLL_PATH/_config_ci.yml'
+  - 'echo "url: https://$CI_PAGES_DOMAIN/felicia_burtscher" >> $JEKYLL_PATH/_config_ci.yml'
   - bundle exec jekyll build -d test --config "$JEKYLL_PATH/_config.yml,$JEKYLL_PATH/_config_ci.yml"
   - 'echo $CI_COMMIT_SHA > test/version'
   artifacts:
