@@ -1,7 +1,7 @@
 ##################################################
 ## Project: MIRIADE
 ## Script purpose: Combine expression levels from Olink tables, integrate prior knowledge
-## Date: 21.12.2020
+## Date: 21.12.2020, 13.01.2021
 ## Author: Marek Ostaszewski, Felicia Burtscher
 ##################################################
 
@@ -239,60 +239,72 @@ simple_sort <- function(ftab) {
 }
 
 ### Adj.p-based sort, ALZ specific
+# # v.0
 # alz_p_sort <- function(ftab, scale = 1) {
 #  sort <- treat_pvals(ftab, scale)
 #  ftab[order(sort$ALZ, -sort$FTD*sort$DLB, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 # }
-### Searching for more stable sorting:
+## Searching for more stable sorting:
+# # v.1
 # alz_p_sort <- function(ftab, scale = 1) {
 #   sort <- treat_pvals(ftab, scale)
 #   ftab[order(sort$ALZ, -(sort$FTD+sort$DLB), -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 # }
+# # v.2
 # alz_p_sort <- function(ftab, scale = 1) {
 #   sort <- treat_pvals(ftab, scale)
 #   ftab[order(sort$ALZ / sort$FTD + sort$ALZ / sort$DLB, sort$ALZ, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 # }
 # improve discrimination between diseases even further
+# v.3
 alz_p_sort <- function(ftab, scale = 1) {
   sort <- treat_pvals(ftab, scale)
   ftab[order((sort$FTD / sort$DLB + sort$DLB / sort$FTD)*(sort$ALZ / sort$FTD + sort$ALZ / sort$DLB), sort$ALZ, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 }
 
-### Adj.p-based sort, FTD specific
+## Adj.p-based sort, FTD specific
+# # v.0
 # ftd_p_sort <- function(ftab, scale = 1) {
 #  sort <- treat_pvals(ftab, scale)
 #  ftab[order(sort$FTD, -sort$ALZ*sort$DLB, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 # }
-### Searching for more stable sorting:
+## Searching for more stable sorting:
+# # v.1
 # ftd_p_sort <- function(ftab, scale = 1) {
 #   sort <- treat_pvals(ftab, scale)
 #   ftab[order(sort$FTD, -(sort$ALZ+sort$DLB), -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 # }
+# # v.2
 # ftd_p_sort <- function(ftab, scale = 1) {
 #   sort <- treat_pvals(ftab, scale)
 #   ftab[order(sort$FTD / sort$ALZ + sort$FTD / sort$DLB, sort$FTD, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 # }
 # improve discrimination between diseases even further
+# v.3
 ftd_p_sort <- function(ftab, scale = 1) {
   sort <- treat_pvals(ftab, scale)
   ftab[order((sort$ALZ / sort$DLB + sort$DLB / sort$ALZ)*(sort$FTD / sort$ALZ + sort$FTD / sort$DLB), sort$FTD, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 }
 
-### Adj.p-based sort, DLB specific
+## Adj.p-based sort, DLB specific
+# # v.0
 # dlb_p_sort <- function(ftab, scale = 1) {
 #  sort <- treat_pvals(ftab, scale)
 #  ftab[order(sort$DLB, -sort$FTD*sort$ALZ, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 # }
-### Searching for more stable sorting:
+## Searching for more stable sorting:
+# # v.1
 # dlb_p_sort <- function(ftab, scale = 1) {
 #   sort <- treat_pvals(ftab, scale)
 #   ftab[order(sort$DLB, -(sort$FTD+sort$ALZ), -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 # }
+# # v.2
 # dlb_p_sort <- function(ftab, scale = 1) {
 #   sort <- treat_pvals(ftab, scale)
 #   ftab[order(sort$DLB / sort$ALZ + sort$DLB / sort$FTD, sort$DLB, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
 # }
 # improve discrimination between diseases even further
+# v.3
 dlb_p_sort <- function(ftab, scale = 1) {
   sort <- treat_pvals(ftab, scale)
   ftab[order((sort$ALZ / sort$FTD + sort$FTD / sort$ALZ)*(sort$DLB / sort$ALZ + sort$DLB / sort$FTD), sort$DLB, -(ftab$DGN_hits + ftab$PS_hits + ftab$DMaps_hits)),]
@@ -308,23 +320,83 @@ head(dlb_p_sort(all_up_dgn_c10_ps_dmaps[,-masked_columns], scale = 1), n = 15)
 
 ### Write results to file
 
+# # v.0
+# write.table(simple_sort(all_up_dgn_c10_ps_dmaps),
+#             file = "Results/v0/across_diseases_sorted_v0.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+# 
+# write.table(alz_p_sort(all_up_dgn_c10_ps_dmaps, scale = 1),
+#             file = "Results/v0/ALZ_sorted_strict_v0.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+# write.table(alz_p_sort(all_up_dgn_c10_ps_dmaps, scale = 0),
+#             file = "Results/v0/ALZ_sorted_relaxed_v0.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+# 
+# write.table(ftd_p_sort(all_up_dgn_c10_ps_dmaps, scale = 1),
+#             file = "Results/v0/FTD_sorted_strict_v0.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+# write.table(ftd_p_sort(all_up_dgn_c10_ps_dmaps, scale = 0),
+#             file = "Results/v0/FTD_sorted_relaxed_v0.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+# 
+# write.table(dlb_p_sort(all_up_dgn_c10_ps_dmaps, scale = 1),
+#             file = "Results/v0/DLB_sorted_strict_v0.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+# write.table(dlb_p_sort(all_up_dgn_c10_ps_dmaps, scale = 0),
+#             file = "Results/v0/DLB_sorted_relaxed_v0.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+
+
+# # v.1
+# write.table(simple_sort(all_up_dgn_c10_ps_dmaps),
+#             file = "Results/v1/across_diseases_sorted_v1.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+# 
+# write.table(alz_p_sort(all_up_dgn_c10_ps_dmaps, scale = 1),
+#             file = "Results/v1/ALZ_sorted_strict_v1.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+# write.table(alz_p_sort(all_up_dgn_c10_ps_dmaps, scale = 0),
+#             file = "Results/v1/ALZ_sorted_relaxed_v1.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+# 
+# write.table(ftd_p_sort(all_up_dgn_c10_ps_dmaps, scale = 1),
+#             file = "Results/v1/FTD_sorted_strict_v1.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+# write.table(ftd_p_sort(all_up_dgn_c10_ps_dmaps, scale = 0),
+#             file = "Results/v1/FTD_sorted_relaxed_v1.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+# 
+# write.table(dlb_p_sort(all_up_dgn_c10_ps_dmaps, scale = 1),
+#             file = "Results/v1/DLB_sorted_strict_v1.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+# write.table(dlb_p_sort(all_up_dgn_c10_ps_dmaps, scale = 0),
+#             file = "Results/v1/DLB_sorted_relaxed_v1.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+
+# # v.2
+# write.table(simple_sort(all_up_dgn_c10_ps_dmaps),
+#             file = "Results/v2/across_diseases_sorted_v2.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+# 
+# write.table(alz_p_sort(all_up_dgn_c10_ps_dmaps, scale = 1),
+#             file = "Results/v2/ALZ_sorted_strict_v2.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+# write.table(alz_p_sort(all_up_dgn_c10_ps_dmaps, scale = 0),
+#             file = "Results/v2/ALZ_sorted_relaxed_v2.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+# 
+# write.table(ftd_p_sort(all_up_dgn_c10_ps_dmaps, scale = 1),
+#             file = "Results/v2/FTD_sorted_strict_v2.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+# write.table(ftd_p_sort(all_up_dgn_c10_ps_dmaps, scale = 0),
+#             file = "Results/v2/FTD_sorted_relaxed_v2.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+# 
+# write.table(dlb_p_sort(all_up_dgn_c10_ps_dmaps, scale = 1),
+#             file = "Results/v2/DLB_sorted_strict_v2.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+# write.table(dlb_p_sort(all_up_dgn_c10_ps_dmaps, scale = 0),
+#             file = "Results/v2/DLB_sorted_relaxed_v2.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+
+# v.3
 write.table(simple_sort(all_up_dgn_c10_ps_dmaps),
-            file = "Results/across_diseases_sorted.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+            file = "Results/v3/across_diseases_sorted_v3.txt", sep = "\t", quote = F, row.names = F, col.names = T)
 
 write.table(alz_p_sort(all_up_dgn_c10_ps_dmaps, scale = 1),
-            file = "Results/ALZ_sorted_strict.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+            file = "Results/v3/ALZ_sorted_strict_v3.txt", sep = "\t", quote = F, row.names = F, col.names = T)
 write.table(alz_p_sort(all_up_dgn_c10_ps_dmaps, scale = 0),
-            file = "Results/ALZ_sorted_relaxed.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+            file = "Results/v3/ALZ_sorted_relaxed_v3.txt", sep = "\t", quote = F, row.names = F, col.names = T)
 
 write.table(ftd_p_sort(all_up_dgn_c10_ps_dmaps, scale = 1),
-            file = "Results/FTD_sorted_strict.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+            file = "Results/v3/FTD_sorted_strict_v3.txt", sep = "\t", quote = F, row.names = F, col.names = T)
 write.table(ftd_p_sort(all_up_dgn_c10_ps_dmaps, scale = 0),
-            file = "Results/FTD_sorted_relaxed.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+            file = "Results/v3/FTD_sorted_relaxed_v3.txt", sep = "\t", quote = F, row.names = F, col.names = T)
 
 write.table(dlb_p_sort(all_up_dgn_c10_ps_dmaps, scale = 1),
-            file = "Results/DLB_sorted_strict.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+            file = "Results/v3/DLB_sorted_strict_v3.txt", sep = "\t", quote = F, row.names = F, col.names = T)
 write.table(dlb_p_sort(all_up_dgn_c10_ps_dmaps, scale = 0),
-            file = "Results/DLB_sorted_relaxed.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+            file = "Results/v3/DLB_sorted_relaxed_v3.txt", sep = "\t", quote = F, row.names = F, col.names = T)
+
 
 ### Generate Excel files from the sorting results
 library(openxlsx)
@@ -446,7 +518,12 @@ wb <- add_sorted_data(wb, dlb_p_sort(all_excel, scale = 1), "DLB-specific, stric
 # FIXED MISTAKE scale=0
 wb <- add_sorted_data(wb, dlb_p_sort(all_excel, scale = 0), "DLB-specific, relaxed")
 
-#saveWorkbook(wb, file = "Results/MIRIADE_Olink_sorted_biomarkers.xlsx", overwrite = TRUE)
-#saveWorkbook(wb, file = "Results/MIRIADE_Olink_sorted_biomarkers_v2.xlsx", overwrite = TRUE)
-saveWorkbook(wb, file = "Results/MIRIADE_Olink_sorted_biomarkers_v3.xlsx", overwrite = TRUE)
+# #saveWorkbook(wb, file = "Results/MIRIADE_Olink_sorted_biomarkers.xlsx", overwrite = TRUE)
+# #saveWorkbook(wb, file = "Results/MIRIADE_Olink_sorted_biomarkers_v2.xlsx", overwrite = TRUE)
+# saveWorkbook(wb, file = "Results/MIRIADE_Olink_sorted_biomarkers_v3.xlsx", overwrite = TRUE)
+
+# saveWorkbook(wb, file = "Results/v0/MIRIADE_Olink_sorted_biomarkers_v0.xlsx", overwrite = TRUE)
+# saveWorkbook(wb, file = "Results/v1/MIRIADE_Olink_sorted_biomarkers_v1.xlsx", overwrite = TRUE)
+# saveWorkbook(wb, file = "Results/v2/MIRIADE_Olink_sorted_biomarkers_v2.xlsx", overwrite = TRUE)
+saveWorkbook(wb, file = "Results/v3/MIRIADE_Olink_sorted_biomarkers_v3.xlsx", overwrite = TRUE)
 
