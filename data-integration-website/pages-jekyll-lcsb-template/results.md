@@ -5,12 +5,12 @@ permalink: /results/
 order: 3
 ---
 
-# WP1: Biomarker identification.
+# WP1: Biomarker identification
 
 The goal of WP1 is to integrate existing –omics data for identification of pathways and candidate biomarkers for differential dementia diagnosis. For selection, we will perform data-integration of existing biomarker discovery datasets of available data sets generated in CSF, tissue or blood of dementia patients and controls. For each dementia type, the 3-5 most promising candidates will be prioritized for development in WP2 and WP3. A Dementia Disease Map will be developed to generate novel hypotheses of early-stage pathobiology of dementias.
 
 
-
+<br />
 
 ## Dementia Disease Map (DM)
 
