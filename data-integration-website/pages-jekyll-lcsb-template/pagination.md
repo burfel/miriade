@@ -2,7 +2,7 @@
 # To enable the pagination, do the following changes in this file:
 # published: true
 # pagination:
-#   enabled: true
+# enabled: true
 
 # And inside `index.md` header (e.g. after `title: index`), add `published: false`
 

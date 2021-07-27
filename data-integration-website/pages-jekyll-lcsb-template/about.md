@@ -4,30 +4,13 @@ title: About
 permalink: /about/
 order: 2
 ---
-Contact information regarding MIRIADE:
 
-Felicia Burtscher, M.Sc.<br>
-LUXEMBOURG CENTRE FOR SYSTEMS BIOMEDICINE <br>
-Campus Belval <br>
-6, avenue du Swing <br>
-L-4367 Belvaux <br>
-`felicia.burtscher (at) uni.lu`<br>
+Dementia is currently diagnosed largely based on cognitive decline, while pathology starts years before symptom onset. To make progress in the development of effective drugs for dementia, there is an urgent need for biomarkers to enable precision health: for early and specific diagnosis and objective monitoring of disease progression.
+With its multidisciplinary team of scientists from academia, industry, and patient organisations, MIRIADE aims to train a new generation of scientists able to optimise and accelerate development of novel biomarkers for dementia.
 
-<!--
-Here you would normally put your contact information.
+![State of the art of biomarker development](/figures/state-of-the-art-bm.png)
 
----
+MIRIADE will integrate biomarker discovery data from multiple platforms and develop a Dementia Disease Map to enhance biomarker identification (WP1). We will develop assays for prioritized biomarkers (WP2), and selected markers will be clinically validated (WP3). We will study pre-analytical stability and validate against regulatory requirements (WP4) and develop a roadmap for optimal biomarker development (WP5). MIRIADE will thus establish an innovative biomarker-focused cross-sectoral research and training programme that will equip ESRs with a unique combination of skills in big data analysis, biomarker assay development, innovation management, and a thorough understanding of medical needs. This programme will provide a new task force of scientists that are optimally trained to the accelerate the biomarker development for dementias and able to progress effective biomarker tools to the clinic.
 
-You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+![Overview of the MIRIADE workflow](figures/overview-miriade-workflow.png)
 
-You can find the source code for this theme at Gitlab:
-[core-services/jekyll-theme-lcsb-default](https://git-r3lab.uni.lu/core-services/jekyll-theme-lcsb-default).
-
-We have successfully helped in publishing at least (their number is increasing) the following websites:
- * [Page of theme](https://core-services.pages.uni.lu/jekyll-theme-lcsb-default/)
- * [This very page](https://core-services.pages.uni.lu/pages-jekyll-lcsb-template/)
- * [Minerva doc's](https://minerva.pages.uni.lu/doc/)
- * [PDmap blog](https://pdmap.pages.uni.lu/blog/)
- * [IMP](https://imp.pages.uni.lu/web/)
-
--->

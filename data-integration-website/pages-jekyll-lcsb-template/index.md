@@ -1,19 +1,25 @@
 ---
 layout: default
-title: Index
+title: Home
 order: 1
 ---
 
+
 # Welcome to the MIRIADE open integrative data platform for dementia! 
 
-This platform for dementia data was developed within WP1 of the MSCA Innovative Training Network MIRIADE to integrate big biomarker discovery data from multiple platforms for candidate biomarker identification in dementia.
+This platform for dementia data is being developed within WP1 of the MSCA Innovative Training Network [MIRADE](https://miriade.eu/) to integrate big biomarker discovery data from multiple platforms for candidate biomarker identification in dementia.
 
-It provides basic data analysis tasks like visual analysis, clustering and other statistical tests, and or algorithm development.
+<!---
+It will provide basic data analysis tasks like visual analysis, clustering and other statistical tests, or algorithm development.
+-->
+It will visualise the work in progress regarding the biomarker selection in WP1 as the project progresses and later the main results of the ITN and its individual work packages. It will be used for the general audience to get access to the data worked within the ITN (see section "Data Access") and to continue contributing data to the consortium (see section "Data Upload").
 
-Also, a Dementia Disease Map in CellDesigner in the standard System Biology Graphical Notation using previously established protocols will be generated in the future to generte novel hypotheses of early stage patobiology of dementia. Maps will be accessible online via the MINERVA platform for advanced navigation, zooming and visualisation.
+Also, a Dementia Disease Map in CellDesigner in the standard System Biology Graphical Notation using previously established protocols will be developed to generate novel hypotheses of early-stage pathobiology of dementia. Maps will be accessible online via the MINERVA platform for advanced navigation, zooming and visualisation (see section "Results").
 
+\
 Sources for this page are [available in Gitlab](https://git-r3lab.uni.lu/core-services/pages-jekyll-lcsb-template).
 If you are interested, have found any issues with the layout or have a helpful suggestion, you can also navigate to the [repository for theme](https://git-r3lab.uni.lu/core-services/jekyll-theme-lcsb-default).
+
 
 <!--
 # Setting up your web page
