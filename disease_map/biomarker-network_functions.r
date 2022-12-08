@@ -85,26 +85,28 @@ generate_color_sequence <- function(desired_number_of_colors) {
 # @return an igraph graph with edges containing the vertices and proper coloring
 ################################################################################
 prepare_graph_coloring_and_sizing_according_to_vertices <- function(graph, vertices_by_types, color_seq) {
-  graph <- color_and_size_vertices(graph, vertices_by_types, color_seq)
+  graph <- adjust_vertices_attributes_according_to_type(graph, vertices_by_types, color_seq)
   graph <- color_and_size_edges_based_on_vertices(graph, vertices_by_types, color_seq)
   return(graph)
 }
 
 ###########
-# Changes the colors and sizes of the vertices of the graph
+# Adjusts the attributes (color, size and type) of the vertices according to their type
 #
 # color_sequence should have at least 1 more element than vertices_by_types
 #
 # @return the colored and resized graph
 ###########
-color_and_size_vertices <- function(graph, vertices_by_types, color_sequence) {
+adjust_vertices_attributes_according_to_type <- function(graph, vertices_by_types, color_sequence) {
   length <- length(vertices_by_types)
   # First the color of vertices that are somehow not associated with anything
   V(graph)$color <- color_sequence[[1]]
   V(graph)$size <- 15
+  V(graph)$type <- "None"
   for (i in 1:length) {
     V(graph)[V(graph)$name %in% vertices_by_types[[i]]]$color <- color_sequence[[i + 1]]
     V(graph)[V(graph)$name %in% vertices_by_types[[i]]]$size <- 22
+    V(graph)[V(graph)$name %in% vertices_by_types[[i]]]$type <- names(vertices_by_types)[[i]]
   }
   return(graph)
 }
