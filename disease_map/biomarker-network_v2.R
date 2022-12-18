@@ -44,9 +44,21 @@ genes_ftd <- c("Q9H156", "Q9BQT9", "Q9BYH1", "Q03405", "Q9HCB6")
 genes_dlb <- c("P20711", "P06850", "P03956", "P09104")
 # for DLB
 
+# 25NOV2022
+genes_by_type <- list("AD" = genes_ad, "FTD"=genes_ftd, "DLB"=genes_dlb)
+# 25NOV2022
+type_list <- list("AD","FTD","DLB")
+
 opout <- op[op$source %in% genes | op$target %in% genes,]
 
 ig <- graph_from_edgelist(as.matrix(opout[,1:2]))
+
+## NEW 25NOV2022 - no longer working
+#draw_igraph(ig, genes_by_type, type_list)
+
+# 6DEC2022
+genes_by_types <- generate_all_vertex_type_combinations(genes_by_type)
+color_seq <- generate_color_sequence(length(genes_by_types) + 1)
 
 #######################################################
 # Legend for colors - color definitions               #
