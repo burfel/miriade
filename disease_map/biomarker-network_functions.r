@@ -75,7 +75,8 @@ generate_color_sequence <- function(desired_number_of_colors) {
 
 ################################################################################
 # Takes a graph and a list of sets of vertices according to all type combinations
-# and uses that list to assign colors to the vertices and edges according to type.
+# and uses that list to assign attributes (e.g. colors) to the vertices and edges 
+# according to type.
 #
 # @param graph 
 # @param vertices_by_types The list of sets of vertices of all combinations
@@ -84,7 +85,7 @@ generate_color_sequence <- function(desired_number_of_colors) {
 #
 # @return an igraph graph with edges containing the vertices and proper coloring
 ################################################################################
-prepare_graph_coloring_and_sizing_according_to_vertices <- function(graph, vertices_by_types, color_seq) {
+prepare_graph_attributes_according_to_vertices <- function(graph, vertices_by_types, color_seq) {
   graph <- adjust_vertices_attributes_according_to_type(graph, vertices_by_types, color_seq)
   graph <- color_and_size_edges_based_on_vertices(graph, vertices_by_types, color_seq)
   return(graph)
