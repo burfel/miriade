@@ -79,6 +79,12 @@ for (i in 1:length(interactions)) {
   graph_list[[i]] <- graph_from_edge_df_filtered_by_genes(
     interactions[[i]],
     source_col_index = 1,
-    target_col_index = 2) %>%
-    adjust_vertices_attributes_according_to_type(vertices_by_test, v_color_seq)
+    target_col_index = 2) 
 }
+unified_graph <- graph_list[[1]]
+for (i in 2:length(graph_list)) {
+  unified_graph <- union(unified_graph,graph_list[[i]])
+}
+unified_graph <- unified_graph %>%
+  adjust_vertices_attributes_according_to_type(vertices_by_test, v_color_seq)
+draw_igraph(unified_graph, extract_type_list_from_vertices_by_types(vertices_by_test), color_seq)
