@@ -25,6 +25,9 @@ miriade_uniprot_interactions <- translate_interactions_using_dictionary(
 # Produce a list of all UniProts in the file
 uniprots_miriade <- extract_all_distinct_objects(miriade_uniprot_interactions,
                                      c("UniProt_TO", "UniProt_FROM"))
+# Produce a list of all network objects
+network_objects_miriade <- extract_all_distinct_objects(miriade_interactions,
+                                    c("Network Object \"FROM\"", "Network Object \"TO\""))
 # DANGER! - Do not run locally. Too much for the poor machine
 # generate the igraph finally
 #ig <- graph_from_edge_df_filtered_by_genes(miriade_uniprot_interactions,
@@ -47,37 +50,3 @@ draw_igraph(ig, extract_type_list_from_vertices_by_types(vertices_by_types), col
 
 # 09DEC2022 - write the graph to file
 write_graph(ig, "/Users/felicia.burtscher/Documents/UL/GITHUB/miriade/disease_map/test-metacore-network.graphml", format = c("graphml"))
-
-#############
-## TEST UNIONING GRAPHS
-#############
-test_interactions <- miriade_uniprot_interactions[dqsample(nrow(miriade_uniprot_interactions), 20),]
-test_interactions2 <- miriade_uniprot_interactions[dqsample(nrow(miriade_uniprot_interactions), 20),]
-test_source_vector <- c("test_interactions", "test_interactions2")
-
-interactions <- list(test_interactions, test_interactions2)
-names(interactions) <- test_source_vector
-
-test_v1 <- unlist(list(test_interactions[[1]], test_interactions[[2]]))
-test_v2 <- unlist(list(test_interactions2[[1]], test_interactions2[[2]]))
-
-vertices_by_test <- generate_all_vertex_type_combinations(
-  list(
-    "test1" = test_v1,
-    "test2" = test_v2
-    ))
-v_color_seq <- generate_color_sequence(length(vertices_by_test) + 1)
-graph_list = list()
-for (i in 1:length(interactions)) {
-  graph_list[[i]] <- graph_from_edge_df_filtered_by_genes(
-    interactions[[i]],
-    source_col_index = 1,
-    target_col_index = 2) 
-}
-unified_graph <- graph_list[[1]]
-for (i in 2:length(graph_list)) {
-  unified_graph <- union(unified_graph,graph_list[[i]])
-}
-unified_graph <- unified_graph %>%
-  adjust_vertices_attributes_according_to_type(vertices_by_test, v_color_seq)
-draw_igraph(unified_graph, extract_type_list_from_vertices_by_types(vertices_by_test), color_seq)
