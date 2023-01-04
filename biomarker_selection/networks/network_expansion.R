@@ -13,7 +13,8 @@ miriade_genes <- readxl::read_xls(paste(from_metacore_path,
 miriade_interactions <- readxl::read_xls(paste(from_metacore_path, 
                                         "all-MIRIADE-biomarker-candidates_analyse-networks_interactions.xls", 
                                         sep="/"), skip = 2) %>%
-  dplyr::select(`Network Object \"FROM\"`, `Network Object \"TO\"`)
+  dplyr::select(`Network Object \"FROM\"`, `Network Object \"TO\"`) %>%
+  dplyr::distinct()
 
 miriade_uniprot_interactions <- translate_interactions_using_dictionary(
         interactions_df = miriade_interactions, 
@@ -22,10 +23,8 @@ miriade_uniprot_interactions <- translate_interactions_using_dictionary(
         dictionary_columns = c("Network Object Name", "SwissProt IDs"),
         new_interaction_names = c("UniProt_FROM", "UniProt_TO"))
 # Produce a list of all UniProts in the file
-uniprots_miriade <- union(
-  dplyr::distinct(miriade_uniprot_interactions, UniProt_TO)[["UniProt_TO"]],
-  dplyr::distinct(miriade_uniprot_interactions, UniProt_FROM)[["UniProt_FROM"]]
-  )
+uniprots_miriade <- extract_all_distinct_objects(miriade_uniprot_interactions,
+                                     c("UniProt_TO", "UniProt_FROM"))
 # DANGER! - Do not run locally. Too much for the poor machine
 # generate the igraph finally
 #ig <- graph_from_edge_df_filtered_by_genes(miriade_uniprot_interactions,

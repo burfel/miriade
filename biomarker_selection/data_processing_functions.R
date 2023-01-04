@@ -33,3 +33,23 @@ translate_interactions_using_dictionary <- function(interactions_df,
   }
   return(dplyr::distinct(new_df))
 }
+
+################################################################################
+# Takes a dataframe with objects of a certain type and the columns containing
+# those objects to return a list of all objects of the type
+#
+# @param df is the dataframe with the desired objects
+# @param object_columns names of all columns containing the desired objects
+#
+# @return a list with all distinct objects from the dataframe
+################################################################################
+extract_all_distinct_objects <- function(df, object_columns) {
+  all_values <- union(df[[object_columns[[1]]]], df[[object_columns[[2]]]])
+  length = length(object_columns)
+  if (length > 2) {
+    for (i in 3:length) {
+      all_values <- union(all_values, df[[object_columns[[i]]]])
+    }
+  }
+  return(all_values)
+}
