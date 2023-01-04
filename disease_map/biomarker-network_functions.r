@@ -145,6 +145,21 @@ add_source_to_edges <- function(graph, source) {
   return(graph)
 }
 
+###########
+# This function takes a union of two graphs with a source attribute in their
+# edges, and fixes the unified graph to have only one (correct) source
+# attribute in the edges
+#
+# @return the graph with the edge sources converged into
+#         one source attribute and the source1&source2 attributes removed
+###########
+converge_edge_sources <- function(graph) {
+  E(graph)[!is.na(E(graph)$source_1)]$source <- E(graph)[!is.na(E(graph)$source_1)]$source_1
+  E(graph)[!is.na(E(graph)$source_2)]$source <- E(graph)[!is.na(E(graph)$source_2)]$source_2
+  return(delete_edge_attr(graph, "source_1") %>%
+           delete_edge_attr("source_2"))
+}
+
 #######################################################
 # Extract a list of all combinations types               #
 #
