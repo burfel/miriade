@@ -133,6 +133,18 @@ color_and_size_edges_based_on_vertices <- function(graph, vertices_by_types, col
   return(graph)
 }
 
+###########
+# Adds the source attribute to the graph's edged.
+# This function is a thin wrapper to allow using the '%>%' operator
+# to perform this operation
+#
+# @return the graph with the source added to the edges
+###########
+add_source_to_edges <- function(graph, source) {
+  E(graph)$source <- source
+  return(graph)
+}
+
 #######################################################
 # Extract a list of all combinations types               #
 #
