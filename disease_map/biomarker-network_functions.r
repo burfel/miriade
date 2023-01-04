@@ -136,7 +136,10 @@ color_edges_based_on_vertices <- function(graph, vertices_by_types, color_sequen
 ###########
 # Changes the colors of the edges of the graph based on their source
 #
-# color_sequence should have at least 1 more element than sources
+# @param graph
+# @param sources the list of sources. In order to properly color edges that come
+#.       from more than one source use the expanded source list based on
+# @param color_sequence should have at least 1 more element than sources
 #
 # @return the colored graph
 ###########

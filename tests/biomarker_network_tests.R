@@ -52,11 +52,12 @@ should_produce_properly_colored_and_typed_graph_when_doing_union <-
           converge_edge_sources()
       }
     }
+    extended_source_list <- extract_type_list_from_vertices_by_types(vertices_by_test)
     unified_graph <- unified_graph %>%
       adjust_vertices_attributes_according_to_type(vertices_by_test, v_color_seq) %>%
-      color_edges_based_on_sources(test_sources, v_color_seq)
+      color_edges_based_on_sources(extended_source_list[-1], v_color_seq)
     if (should_draw_graph) {
-      draw_igraph(unified_graph, extract_type_list_from_vertices_by_types(vertices_by_test), v_color_seq)  
+      draw_igraph(unified_graph, extended_source_list, v_color_seq)
     }
     return(unified_graph)
   }
