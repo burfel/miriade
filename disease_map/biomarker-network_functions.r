@@ -113,13 +113,13 @@ adjust_vertices_attributes_according_to_type <- function(graph, vertices_by_type
 }
 
 ###########
-# Changes the colors and sizes of the edges of the graph
+# Changes the colors of the edges of the graph
 #
 # color_sequence should have at least 1 more element than vertices_by_types
 #
-# @return the colored and resized graph
-########### TODO: Figure out how to address all combinations of types
-color_and_size_edges_based_on_vertices <- function(graph, vertices_by_types, color_sequence) {
+# @return the colored graph
+###########
+color_edges_based_on_vertices <- function(graph, vertices_by_types, color_sequence) {
   length <- length(vertices_by_types)
   logical_indexing_lists <- generate_logical_indexing_lists(graph, vertices_by_types)
   
@@ -132,6 +132,8 @@ color_and_size_edges_based_on_vertices <- function(graph, vertices_by_types, col
   }
   return(graph)
 }
+
+
 
 ###########
 # Adds the source attribute to the graph's edged.
