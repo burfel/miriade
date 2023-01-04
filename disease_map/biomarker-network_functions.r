@@ -164,14 +164,25 @@ add_source_to_edges <- function(graph, source) {
 ###########
 # This function takes a union of two graphs with a source attribute in their
 # edges, and fixes the unified graph to have only one (correct) source
-# attribute in the edges
+# attribute in the edges.
+# This function also creates a union source if edges appear in both sources
+# under the assumption that all sources are unique
 #
 # @return the graph with the edge sources converged into
 #         one source attribute and the source1&source2 attributes removed
 ###########
 converge_edge_sources <- function(graph) {
-  E(graph)[!is.na(E(graph)$source_1)]$source <- E(graph)[!is.na(E(graph)$source_1)]$source_1
-  E(graph)[!is.na(E(graph)$source_2)]$source <- E(graph)[!is.na(E(graph)$source_2)]$source_2
+  exists_in_source1 <- !is.na(E(graph)$source_1)
+  exists_in_source2 <- !is.na(E(graph)$source_2)
+  only_in_source_1 <- exists_in_source1 & !exists_in_source2
+  only_in_source_2 <- exists_in_source2 & !exists_in_source1
+  in_both <- exists_in_source1 & exists_in_source2
+  E(graph)[only_in_source_1]$source <-
+    E(graph)[only_in_source_1]$source_1
+  E(graph)[only_in_source_2]$source <-
+    E(graph)[only_in_source_2]$source_2
+  E(graph)[in_both]$source <-
+    paste(E(graph)[in_both]$source_1, E(graph)[in_both]$source_2, sep = '+')
   return(delete_edge_attr(graph, "source_1") %>%
            delete_edge_attr("source_2"))
 }
