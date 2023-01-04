@@ -1,5 +1,5 @@
 library(dplyr)
-biomarker_network_functions_path <- "/Users/felicia.burtscher/Documents/UL/GITHUB/miriade/disease_map/biomarker-network_functions.R"
+biomarker_network_functions_path <- "/Users/felicia.burtscher/Documents/UL/GITHUB/miriade/functions/biomarker-network_functions.R"
 source(biomarker_network_functions_path)
 from_metacore_path <- "/Users/felicia.burtscher/Documents/UL/GITHUB/miriade/biomarker_selection/networks/from-metacore"
 miriade_genes <- readxl::read_xls(paste(from_metacore_path, 

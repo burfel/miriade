@@ -87,7 +87,7 @@ generate_color_sequence <- function(desired_number_of_colors) {
 ################################################################################
 prepare_graph_attributes_according_to_vertices <- function(graph, vertices_by_types, color_seq) {
   graph <- adjust_vertices_attributes_according_to_type(graph, vertices_by_types, color_seq)
-  graph <- color_and_size_edges_based_on_vertices(graph, vertices_by_types, color_seq)
+  graph <- color_edges_based_on_vertices(graph, vertices_by_types, color_seq)
   return(graph)
 }
 
@@ -225,7 +225,7 @@ draw_igraph <- function(graph, type_list, color_seq) {
                       weight.node.edge.dist = 0.2* (1 - edge_density(graph)))
   
   plot.igraph(graph, layout=l, 
-              edge.width=1, edge.arrow.size = 0.05, #edge.length = 10, 
+              edge.width=1, edge.arrow.size = 0.05, #edge.length = 10,
               vertex.label.cex=0.6, 
               vertex.label.family="Helvetica",
               vertex.label.font=1,

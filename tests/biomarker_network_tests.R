@@ -66,9 +66,9 @@ should_produce_properly_colored_and_typed_graph_when_doing_union <-
 # Default driver code for graph union test#
 ###########################################
 library(dplyr)
-biomarker_network_functions_path <- "/Users/felicia.burtscher/Documents/UL/GITHUB/miriade/disease_map/biomarker-network_functions.R"
+biomarker_network_functions_path <- "/Users/felicia.burtscher/Documents/UL/GITHUB/miriade/functions/biomarker-network_functions.R"
 source(biomarker_network_functions_path)
-data_processing_functions_path <- "/Users/felicia.burtscher/Documents/UL/GITHUB/miriade/biomarker_selection/data_processing_functions.R"
+data_processing_functions_path <- "/Users/felicia.burtscher/Documents/UL/GITHUB/miriade/functions/data_processing_functions.R"
 source(data_processing_functions_path)
 from_metacore_path <- "/Users/felicia.burtscher/Documents/UL/GITHUB/miriade/biomarker_selection/networks/from-metacore"
 miriade_interactions <- readxl::read_xls(paste(from_metacore_path, 
