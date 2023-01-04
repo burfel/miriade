@@ -51,5 +51,5 @@ extract_all_distinct_objects <- function(df, object_columns) {
       all_values <- union(all_values, df[[object_columns[[i]]]])
     }
   }
-  return(all_values)
+  return(na.omit(all_values))
 }
