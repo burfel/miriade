@@ -22,10 +22,6 @@ miriade_uniprot_interactions <- dplyr::inner_join(miriade_interactions, miriade_
                    by = c("Network Object \"TO\"" = "Network Object Name")) %>%
   dplyr::rename(UniProt_TO = `SwissProt IDs`) %>%
   dplyr::select(UniProt_FROM, UniProt_TO) %>%
-  # Separate the ';' delimited lists of UniProts into separate rows TWICE:
-  # once for the FROM column, and once for the TO column
-  tidyr::separate_rows(UniProt_FROM,sep=";") %>% 
-  tidyr::separate_rows(UniProt_TO,sep=";") %>%
   dplyr::distinct()
 # Produce a list of all UniProts in the file
 uniprots_miriade <- union(
