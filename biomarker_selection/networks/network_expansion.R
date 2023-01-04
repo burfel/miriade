@@ -15,14 +15,12 @@ miriade_interactions <- readxl::read_xls(paste(from_metacore_path,
                                         sep="/"), skip = 2) %>%
   dplyr::select(`Network Object \"FROM\"`, `Network Object \"TO\"`)
 
-miriade_uniprot_interactions <- dplyr::inner_join(miriade_interactions, miriade_genes, 
-                  by = c("Network Object \"FROM\"" = "Network Object Name")) %>%
-  dplyr::rename(UniProt_FROM = `SwissProt IDs`) %>%
-  dplyr::inner_join(miriade_genes, 
-                   by = c("Network Object \"TO\"" = "Network Object Name")) %>%
-  dplyr::rename(UniProt_TO = `SwissProt IDs`) %>%
-  dplyr::select(UniProt_FROM, UniProt_TO) %>%
-  dplyr::distinct()
+miriade_uniprot_interactions <- translate_interactions_using_dictionary(
+        interactions_df = miriade_interactions, 
+        interaction_columns = c("Network Object \"FROM\"", "Network Object \"TO\""),
+        dictionary_df = miriade_genes,
+        dictionary_columns = c("Network Object Name", "SwissProt IDs"),
+        new_interaction_names = c("UniProt_FROM", "UniProt_TO"))
 # Produce a list of all UniProts in the file
 uniprots_miriade <- union(
   dplyr::distinct(miriade_uniprot_interactions, UniProt_TO)[["UniProt_TO"]],
