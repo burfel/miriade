@@ -1,6 +1,7 @@
 ###########
-# Tests whether the graph functions from 'biomarker-network_functions'
-# do their job correctly when performing a union
+# This auxiliary function splits an interaction dataframe into randomly
+# sampled parts, annotates each part as a source and then performs a union
+# on the parts and possibly draws it
 #
 # @param source_df A dataframe convertible to a graph via 
 #        graph_from_edge_df_filtered_by_genes
@@ -15,7 +16,7 @@
 #
 # @return the unified_graph
 ###########
-should_produce_properly_colored_and_typed_graph_when_doing_union <-
+split_dataframe_and_rejoin_resulting_graphs <-
   function(source_df, source_and_target_columns,
            number_of_parts = 2, size_of_parts = 20,
            should_draw_graph = FALSE) {
@@ -55,6 +56,30 @@ should_produce_properly_colored_and_typed_graph_when_doing_union <-
     return(unified_graph)
   }
 
+###########
+# This test tests whether the graph functions from 'biomarker-network_functions'
+# do their job correctly when performing a union.
+# It optionally draws the graph
+# It returns a dataframed version of the graph for easier inspection
+###########
+should_produce_properly_colored_and_typed_graph_when_doing_union <-
+  function(number_of_parts = 2, size_of_parts = 20,
+           should_draw_graph = FALSE) {
+from_metacore_path <- "/Users/felicia.burtscher/Documents/UL/GITHUB/miriade/biomarker_selection/networks/from-metacore"
+miriade_interactions <- readxl::read_xls(paste(from_metacore_path, 
+                                               "all-MIRIADE-biomarker-candidates_analyse-networks_interactions.xls", 
+                                               sep="/"), skip = 2) %>%
+  dplyr::select(`Network Object \"FROM\"`, `Network Object \"TO\"`) %>%
+  dplyr::distinct()
+source_and_target_columns <- data.frame(index = c(1,2), name = c("Network Object \"FROM\"", "Network Object \"TO\""))
+test_unified_graph <- split_dataframe_and_rejoin_resulting_graphs(miriade_interactions,
+                                                                 source_and_target_columns,
+                                                                 number_of_parts,
+                                                                 size_of_parts,
+                                                                 should_draw_graph)
+return(as_data_frame(test_unified_graph))
+}
+
 ###########################################
 # Default driver code for graph union test#
 ###########################################
@@ -63,15 +88,4 @@ biomarker_network_functions_path <- "/Users/felicia.burtscher/Documents/UL/GITHU
 source(biomarker_network_functions_path)
 data_processing_functions_path <- "/Users/felicia.burtscher/Documents/UL/GITHUB/miriade/functions/data_processing_functions.R"
 source(data_processing_functions_path)
-from_metacore_path <- "/Users/felicia.burtscher/Documents/UL/GITHUB/miriade/biomarker_selection/networks/from-metacore"
-miriade_interactions <- readxl::read_xls(paste(from_metacore_path, 
-                                               "all-MIRIADE-biomarker-candidates_analyse-networks_interactions.xls", 
-                                               sep="/"), skip = 2) %>%
-  dplyr::select(`Network Object \"FROM\"`, `Network Object \"TO\"`) %>%
-  dplyr::distinct()
-source_and_target_columns <- data.frame(index = c(1,2), name = c("Network Object \"FROM\"", "Network Object \"TO\""))
-test_unified_graph <- should_produce_properly_colored_and_typed_graph_when_doing_union(miriade_interactions,
-                                                                 source_and_target_columns,
-                                                                 number_of_parts = 3,
-                                                                 size_of_parts = 100)
-data_framed_graph <- as_data_frame(test_unified_graph)
+data_framed_graph <- should_produce_properly_colored_and_typed_graph_when_doing_union()
