@@ -23,6 +23,9 @@ graph_from_edge_df_filtered_by_genes <- function(edge_df, vertex_list = NULL,
     filtered_edge_df <- edge_df[edge_df[,source_col_index] %in% vertex_list 
                                 | edge_df[,target_col_index] %in% vertex_list,]
   }
+  # There was a bug where the presence of NA caused an error.
+  # Will therefore remove any edge that has NA as a vertex
+  filtered_edge_df <- na.omit(filtered_edge_df)
   graph <- graph_from_edgelist(as.matrix(
       filtered_edge_df[,c(source_col_index,target_col_index)]))
   return(graph)
