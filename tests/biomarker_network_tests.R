@@ -35,7 +35,7 @@ should_produce_properly_colored_and_typed_graph_when_doing_union <-
     
     vertices_by_test <- generate_all_vertex_type_combinations(test_vertices)
     v_color_seq <- generate_color_sequence(length(vertices_by_test) + 1)
-    
+
     graph_list = list()
     for (i in 1:number_of_parts) {
       graph_list[[i]] <- graph_from_edge_df_filtered_by_genes(
@@ -45,17 +45,10 @@ should_produce_properly_colored_and_typed_graph_when_doing_union <-
         add_source_to_edges(test_sources[[i]])
     }
 
-    unified_graph <- graph_list[[1]]
-    if (number_of_parts > 1) {
-      for (i in 2:length(graph_list)) {
-        unified_graph <- union(unified_graph,graph_list[[i]]) %>%
-          converge_edge_sources()
-      }
-    }
     extended_source_list <- extract_type_list_from_vertices_by_types(vertices_by_test)
-    unified_graph <- unified_graph %>%
-      adjust_vertices_attributes_according_to_type(vertices_by_test, v_color_seq) %>%
-      color_edges_based_on_sources(extended_source_list[-1], v_color_seq)
+
+    unified_graph <- unify_graphs(graph_list, vertices_by_test,
+                                  extended_source_list[-1], v_color_seq)
     if (should_draw_graph) {
       draw_igraph(unified_graph, extended_source_list, v_color_seq)
     }

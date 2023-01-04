@@ -142,3 +142,34 @@ draw_igraph <- function(graph, type_list, color_seq) {
          fill=color_seq, border=NA,
          title = "Vertices")
 }
+
+###########
+# This function takes a list of graphs and generates a unified graph
+# with the correct sources for the edges
+# and the correct coloring of the vertices and edges
+#
+# @param graph_list
+# @param vertices_by_type named list of vertices by their extended type
+# @param extended_source_list
+# @param color_sequence at least as big as
+#        max(length(vertices_by_type), length(extended_source_list))
+#
+# @return the graph with the edge sources converged into
+#         one source attribute and the source1&source2 attributes removed
+###########
+unify_graphs <- function(graph_list, vertices_by_type, extended_source_list,
+                         color_sequence) {
+  number_of_graphs <- length(graph_list)
+  unified_graph <- graph_list[[1]]
+  if (number_of_graphs > 1) {
+    for (i in 2:number_of_graphs) {
+      unified_graph <- union(unified_graph,graph_list[[i]]) %>%
+        converge_edge_sources()
+    }
+  }
+
+  unified_graph <- unified_graph %>%
+    adjust_vertices_attributes_according_to_type(vertices_by_type, color_sequence) %>%
+    color_edges_based_on_sources(extended_source_list, color_sequence)
+  return(unified_graph)
+}
