@@ -5,7 +5,7 @@
 ## Author: Marek Ostaszewski, Felicia Burtscher
 ##################################################
 
-setwd("~/Documents/_PhD/UNILUX/CODING/miriade/biomarker_selection")
+# Removed setwd, but the paths in the file are WRONG. Fix before use
 
 library(reshape2)
 library("scales")

@@ -1,22 +1,21 @@
 library(dplyr)
-biomarker_network_functions_path <- "/Users/felicia.burtscher/Documents/UL/GITHUB/miriade/functions/biomarker-network_functions.R"
-source(biomarker_network_functions_path)
-data_processing_functions_path <- "/Users/felicia.burtscher/Documents/UL/GITHUB/miriade/functions/data_processing_functions.R"
-source(data_processing_functions_path)
-from_metacore_path <- "/Users/felicia.burtscher/Documents/UL/GITHUB/miriade/biomarker_selection/networks/from-metacore"
-miriade_genes <- readxl::read_xls(paste(from_metacore_path, 
-                                        "all-MIRIADE-biomarker-candidates_analyse-networks_genes.xls", 
-                                        sep="/"), skip = 2) %>%
+library(here)
+source(here("functions", "biomarker-network_functions.R"))
+source(here("functions", "data_processing_functions.R"))
+from_metacore_path <- here("biomarker_selection", "networks", "from-metacore")
+miriade_genes <- readxl::read_xls(here(from_metacore_path, 
+                                        "all-MIRIADE-biomarker-candidates_analyse-networks_genes.xls"), 
+                                        skip = 2) %>%
   dplyr::select(`SwissProt IDs`, `Network Object Name`) %>%
   # Remove useless "No ID" rows
   dplyr::filter(`SwissProt IDs`!="No ID") %>%
   dplyr::distinct(`Network Object Name`, .keep_all = TRUE)
 
-miriade_interactions <- readxl::read_xls(paste(from_metacore_path, 
-                                        "all-MIRIADE-biomarker-candidates_analyse-networks_interactions.xls", 
-                                        sep="/"), skip = 2) %>%
+miriade_interactions <- readxl::read_xls(here(from_metacore_path, 
+                                        "all-MIRIADE-biomarker-candidates_analyse-networks_interactions.xls"), 
+                                        skip = 2) %>%
   dplyr::select(`Network Object \"FROM\"`, `Network Object \"TO\"`) %>%
-  dplyr::distinct()
+  dplyr::distinct() # 5 NAs
 
 miriade_uniprot_interactions <- translate_interactions_using_dictionary(
         interactions_df = miriade_interactions, 
@@ -56,11 +55,11 @@ library(dqrng)
 ###########################################################################
 # Taking the csf metacore interactions and combining with the miriade ones
 ###########################################################################
-csf_interactions <- readxl::read_xls(paste(from_metacore_path,
-                                           "pooled-CSF-proteins_interactions.xls",
-                                           sep="/"), skip = 2) %>%
+csf_interactions <- readxl::read_xls(here(from_metacore_path,
+                                           "pooled-CSF-proteins_interactions.xls"),
+                                           skip = 2) %>%
   dplyr::select(`Network Object \"FROM\"`, `Network Object \"TO\"`) %>%
-  dplyr::distinct()
+  dplyr::distinct() # 21 NAs
 # Produce a list of all network objects for csf
 network_objects_csf <- extract_all_distinct_objects(csf_interactions,
                                                         c("Network Object \"FROM\"", "Network Object \"TO\""))
@@ -90,7 +89,7 @@ unified_graph <- unify_graphs(graph_list, vertices_by_source,
                               extended_source_list[-1], color_sequence)
 
 write_graph(unified_graph,
-            "/Users/felicia.burtscher/Documents/UL/GITHUB/miriade/biomarker_selection/networks/miriade_csf.graphml",
+            here("biomarker_selection", "networks", "/miriade_csf.graphml"),
             format = "graphml")
 
 data_framed_graph <- igraph::as_data_frame(unified_graph)

@@ -1,6 +1,5 @@
-functions_path <- "/Users/felicia.burtscher/Documents/UL/GITHUB/miriade/functions/"
-source(paste(functions_path, "graph_vertices_functions.R", sep = "/"))
-source(paste(functions_path, "graph_edges_functions.R", sep = "/"))
+source(here("functions", "graph_vertices_functions.R"))
+source(here("functions", "graph_edges_functions.R"))
 ################################################################################
 # Takes an edge dataframe and extracts from it a graph with edges where at
 # least one node is in the vertex_list
