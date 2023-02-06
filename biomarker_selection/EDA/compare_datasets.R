@@ -9,6 +9,8 @@ options(stringsAsFactors = F)
 library(dplyr)
 library(readxl)
 library(ggplot2)
+library(here)
+source(here("biomarker_selection", "EDA", "significance_olink_prep.R"))
 
 # Read the KTH
 kth <- read.table("/Users/felicia.burtscher/Documents/UL/DATASETS/KTH/cleaned_KTH_entries.tsv", sep = "\t", header = T,
