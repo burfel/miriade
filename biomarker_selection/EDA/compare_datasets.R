@@ -4,11 +4,6 @@
 ## Date: 03.10.2022
 ## Author: Felicia Burtscher
 ##################################################
-options(stringsAsFactors = F)
-
-library(dplyr)
-library(readxl)
-library(ggplot2)
 library(here)
 source(here("biomarker_selection", "EDA", "significance_olink_prep.R"))
 
@@ -187,3 +182,25 @@ ftd_olink_mspec_intersection_significant_in_both_datasets <-
                     suffix = c("_olink", "_mspec")) %>%
   dplyr::filter(p.val_olink <= 0.05 & p.val_mspec <=0.05)
 remove(preprocessed_olink_mspec_ftd)
+
+# Now adni and kth
+preprocessed_adni_and_kth <- preprocess_datasets(
+  datasets = list(adni,kth),
+  should_filter_by_disease = c(FALSE,FALSE))
+alz_adni_kth <- bind_datasets_together(preprocessed_adni_and_kth) %>%
+  dplyr::mutate(Source = case_when(Source == 1 ~ 'adni', Source == 2 ~ 'kth'))
+alz_adni_kth_intersection_list <-
+  filter_according_to_UniProt_masks(alz_adni_kth, preprocessed_adni_and_kth)
+alz_adni_kth_intersection_uniprots <- extract_unique_uniprots(alz_adni_kth_intersection_list)
+remove(preprocessed_adni_and_kth)
+
+# Now emif and kth
+preprocessed_emif_and_kth <- preprocess_datasets(
+  datasets = list(emif,kth),
+  should_filter_by_disease = c(FALSE,FALSE))
+alz_emif_kth <- bind_datasets_together(preprocessed_emif_and_kth) %>%
+  dplyr::mutate(Source = case_when(Source == 1 ~ 'emif', Source == 2 ~ 'kth'))
+alz_emif_kth_intersection_list <-
+  filter_according_to_UniProt_masks(alz_emif_kth, preprocessed_emif_and_kth)
+alz_emif_kth_intersection_uniprots <- extract_unique_uniprots(alz_emif_kth_intersection_list)
+remove(preprocessed_emif_and_kth)
