@@ -1,5 +1,10 @@
+library(here)
+source(here("functions", "data_processing_functions.R"))
+
+datasets_root_directory <- define_datasets_root()
+
 ### Read the VUMC Olink biomarkers
-vumc_ol <- read.table("/Users/felicia.burtscher/Documents/UL/DATASETS/Olink/20201216_OLINK_Data/cleaned_VUMC_olink.tsv",
+vumc_ol <- read.table(file.path(datasets_root_directory, "Olink/20201216_OLINK_Data/cleaned_VUMC_olink.tsv"),
                       sep = "\t", header = T,
                       quote = "") # 'quote' needed due to a special sign in 'Name'
 

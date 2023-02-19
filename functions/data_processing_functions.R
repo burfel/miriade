@@ -53,3 +53,23 @@ extract_all_distinct_objects <- function(df, object_columns) {
   }
   return(na.omit(all_values))
 }
+
+################################################################################
+#' Define data sets root
+#'
+#' This opens up a dialog to choose the root directory for data sets in one
+#' of two cases:
+#' 1) If the variable datasets_root_directory doesn't exist
+#' 2) If it does exist, the user is prompted if they want to redefine it and
+#'    they type in 'y' and press enter
+#'
+#' @return The path for the directory chosen as the root for the data sets
+################################################################################
+define_datasets_root <- function() {
+  if(exists("datasets_root_directory")
+     && !identical(readline(prompt = "datasets_root_directory already exists. If you want to redefine it, type 'y' and press enter: \n"), 'y')) {
+    return(datasets_root_directory)
+  }
+  # Open a file dialog to store the root directory of all data sets
+  return(choose.dir(caption = "Choose the root of all datasets"))
+}

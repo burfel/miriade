@@ -7,23 +7,29 @@
 ##################################################
 
 options(stringsAsFactors = F)
+library(here)
+
+source(here("functions", "data_processing_functions.R"))
+
+datasets_root_directory <- define_datasets_root()
 
 ### Read the harmonised, annotated biomarkers
 # annotated_BMs <- read.table("_notgit/annotated_candidate_biomarkers.tsv", sep = "\t", header = T)
-annotated_BMs <- read.table("/Users/felicia.burtscher/Documents/UL/DATASETS/annotated_candidate_biomarkers.tsv", sep = "\t", header = T)
+annotated_BMs <- read.table(file.path(datasets_root_directory, "annotated_candidate_biomarkers.tsv"),
+                            sep = "\t", header = T)
 
 library(dplyr)
 
 ### DisGeNet
 ### Read the DisGeNET file, can be replaced with an API call for better reproducibility (as any changes are not captured in .tsv file)
 ### Use only the C10 mapping, "Neurological disorders" and score > 0.1
-# dgn_c10 <- read.table("_notgit/knowledge_bases/all_gene_disease_associations.tsv", 
-dgn_c10 <- read.table("/Users/felicia.burtscher/Documents/UL/DATASETS/knowledge_bases/curated_gene_disease_associations.tsv", 
+# dgn_c10 <- read.table("_notgit/knowledge_bases/all_gene_disease_associations.tsv",
+dgn_c10 <- read.table(file.path(datasets_root_directory, "knowledge_bases/curated_gene_disease_associations.tsv"),
                       sep = "\t", quote = "", comment.char = "", header = T) %>%
   dplyr::filter(grepl("(^C10;)|(^C10$)|(;C10$)|(;C10;)", diseaseClass) & score > 0.3)
-### Integrate with the main table, count how many hits each of the BMs has  
-annotated_BMs <- dplyr::mutate(annotated_BMs, 
-                                DGN_hits = sapply(SYMBOL, 
+### Integrate with the main table, count how many hits each of the BMs has
+annotated_BMs <- dplyr::mutate(annotated_BMs,
+                                DGN_hits = sapply(SYMBOL,
                                                   function(x) sum(dgn_c10$geneSymbol == x)))
 
 ### Disease Maps
@@ -51,7 +57,7 @@ ad_ups <- wrap_map("https://minerva-dev.lcsb.uni.lu/minerva/api/","alzpath_8APR"
 ### A combined look-up table
 dm_ups <- table(unlist(c(pd_ups, ag_ups, ad_ups)))
 
-### Integrate with the main table  
+### Integrate with the main table
 annotated_BMs <- dplyr::mutate(annotated_BMs, 
                                DMaps_hits = sapply(UniProt, function(x) dm_ups[x])) %>%
   dplyr::mutate(DMaps_hits = ifelse(is.na(DMaps_hits), 0, DMaps_hits)) ### Clean up the NAs
@@ -60,7 +66,6 @@ sort_table <- function(bm_table, dis) {
   dplyr::filter(bm_table, disease %in% dis) %>%
     arrange(adj.p, desc(DGN_hits), desc(DMaps_hits))
 }
-         
 
 alz_bms <- sort_table(annotated_BMs, "ALZ")
 ftd_bms <- sort_table(annotated_BMs, "FTD")
@@ -72,22 +77,24 @@ com_bms <- sort_table(annotated_BMs, c("ALZ,FTD,DLB","ALZ,FTD","FTD,DLB"))
 ###
 
 # hpa_brain_gtex <- read.table("_notgit/rna_brain_gtex.tsv", sep = "\t", header = T) %>%
-hpa_brain_gtex <- read.table("/Users/felicia.burtscher/Documents/UL/DATASETS/HPA/rna_brain_gtex.tsv", sep = "\t", header = T) %>%
+hpa_brain_gtex <- read.table(file.path(datasets_root_directory, "HPA/rna_brain_gtex.tsv"),
+                             sep = "\t", header = T) %>%
   dplyr::filter(!(Brain.region %in% c("amygdala", "pituitary gland", "retina")))
 # hpa_brain_fant <- read.table("_notgit/rna_brain_fantom.tsv", sep = "\t", header = T) %>%
-hpa_brain_fant <- read.table("/Users/felicia.burtscher/Documents/UL/DATASETS/HPA/rna_brain_fantom.tsv", sep = "\t", header = T) %>%
-  dplyr::filter(!(Brain.region %in% c("amygdala", "pituitary gland", "retina", 
+hpa_brain_fant <- read.table(file.path(datasets_root_directory, "HPA/rna_brain_fantom.tsv"),
+                             sep = "\t", header = T) %>%
+  dplyr::filter(!(Brain.region %in% c("amygdala", "pituitary gland", "retina",
                                       "medulla oblongata", "pons")))
 
-### Get HPA-GTEX entries that have values >= 3, but not those where "spinal cord" has the maximum expression 
-hpa_brain_gtex_genes <- dplyr::group_by(hpa_brain_gtex, Gene, Gene.name) %>% 
+### Get HPA-GTEX entries that have values >= 3, but not those where "spinal cord" has the maximum expression
+hpa_brain_gtex_genes <- dplyr::group_by(hpa_brain_gtex, Gene, Gene.name) %>%
   dplyr::filter(max(nTPM) >= 3) %>%
   dplyr::select(Gene.name) %>%
   dplyr::distinct() %>% pull()
 
 library(OmnipathR)
 op_narrow <- OmnipathR::import_all_interactions() %>%
-  dplyr::filter(consensus_direction == 1 & n_references > 1 & (consensus_inhibition + consensus_stimulation) > 0) %>% 
+  dplyr::filter(consensus_direction == 1 & n_references > 1 & (consensus_inhibition + consensus_stimulation) > 0) %>%
   dplyr::select(-starts_with("consensus_"), -starts_with("is_"))
 
 library(igraph)
@@ -121,7 +128,7 @@ combined_analysis <- function(bms, adj.p.cutoff = 0.1) {
   enrc <- enrichR::enrichr(bms$SYMBOL, databases = pathways)
   kegg <- dplyr::filter(enrc$KEGG_2021_Human, Adjusted.P.value < adj.p.cutoff & !grepl(kegg_reject,Term))
   ### Turn pathway-genes (one-many) association table into a flat pathway-gene (one-one) table
-  kegg_flat <- do.call(rbind, apply(kegg, 1, function(x) data.frame(Term = x["Term"], 
+  kegg_flat <- do.call(rbind, apply(kegg, 1, function(x) data.frame(Term = x["Term"],
                                                                     Genes = unlist(strsplit(x["Genes"], split = ";")),
                                                                     row.names = NULL)))
   ### Use the flat table to compute pathway hits and pathway names per gene
@@ -138,14 +145,14 @@ combined_analysis <- function(bms, adj.p.cutoff = 0.1) {
   ### Use the flat table to compute pathway hits and pathway names per gene
   bms <- dplyr::mutate(bms, Reactome_hits = sapply(ENTREZID, function(x) sum(reac_flat$geneID == x))) %>%
     dplyr::mutate(bms, Reactome_pathways = sapply(ENTREZID, function(x) paste(with(reac_flat, Description[geneID == x]), collapse = ",")))
-  
+
   ### OmniPath connectivity
   bms_g <- op_graph(op_narrow, bms)
-  
+
   # ### Use the graph degree table to enrich the table, preferred over "merge"
   # bms <- dplyr::mutate(bms, OmniPath_out = sapply(SYMBOL, function(x) bms_g$inout[x,2])) %>%
   #   dplyr::mutate(bms, OmniPath_in = sapply(SYMBOL, function(x) bms_g$inout[x,3]))
-  
+
   ### Wrap things up
   return(list(kegg = kegg, reac = reac, opco = bms_g, enriched_bms = bms))
 }
@@ -190,9 +197,11 @@ ftd_tissues <- lapply(ftd_prep_bms$UniProt, function(x) fromJSON(paste0(proteind
 
 ### Source: Human Protein Atlas, https://www.proteinatlas.org/about/download
 # hpa_ihch_tissues <- read.table("_notgit/normal_tissue.tsv", sep = "\t", header = T)
-hpa_ihch_tissues <- read.table("/Users/felicia.burtscher/Documents/UL/DATASETS/HPA/normal_tissue.tsv", sep = "\t", header = T)
+hpa_ihch_tissues <- read.table(file.path(datasets_root_directory, "HPA/normal_tissue.tsv"),
+                               sep = "\t", header = T)
 # hpa_rna_tissues <- read.table("_notgit/rna_tissue_consensus.tsv", sep = "\t", header = T)
-hpa_rna_tissues <- read.table("/Users/felicia.burtscher/Documents/UL/DATASETS/HPA/rna_tissue_consensus.tsv", sep = "\t", header = T)
+hpa_rna_tissues <- read.table(file.path(datasets_root_directory, "HPA/rna_tissue_consensus.tsv"),
+                              sep = "\t", header = T)
 
 table(hpa_ihch_tissues$Reliability)
 

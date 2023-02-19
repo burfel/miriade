@@ -1,8 +1,11 @@
 library(here)
 source(here("functions", "histogram_functions.R"))
+source(here("functions", "data_processing_functions.R"))
+
+datasets_root_directory <- define_datasets_root()
 
 ### read the VUMC Olink cohort file
-vumc_olink_path <- "/Users/felicia.burtscher/Documents/UL/DATASETS/Olink/OLINK basic data files/clin_bl_basic_04022020.csv"
+vumc_olink_path <- file.path(datasets_root_directory, "Olink/OLINK basic data files/clin_bl_basic_04022020.csv")
 olink_cohort <- read.table(vumc_olink_path, sep = ",", header = T)
 
 # select the three columns and filter out anything not the 3 diseases (AD, DLB or FTD)
@@ -58,7 +61,7 @@ age_and_sex_count_hist <- make_histogram_plots(age_sex_per_disease,
 age_and_sex_count_hist
 
 # Samey for KTH
-kth_path <- "/Users/felicia.burtscher/Documents/UL/DATASETS/KTH/KTH AD dataset for MIRIADE biomarker selection sample info and results.csv"
+kth_path <- file.path(datasets_root_directory, "KTH/KTH AD dataset for MIRIADE biomarker selection sample info and results.csv")
 kth_age_sex_disease <- read.table(kth_path, sep = ";", fileEncoding = "UTF-8",
                                   header = T) %>%
   dplyr::select(Class, Diagnosis, Age, Gender, Tau, Ptau, Ab42, ApoE4, MMSE_score)
@@ -87,7 +90,7 @@ kth_age_and_sex_count_hist <- make_histogram_plots(kth_age_sex_disease,
 kth_age_and_sex_count_hist
 
 #Samey for emif
-emif_path <- "/Users/felicia.burtscher/Documents/UL/DATASETS/EMIF-AD MBD Study/Clinical_EMIFMBD_MIRIADE.csv"
+emif_path <- file.path(datasets_root_directory, "EMIF-AD MBD Study/Clinical_EMIFMBD_MIRIADE.csv")
 emif_age_sex_disease <- read.table(emif_path, sep = ";", fileEncoding = "UTF-8",
                                    header = T, dec = ",") %>%
   dplyr::filter(Age != "" & Diagnosis !="") %>%

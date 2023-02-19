@@ -10,10 +10,15 @@ library(reshape)
 library(dplyr)
 library(stats)
 library(purrr)
+library(here)
+
+source(here("functions", "data_processing_functions.R"))
+
+datasets_root_directory <- define_datasets_root()
 
 ### Read the table
 # tab <- readxl::read_xlsx("_notgit/KTH/KTH AD dataset for MIRIADE biomarker selection sample info and results.xlsx")
-tab <- readxl::read_xlsx("/Users/felicia.burtscher/Documents/UL/DATASETS/KTH/KTH AD dataset for MIRIADE biomarker selection sample info and results.xlsx")
+tab <- readxl::read_xlsx(file.path(datasets_root_directory, "KTH/KTH AD dataset for MIRIADE biomarker selection sample info and results.xlsx"))
 
 ### Change the names into HGNC symbols (prefixes)
 colnames(tab) <- sapply(colnames(tab), function(n) strsplit(n, "_")[[1]][1])
@@ -32,9 +37,9 @@ tab2 <- reshape2::melt(tab, id = 1:9, variable.name = "HGNC_Symbol", value.name 
 ### A helper function to calculate Kruskal-Wallis for all the Diagnoses in the table, given the hgnc symbol
 kw_for_diagnoses <- function(hgnc, table) {
   ### This *magic* one-liner filters by 'hgnc', splits 'median_ab_readout' by 'Diagnosis'
-  kw_tibbles <- tibble::as_tibble(table) %>% 
-    dplyr::filter(HGNC_Symbol == hgnc) %>%                          
-    dplyr::select(Diagnosis, median_ab_readout) %>% 
+  kw_tibbles <- tibble::as_tibble(table) %>%
+    dplyr::filter(HGNC_Symbol == hgnc) %>%
+    dplyr::select(Diagnosis, median_ab_readout) %>%
     dplyr::group_split(Diagnosis, .keep = FALSE)
   ### We need to unlist the tibbles from the 'group_split' to run the kruskal.test
   stats::kruskal.test(lapply(kw_tibbles, unlist))$p.value
@@ -54,9 +59,9 @@ sub_kw <- dplyr::filter(tab2, HGNC_Symbol %in% kw_biomarkers)
 ### A helper function to calculate pairwise Wilcoxon tests for the given list of
 ### group pairs. This function is specific for the variable/value names assigned in reshape2::melt, above
 test_pairwise_wilcoxon <- function(df, groups) {
-  return(sapply(groups, function(g) with(df, 
+  return(sapply(groups, function(g) with(df,
                                          stats::wilcox.test(median_ab_readout[Diagnosis == g[1]],
-                                                            median_ab_readout[Diagnosis == g[2]], 
+                                                            median_ab_readout[Diagnosis == g[2]],
                                                             exact = F)$p.value)))
 }
 
@@ -67,7 +72,7 @@ pairs <- unique(tab2$Diagnosis) %>%
 
 
 ### Calculate Wilcoxon pairwise tests
-sub_kw_wilcox <- sapply(unique(sub_kw$HGNC_Symbol), 
+sub_kw_wilcox <- sapply(unique(sub_kw$HGNC_Symbol),
                         function(hgnc) test_pairwise_wilcoxon(sub_kw[sub_kw$HGNC_Symbol == hgnc,], pairs))
 colnames(sub_kw_wilcox) <- unique(sub_kw$HGNC_Symbol)
 
@@ -78,7 +83,7 @@ colnames(sub_kw_adj_wilcox) <- colnames(sub_kw_wilcox)
 
 ### Select only Control vs AD
 ### Construct the final table
-final <- data.frame(Name = colnames(sub_kw_wilcox), 
+final <- data.frame(Name = colnames(sub_kw_wilcox),
                     p.val = sub_kw_wilcox["Control_vs_AD",],
                     adj.p = sub_kw_adj_wilcox["Control_vs_AD",],
                     disease = "ALZ")
@@ -92,19 +97,19 @@ if(!("ensembl_h" %in% ls())) {
   ensembl_h = useMart(biomart = "ensembl", dataset = "hsapiens_gene_ensembl")
 }
 
-id_mapping <- getBM(attributes = c("hgnc_symbol", "uniprotswissprot"), 
+id_mapping <- getBM(attributes = c("hgnc_symbol", "uniprotswissprot"),
                     filters = "hgnc_symbol",
-                    values = final$Name, 
+                    values = final$Name,
                     mart = ensembl_h)
 
 id_mapping <- dplyr::filter(id_mapping, uniprotswissprot != "")
 
 ### Add UniProt ids based on the HGNCs in the Name
-final <- cbind(UniProt = sapply(final$Name, function(x) with(id_mapping, uniprotswissprot[hgnc_symbol == x][1])), 
+final <- cbind(UniProt = sapply(final$Name, function(x) with(id_mapping, uniprotswissprot[hgnc_symbol == x][1])),
                final)
 
-# write.table(final, file = "_notgit/cleaned_KTH_entries.tsv", 
+# write.table(final, file = "_notgit/cleaned_KTH_entries.tsv",
 #             sep = "\t", quote = F, row.names = F, col.names = T)
-write.table(final, file = "/Users/felicia.burtscher/Documents/UL/DATASETS/KTH/cleaned_KTH_entries.tsv", 
+write.table(final, file = file.path(datasets_root_directory, "KTH/cleaned_KTH_entries.tsv"),
             sep = "\t", quote = F, row.names = F, col.names = T)
 

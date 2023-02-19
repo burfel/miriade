@@ -8,13 +8,13 @@ library(here)
 source(here("biomarker_selection", "EDA", "significance_olink_prep.R"))
 
 # Read the KTH
-kth <- read.table("/Users/felicia.burtscher/Documents/UL/DATASETS/KTH/cleaned_KTH_entries.tsv",
+kth <- read.table(file.path(datasets_root_directory, "KTH/cleaned_KTH_entries.tsv"),
                   sep = "\t", header = T, quote = "")
-adni <- read.table("/Users/felicia.burtscher/Documents/UL/DATASETS/Brain 2020 AD/cleaned_ADNI_entries.tsv",
+adni <- read.table(file.path(datasets_root_directory, "Brain 2020 AD/cleaned_ADNI_entries.tsv"),
                    sep = "\t", header = T, quote = "")
-emif <- read.table("/Users/felicia.burtscher/Documents/UL/DATASETS/Brain 2020 AD/cleaned_EMIF_entries.tsv",
+emif <- read.table(file.path(datasets_root_directory, "Brain 2020 AD/cleaned_EMIF_entries.tsv"),
                    sep = "\t", header = T, quote = "")
-mspec <- read.table("/Users/felicia.burtscher/Documents/UL/DATASETS/VUMC/cleaned_VUMC_mspec.tsv",
+mspec <- read.table(file.path(datasets_root_directory, "VUMC/cleaned_VUMC_mspec.tsv"),
                     sep = "\t", header = T, quote = "")
 
 # Preprocess datasets to have the unified format of UniProt and Pvalue, possibly after filtering

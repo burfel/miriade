@@ -10,13 +10,18 @@ library(reshape)
 library(dplyr)
 library(stats)
 library(purrr)
+library(here)
+
+source(here("functions", "data_processing_functions.R"))
+
+datasets_root_directory <- define_datasets_root()
 
 ### Read the table
 # tab <- readxl::read_xlsx("_notgit/UNIPG/Metabolomic data.xlsx") %>%
 #   dplyr::rename(Sample = ...1) %>%
 #   dplyr::mutate(Diagnosis = sapply(Sample, function(x) tail(strsplit(x, split = "_")[[1]],1)),
 #                 .before = Center)
-tab <- readxl::read_xlsx("/Users/felicia.burtscher/Documents/UL/DATASETS/UNIPG/Metabolomic data.xlsx") %>%
+tab <- readxl::read_xlsx(file.path(datasets_root_directory, "UNIPG/Metabolomic data.xlsx")) %>%
   dplyr::rename(Sample = ...1) %>%
   dplyr::mutate(Diagnosis = sapply(Sample, function(x) tail(strsplit(x, split = "_")[[1]],1)),
                 .before = Center)
@@ -38,8 +43,8 @@ sapply(tab$Sample, function(x) tail(strsplit(x, split = "_")[[1]],1))
 kw_for_diagnoses <- function(metabolite, table) {
   ### This *magic* one-liner filters by 'metabolite', splits 'readout' by 'Diagnosis'
   kw_tibbles <- tibble::as_tibble(table) %>% 
-    dplyr::filter(Metabolite == metabolite) %>%                          
-    dplyr::select(Diagnosis, readout) %>% 
+    dplyr::filter(Metabolite == metabolite) %>%
+    dplyr::select(Diagnosis, readout) %>%
     dplyr::group_split(Diagnosis, .keep = FALSE)
   ### We need to unlist the tibbles from the 'group_split' to run the kruskal.test
   stats::kruskal.test(lapply(kw_tibbles, unlist))$p.value
@@ -67,9 +72,9 @@ per_bms <- run_kw(dplyr::filter(tab2, Center == "Perugia"))
 ams_bms <- run_kw(dplyr::filter(tab2, Center == "Amsterdam"))
 
 # library(ggplot2)
-# ggplot(dplyr::filter(tab2, Center == "Perugia" & Metabolite %in% c("ascorbate")), 
-#        aes(Metabolite, readout, colour = Diagnosis)) + 
-#   geom_boxplot() + 
+# ggplot(dplyr::filter(tab2, Center == "Perugia" & Metabolite %in% c("ascorbate")),
+#        aes(Metabolite, readout, colour = Diagnosis)) +
+#   geom_boxplot() +
 #   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 ####
@@ -79,9 +84,9 @@ ams_bms <- run_kw(dplyr::filter(tab2, Center == "Amsterdam"))
 ### A helper function to calculate pairwise Wilcoxon tests for the given list of
 ### group pairs. This function is specific for the variable/value names assigned in reshape2::melt, above
 test_pairwise_wilcoxon <- function(df, groups) {
-  return(sapply(groups, function(g) with(df, 
+  return(sapply(groups, function(g) with(df,
                                          stats::wilcox.test(readout[Diagnosis == g[1]],
-                                                            readout[Diagnosis == g[2]], 
+                                                            readout[Diagnosis == g[2]],
                                                             exact = F)$p.value)))
 }
 
@@ -95,7 +100,7 @@ run_wilcoxon <- function(table) {
   sub_kw_wilcox <- sapply(unique(table$Metabolite), 
                           function(met) test_pairwise_wilcoxon(table[table$Metabolite == met,], pairs))
   # colnames(sub_kw_wilcox) <- unique(table$Metabolite)
-  
+
   ### Adjust for measurements
   sub_kw_adj_wilcox <- matrix(p.adjust(sub_kw_wilcox, method = "BH"), nrow = length(pairs))
   rownames(sub_kw_adj_wilcox) <- rownames(sub_kw_wilcox)
@@ -110,14 +115,14 @@ run_wilcoxon(per_bms)
 
 ### Select only Control vs AD
 ### Construct the final table
-sub_final <- data.frame(Name = colnames(sub_kw_wilcox), 
+sub_final <- data.frame(Name = colnames(sub_kw_wilcox),
                         p.val.ALZ = sub_kw_wilcox["Control_vs_AD",],
                         adj.p.ALZ = sub_kw_adj_wilcox["Control_vs_AD",])
 ### A helper function to get UniProt id for a given HGNC
 HGNC_to_UniProt <- function(hgnc) {
   require(RCurl)
   require(jsonlite)
-  hgnc_entry <- RCurl::httpGET(paste0("http://rest.genenames.org/fetch/symbol/", hgnc), 
+  hgnc_entry <- RCurl::httpGET(paste0("http://rest.genenames.org/fetch/symbol/", hgnc),
                                httpheader = c(Accept = "application/json"))
   ups <- jsonlite::fromJSON(hgnc_entry)$response$docs$uniprot_ids
   return(unlist(ups))
@@ -125,10 +130,9 @@ HGNC_to_UniProt <- function(hgnc) {
 ### Add UniProt ids based on the HGNCs in the Name
 final <- cbind(UniProt = sapply(sub_final$Name, HGNC_to_UniProt), sub_final)
 
-# write.table(final, file = "_notgit/cleaned_KTH_entries.tsv", 
+# write.table(final, file = "_notgit/cleaned_KTH_entries.tsv",
 #             sep = "\t", quote = F, row.names = F, col.names = T)
 
-write.table(final, file = "/Users/felicia.burtscher/Documents/UL/DATASETS/UNIPG/cleaned_UNIPG_entries.tsv", 
+write.table(final, file = file.path(datasets_root_directory, "UNIPG/cleaned_UNIPG_entries.tsv"),
             sep = "\t", quote = F, row.names = F, col.names = T)
-
 

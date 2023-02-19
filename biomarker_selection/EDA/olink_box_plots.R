@@ -1,6 +1,11 @@
 # 15.11.2022
 # visualising the original Olink data as box plots
-olink_basic <- read.table("/Users/felicia.burtscher/Documents/UL/DATASETS/Olink/OLINK basic data files/protein_data_LODmax_10percent_outliers_rm_missing_imputed_16112020.txt",
+library(here)
+source(here("functions", "data_processing_functions.R"))
+
+datasets_root_directory <- define_datasets_root()
+
+olink_basic <- read.table(file.path(datasets_root_directory, "Olink/OLINK basic data files/protein_data_LODmax_10percent_outliers_rm_missing_imputed_16112020.txt"),
                           sep = "\t", header = T) 
 
 create_box_plot_of_column <- function(dataframe, column) {

@@ -5,20 +5,25 @@
 ## Date: 02.06.2022, 26.09.2022
 ## Author: Marek Ostaszewski, Felicia Burtscher
 ##################################################
+library(here)
+
+source(here("functions", "data_processing_functions.R"))
+
+datasets_root_directory <- define_datasets_root()
 
 ### Previously pooled biomarkers
 # annotated_BMs <- read.table(file = "_notgit/annotated_candidate_biomarkers.tsv", sep = "\t", header = T)
-annotated_BMs <- read.table(file = "/Users/felicia.burtscher/Documents/UL/DATASETS/annotated_candidate_biomarkers.tsv", sep = "\t", header = T)
+annotated_BMs <- read.table(file = file.path(datasets_root_directory, "annotated_candidate_biomarkers.tsv"), sep = "\t", header = T)
 
 
 ### Human Protein Atlas sources, loaded locally, obtained at: https://www.proteinatlas.org/about/download
 ### HPA dataset load
 ### Protein expression (ICH): https://www.proteinatlas.org/download/normal_tissue.tsv.zip
 # normal_tissue_ich <- read.table(file = "_notgit/normal_tissue.tsv", sep = "\t", header = T, quote = "")
-normal_tissue_ich <- read.table(file = "/Users/felicia.burtscher/Documents/UL/DATASETS/HPA/normal_tissue.tsv", sep = "\t", header = T, quote = "")
+normal_tissue_ich <- read.table(file = file.path(datasets_root_directory, "HPA/normal_tissue.tsv"), sep = "\t", header = T, quote = "")
 ### Gene expression (RNASeq): https://www.proteinatlas.org/download/rna_tissue_consensus.tsv.zip
 # normal_tissue_RNAseq <- read.table(file = "_notgit/rna_tissue_consensus.tsv", sep = "\t", header = T, quote = "")
-normal_tissue_RNAseq <- read.table(file = "/Users/felicia.burtscher/Documents/UL/DATASETS/HPA/rna_tissue_consensus.tsv", sep = "\t", header = T, quote = "")
+normal_tissue_RNAseq <- read.table(file = file.path(datasets_root_directory, "HPA/rna_tissue_consensus.tsv"), sep = "\t", header = T, quote = "")
 ### CNS tissues, for aggregation
 hpa_cns_tissues <- c("amygdala", "basal ganglia", "caudate", "cerebellum", "cerebral cortex", 
                      "dorsal raphe", "hippocampus", "hippocampal formation", "hypothalamus", "medulla oblongata", "midbrain",
@@ -67,7 +72,7 @@ aggregated_rna <- normal_tissue_RNAseq %>%
 ### Load data from Protein DB, if the table does not exist - regenerate
 ### Data acquired from "https://www.proteomicsdb.org"
 # if(!file.exists("_notgit/proteindb_tissues_annotated_BM.tsv")) {
-if(!file.exists("/Users/felicia.burtscher/Documents/UL/DATASETS/proteindb_tissues_annotated_BM.tsv")) {
+if(!file.exists(file.path(datasets_root_directory, "proteindb_tissues_annotated_BM.tsv"))) {
   ### Head and tail of a curl query for a single UniProt
   proteindb_head <- "https://www.proteomicsdb.org/proteomicsdb/logic/api/proteinexpression.xsodata/InputParams(PROTEINFILTER='"
   proteindb_tail <- "',MS_LEVEL=1,TISSUE_ID_SELECTION='',TISSUE_CATEGORY_SELECTION='tissue;fluid',SCOPE_SELECTION=1,GROUP_BY_TISSUE=1,CALCULATION_METHOD=0,EXP_ID=-1)/Results?$select=UNIQUE_IDENTIFIER,TISSUE_ID,TISSUE_NAME,TISSUE_SAP_SYNONYM,UNNORMALIZED_INTENSITY,NORMALIZED_INTENSITY,MIN_NORMALIZED_INTENSITY,MAX_NORMALIZED_INTENSITY&$format=json"
@@ -83,13 +88,14 @@ if(!file.exists("/Users/felicia.burtscher/Documents/UL/DATASETS/proteindb_tissue
   ### Bind all the tables for each entry, harmonise for only selected column names
   proteindb_tab <- do.call(rbind, lapply(proteindb_tissues, function(x) x$d$results %>% dplyr::select(sel_names)))
   ### Write the source JSON and the tidied table
-  write.table(proteindb_tab, file = "/Users/felicia.burtscher/Documents/UL/DATASETS/proteindb_tissues_annotated_BM.tsv",
+  write.table(proteindb_tab, file = file.path(datasets_root_directory, "proteindb_tissues_annotated_BM.tsv"),
               sep = "\t", col.names = T, row.names = F, quote = F)
   # write_json(proteindb_tissues, "_notgit/proteindb_tissues")
-  write_json(proteindb_tissues, "/Users/felicia.burtscher/Documents/UL/DATASETS/proteindb_tissues")
+  write_json(proteindb_tissues, file.path(datasets_root_directory, "proteindb_tissues.json"))
 } else {
   # proteindb_tab <- read.table("_notgit/proteindb_tissues_annotated_BM.tsv", sep = "\t", header = T)
-  proteindb_tab <- read.table("_/Users/felicia.burtscher/Documents/UL/DATASETS/proteindb_tissues_annotated_BM.tsv", sep = "\t", header = T)
+  proteindb_tab <- read.table(file.path(datasets_root_directory, "proteindb_tissues_annotated_BM.tsv"),
+                              sep = "\t", header = T)
 }
 
 ### Filter the HPA RNAseq data per gene symbol and aggregate CNS-related data
@@ -116,7 +122,7 @@ summary_table_tissue_BMs <- merge(summary_table_tissue_BMs, aggregated_proteindb
 
 ### Write the table down
 # write.table(summary_table_tissue_BMs, file = "_notgit/summary_tissues_annotated_BM.tsv",
-write.table(summary_table_tissue_BMs, file = "/Users/felicia.burtscher/Documents/UL/DATASETS/summary_tissues_annotated_BM.tsv",
+write.table(summary_table_tissue_BMs, file = file.path(datasets_root_directory, "summary_tissues_annotated_BM.tsv"),
             sep = "\t", col.names = T, row.names = F, quote = F)
 
 tmp <- cbind(is.na(summary_table_tissue_BMs$cns_level_ich),
