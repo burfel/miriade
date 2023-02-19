@@ -73,3 +73,69 @@ define_datasets_root <- function() {
   # Open a file dialog to store the root directory of all data sets
   return(choose.dir(caption = "Choose the root of all datasets"))
 }
+
+################################################################################
+# Preprocess datasets to have the unified format of UniProt and Pvalue, possibly
+# after filtering
+# some of them according to disease.
+# datasets and should_filter_by_disease must be lists/vectors of the same length
+# datasets HAS TO BE A LIST OF DATAFRAMES
+# Any dataframe for which should_filter_by_disease is true needs to have a
+# disease column
+# If any of should_filter_by_disease is true, disease_to_filter_by should be a
+# string that appears in the disease column
+################################################################################
+preprocess_datasets <- function(datasets, should_filter_by_disease,
+                                disease_to_filter_by = NULL) {
+  datasets_length <- length(datasets)
+  if (datasets_length != length(should_filter_by_disease)) {
+    stop("datasets and should_filter_by_disease must be lists/vectors of the same length")
+  }
+  processed_datasets <- vector(mode = "list", length = datasets_length)
+  ind <- 1
+  for (dataset in datasets) {
+    if(should_filter_by_disease[ind]) {
+      dataset <- dataset %>% dplyr::filter(disease == disease_to_filter_by)
+    }
+    dataset <- dataset %>% dplyr::select(UniProt, p.val)
+    processed_datasets[[ind]] <- dataset
+    ind <- ind + 1
+  }
+  return(processed_datasets)
+}
+
+################################################################################
+# Binds datasets together and produces a dataframe with UniProt p_values and a
+# column for the source of that row
+# TODO: fold the mutate into this function once we realize how to use case_when
+# with expressions built
+# on the fly with indices unknown in advance
+################################################################################
+bind_datasets_together <- function(processed_datasets) {
+  # Unfortunately, failed to do the renaming of source here... might have to
+  # repeat it
+  return(dplyr::bind_rows(processed_datasets, .id = "Source")
+  )
+}
+
+################################################################################
+# This function takes a dataframe with uniprots and p values from more than one
+# source
+# filters and returns according to the list of limiting dataframes
+################################################################################
+filter_according_to_UniProt_masks <- function(data_frame, masking_frames_vector) {
+  filtered_data_frame <- data_frame
+  for (mask in masking_frames_vector) {
+    filtered_data_frame <- filtered_data_frame %>%
+      dplyr::filter(UniProt %in% mask$UniProt)
+  }
+  return(filtered_data_frame)
+}
+
+################################################################################
+# Takes a datafrane with a UniProt column, and extracts the distinct UniProts
+################################################################################
+extract_unique_uniprots <- function(dataframe) {
+  return(dataframe %>%
+           dplyr::select(UniProt) %>% dplyr::distinct(UniProt))
+}
