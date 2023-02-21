@@ -139,3 +139,14 @@ extract_unique_uniprots <- function(dataframe) {
   return(dataframe %>%
            dplyr::select(UniProt) %>% dplyr::distinct(UniProt))
 }
+
+################################################################################
+#' Strip underscores and following chars from string
+#'
+#' @param str a string to strip
+#'
+#' @return the substring that comes before the underscore
+################################################################################
+take_only_pre_underscore_substring <- function(str) {
+  return(strsplit(str, "_")[[1]][1])
+}

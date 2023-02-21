@@ -21,7 +21,7 @@ datasets_root_directory <- define_datasets_root()
 tab <- readxl::read_xlsx(file.path(datasets_root_directory, "KTH/KTH AD dataset for MIRIADE biomarker selection sample info and results.xlsx"))
 
 ### Change the names into HGNC symbols (prefixes)
-colnames(tab) <- sapply(colnames(tab), function(n) strsplit(n, "_")[[1]][1])
+colnames(tab) <- sapply(colnames(tab), take_only_pre_underscore_substring)
 
 ### Melt the dataframe, so there's only one readout variable
 tab2 <- reshape2::melt(tab, id = 1:9, variable.name = "HGNC_Symbol", value.name = "median_ab_readout")
