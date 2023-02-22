@@ -150,3 +150,21 @@ extract_unique_uniprots <- function(dataframe) {
 take_only_pre_underscore_substring <- function(str) {
   return(strsplit(str, "_")[[1]][1])
 }
+
+################################################################################
+#' Function to read password-protected xlsx file with a prompt
+#'
+#' @param filepath path to excel file
+#' @param sheet index or name of the sheer
+#'
+#' @return A dataframe of the sheet
+################################################################################
+
+read_password_xlsx <- function(filepath, sheet) {
+  wb <- XLConnect::loadWorkbook(filepath,
+              password = rstudioapi::askForPassword("Enter password for file:"))
+
+  data <- XLConnect::readWorksheet(wb, sheet = sheet)
+
+  return(data)
+}
