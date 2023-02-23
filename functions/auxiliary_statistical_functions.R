@@ -48,6 +48,22 @@ kruskal_wallis_test_for_sample_groups <- function(tested_differentiating_feature
   stats::kruskal.test(lapply(kw_tibbles, unlist))$p.value
 }
 
+keep_only_significant_entries <- function(melted_table,
+                                          differentiating_feature_symbol,
+                                          kw_per_differentiating_feature,
+                                          significance_limit = 0.1) {
+  ### Adjust for multiple hypothesis testing
+  is_adjusted_pvalue_significant_predicate_vector <-
+    is_adjusted_pvalue_significant_predicate(kw_per_differentiating_feature,
+                                             significance_limit)
+  unique_differentiating_values <-
+    unique_table_column_values(melted_table, differentiating_feature_symbol)
+  kw_biomarkers <-
+    as.character(unique_differentiating_values[is_adjusted_pvalue_significant_predicate_vector])
+  ### Keep only the significant entries
+  return(dplyr::filter(melted_table, !!differentiating_feature_symbol %in% kw_biomarkers))
+}
+
 ################################################################################
 # Wilcoxon pairwise comparisons for biomarkers passing the KW test
 #
@@ -55,28 +71,18 @@ kruskal_wallis_test_for_sample_groups <- function(tested_differentiating_feature
 # group pairs. This function is specific for the variable/value names assigned
 # in reshape2::melt, above
 ################################################################################
-test_pairwise_wilcoxon <- function(table,
+test_pairwise_wilcoxon <- function(melted_table,
                                    differentiating_feature_symbol,
-                                   kw_per_differentiating_feature,
+                                   significant_kw,
                                    grouping_feature_symbol,
-                                   measurement_symbol,
-                                   significance_limit = 0.1) {
+                                   measurement_symbol) {
   differentiating_name <- as.character(differentiating_feature_symbol)
-  ### Adjust for multiple hypothesis testing
-  is_adjusted_pvalue_significant_predicate_vector <-
-    is_adjusted_pvalue_significant_predicate(kw_per_differentiating_feature,
-                                             significance_limit)
-  unique_differentiating_values <-
-    unique_table_column_values(table, differentiating_feature_symbol)
-  kw_biomarkers <-
-    as.character(unique_differentiating_values[is_adjusted_pvalue_significant_predicate_vector])
-  ### Keep only the significant entries
-  sub_kw <- dplyr::filter(table, !!differentiating_feature_symbol %in% kw_biomarkers)
-  pairs <- unique_table_column_values(table, grouping_feature_symbol) %>%
+
+  pairs <- unique_table_column_values(melted_table, grouping_feature_symbol) %>%
            combn(2, simplify = F) %>%
            purrr::set_names(purrr::map_chr(., ~ paste(., collapse = "_vs_")))
-  sapply(unique(sub_kw[[differentiating_name]]), collect_wilcoxon_pvalues_of_all_pairs_and_proteins,
-         sub_kw, measurement_symbol, grouping_feature_symbol, differentiating_feature_symbol, pairs)
+  sapply(unique(significant_kw[[differentiating_name]]), collect_wilcoxon_pvalues_of_all_pairs_and_proteins,
+         significant_kw, measurement_symbol, grouping_feature_symbol, differentiating_feature_symbol, pairs)
 }
 
 # AUXILIARY to test_pairwise_wilcoxon
