@@ -81,8 +81,21 @@ test_pairwise_wilcoxon <- function(melted_table,
   pairs <- unique_table_column_values(melted_table, grouping_feature_symbol) %>%
            combn(2, simplify = F) %>%
            purrr::set_names(purrr::map_chr(., ~ paste(., collapse = "_vs_")))
-  sapply(unique(significant_kw[[differentiating_name]]), collect_wilcoxon_pvalues_of_all_pairs_and_proteins,
-         significant_kw, measurement_symbol, grouping_feature_symbol, differentiating_feature_symbol, pairs)
+
+  unique_differentiator_values <- unique(significant_kw[[differentiating_name]])
+
+  result <-
+    sapply(
+      unique_differentiator_values,
+      collect_wilcoxon_pvalues_of_all_pairs_and_proteins,
+      significant_kw,
+      measurement_symbol,
+      grouping_feature_symbol,
+      differentiating_feature_symbol, pairs)
+  colnames(result) <-
+    unique_differentiator_values
+
+  return(result)
 }
 
 # AUXILIARY to test_pairwise_wilcoxon
