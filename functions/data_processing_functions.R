@@ -70,8 +70,21 @@ define_datasets_root <- function() {
      && !identical(readline(prompt = "datasets_root_directory already exists. If you want to redefine it, type 'y' and press enter: \n"), 'y')) {
     return(datasets_root_directory)
   }
+  # Depending on the OS, use appropriate method
+  # For Windows and Mac we 
   # Open a file dialog to store the root directory of all data sets
-  return(choose.dir(caption = "Choose the root of all datasets"))
+  # For other unix the user needs to enter the path
+  if (.Platform$OS.type == "windows") {
+    folder <- choose.dir(caption = "Choose the root of all datasets")
+  }
+  else if (.Platform$OS.type == "unix") {
+    folder <- rChoiceDialogs::rchoose.dir()
+  }
+  else {
+    stop("Unsupported operating system")
+  }
+  
+  return(folder)
 }
 
 ################################################################################

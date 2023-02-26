@@ -935,13 +935,14 @@
     },
     "htmltools": {
       "Package": "htmltools",
-      "Version": "0.5.3",
+      "Version": "0.5.4",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "6496090a9e00f8354b811d1a2d47b566",
+      "Hash": "9d27e99cc90bd701c0a7a63e5923f9b7",
       "Requirements": [
         "base64enc",
         "digest",
+        "ellipsis",
         "fastmap",
         "rlang"
       ]
@@ -1293,6 +1294,14 @@
         "ggplot2",
         "reshape2"
       ]
+    },
+    "rChoiceDialogs": {
+      "Package": "rChoiceDialogs",
+      "Version": "1.0.6.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "d442b88d6c3a5d573d6ff821a8b12797",
+      "Requirements": []
     },
     "randomcoloR": {
       "Package": "randomcoloR",
