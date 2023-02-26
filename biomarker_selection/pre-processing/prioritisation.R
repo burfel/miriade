@@ -117,13 +117,12 @@ library(enrichR)
 ageing <- c("Aging_Perturbations_from_GEO_down", "Aging_Perturbations_from_GEO_up")
 pathways <- c("KEGG_2021_Human", "MSigDB_Hallmark_2020")
 
-kegg_reject <- "infection|cancer|carcinoma|virus|[v|V]iral|trypanosomiasis|Malaria|Tuberculosis|Melanoma|leukemia|Influenza|disease|Amoebiasis"
-
 library(ReactomePA)
 reac_reject <- ""
 
 ### A wrapper function to run enrichment and OmniPath lookup, and combine the analysis
-combined_analysis <- function(bms, adj.p.cutoff = 0.1) {
+combined_analysis <- function(bms, adj.p.cutoff = 0.1,
+                    kegg_reject = "infection|cancer|carcinoma|virus|[v|V]iral|trypanosomiasis|Malaria|Tuberculosis|Melanoma|leukemia|Influenza|disease|Amoebiasis") {
   ### KEGG enrichment
   enrc <- enrichR::enrichr(bms$SYMBOL, databases = pathways)
   kegg <- dplyr::filter(enrc$KEGG_2021_Human, Adjusted.P.value < adj.p.cutoff & !grepl(kegg_reject,Term))
