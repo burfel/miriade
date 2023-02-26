@@ -173,6 +173,8 @@ write.table(rbind(alz_sum$enriched_bms, rbind(ftd_sum$enriched_bms, rbind(dlb_su
             file = "all_new_biomarkers.tsv", sep = "\t", quote = F, row.names = F)
 
 #ftds <- read.table("_notgit/ftd candidates")
+ftds <- read.table(file.path(datasets_root_directory, "Olink/20201216_OLINK_Data/cleaned_VUMC_olink_FTD.tsv"),
+                   header = TRUE)
 
 dplyr::filter(ftd_bms, UniProt %in% ftds[,1])
 
