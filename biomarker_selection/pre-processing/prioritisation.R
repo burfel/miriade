@@ -196,20 +196,20 @@ plot(reac_g)
 
 
 
-##  further in-depth study of the disease biomarker candidates
+##  Further in-depth study of the disease biomarker candidates
 
-#ftds <- read.table("_notgit/ftd candidates")
+## FTD
 ftds <- read.table(file.path(datasets_root_directory, "Olink/20201216_OLINK_Data/cleaned_VUMC_olink_FTD.tsv"),
                    header = TRUE)
-
+# Check overlap of FTD bioomarker candidates from combined analysis with Olink
 dplyr::filter(ftd_bms, UniProt %in% ftds[,1])
 
 curl_head <- "curl -X GET --header 'Accept: application/json' 'https://www.ebi.ac.uk/europepmc/annotations_api/annotationsByRelationship?firstEntity="
 curl_tail <- "&secondEntity=dementia'"
 
-eupmc <- lapply(ftd_sum$enriched_bms$SYMBOL, function(g) fromJSON(system(paste0(curl_head,g,curl_tail), intern = T)))
+eupmc_ftd <- lapply(ftd_sum$enriched_bms$SYMBOL, function(g) fromJSON(system(paste0(curl_head,g,curl_tail), intern = T)))
 # Assuming gene order is preserved
-ftd_prep_bms <- cbind(ftd_sum$enriched_bms, TM_hits = sapply(eupmc, function(x) length(x$articles$source)))
+ftd_prep_bms <- cbind(ftd_sum$enriched_bms, TM_hits = sapply(eupmc_ftd, function(x) length(x$articles$source)))
 
 hitcols <- c("DGN_hits", "DMaps_hits", "KEGG_hits", "Reactome_hits", "TM_hits")
 
@@ -222,6 +222,56 @@ proteindb_head <- "https://www.proteomicsdb.org/proteomicsdb/logic/api/proteinex
 proteindb_tail <- "',MS_LEVEL=1,TISSUE_ID_SELECTION='',TISSUE_CATEGORY_SELECTION='tissue;fluid',SCOPE_SELECTION=1,GROUP_BY_TISSUE=1,CALCULATION_METHOD=0,EXP_ID=-1)/Results?$select=UNIQUE_IDENTIFIER,TISSUE_ID,TISSUE_NAME,TISSUE_SAP_SYNONYM,SAMPLE_ID,SAMPLE_NAME,AFFINITY_PURIFICATION,EXPERIMENT_ID,EXPERIMENT_NAME,EXPERIMENT_SCOPE,EXPERIMENT_SCOPE_NAME,PROJECT_ID,PROJECT_NAME,PROJECT_STATUS,UNNORMALIZED_INTENSITY,NORMALIZED_INTENSITY,MIN_NORMALIZED_INTENSITY,MAX_NORMALIZED_INTENSITY,SAMPLES&$format=json"
 
 ftd_tissues <- lapply(ftd_prep_bms$UniProt, function(x) fromJSON(paste0(proteindb_head, x, proteindb_tail)))
+
+
+## DLB
+dlbs <- read.table(file.path(datasets_root_directory, "Olink/20201216_OLINK_Data/cleaned_VUMC_olink_DLB.tsv"),
+                   header = TRUE)
+# Check overlap of DLB biomarker candidates from combined analysis with Olink
+dplyr::filter(dlb_bms, UniProt %in% dlbs[,1])
+
+eupmc_dlb <- lapply(dlb_sum$enriched_bms$SYMBOL, function(g) fromJSON(system(paste0(curl_head,g,curl_tail), intern = T)))
+# Assuming gene order is preserved
+dlb_prep_bms <- cbind(dlb_sum$enriched_bms, TM_hits = sapply(eupmc_dlb, function(x) length(x$articles$source)))
+
+dlb_supported <- dplyr::filter(dlb_prep_bms, rowSums(dlb_prep_bms[,hitcols]) > 0)
+dlb_low_evidence <- dplyr::filter(dlb_prep_bms, rowSums(dlb_prep_bms[,hitcols]) == 0)
+
+dlb_tissues <- lapply(dlb_prep_bms$UniProt, function(x) fromJSON(paste0(proteindb_head, x, proteindb_tail)))
+
+
+## AD
+alzs <- read.table(file.path(datasets_root_directory, "Olink/20201216_OLINK_Data/cleaned_VUMC_olink_AD.tsv"),
+                   header = TRUE)
+# Check overlap of AD biomarker candidates from combined analysis with Olink
+dplyr::filter(alz_bms, UniProt %in% alzs[,1])
+
+eupmc_alz <- lapply(alz_sum$enriched_bms$SYMBOL, function(g) fromJSON(system(paste0(curl_head,g,curl_tail), intern = T)))
+# Assuming gene order is preserved
+alz_prep_bms <- cbind(alz_sum$enriched_bms, TM_hits = sapply(eupmc_alz, function(x) length(x$articles$source)))
+
+alz_supported <- dplyr::filter(alz_prep_bms, rowSums(alz_prep_bms[,hitcols]) > 0)
+alz_low_evidence <- dplyr::filter(alz_prep_bms, rowSums(alz_prep_bms[,hitcols]) == 0)
+
+alz_tissues <- lapply(alz_prep_bms$UniProt, function(x) fromJSON(paste0(proteindb_head, x, proteindb_tail)))
+
+
+## Across-disease
+coms <- read.table(file.path(datasets_root_directory, "Olink/20201216_OLINK_Data/cleaned_VUMC_olink.tsv"),
+                   header = TRUE)
+# Check overlap of across-disease biomarker candidates from combined analysis with Olink
+dplyr::filter(com_bms, UniProt %in% coms[,1])
+
+eupmc_com <- lapply(com_sum$enriched_bms$SYMBOL, function(g) fromJSON(system(paste0(curl_head,g,curl_tail), intern = T)))
+# Assuming gene order is preserved
+com_prep_bms <- cbind(com_sum$enriched_bms, TM_hits = sapply(eupmc_com, function(x) length(x$articles$source)))
+
+com_supported <- dplyr::filter(com_prep_bms, rowSums(com_prep_bms[,hitcols]) > 0)
+com_low_evidence <- dplyr::filter(com_prep_bms, rowSums(com_prep_bms[,hitcols]) == 0)
+
+com_tissues <- lapply(com_prep_bms$UniProt, function(x) fromJSON(paste0(proteindb_head, x, proteindb_tail)))
+
+
 
 ### Source: Human Protein Atlas, https://www.proteinatlas.org/about/download
 # hpa_ihch_tissues <- read.table("_notgit/normal_tissue.tsv", sep = "\t", header = T)
@@ -238,7 +288,8 @@ hpa_ihch_tissues_slim <- dplyr::filter(hpa_ihch_tissues, Reliability != "Uncerta
 
 unique(hpa_ihch_tissues$Gene.name)
 
+
+## TODO: WHERE IS biomarkers_annotated_EV_features.csv file?
 # dea_preds <- read.table("_notgit/biomarkers_annotated_EV_features.csv", sep = ",", header = T) %>%
 #   dplyr::select(-dplyr::matches("^[A-Z]$")) %>%
 #   dplyr::select(-dplyr::ends_with(c("_exposed", "_netsurfp2", "_UP", "_all", "_MSD")))
-
