@@ -172,6 +172,32 @@ write.table(rbind(alz_select, rbind(ftd_select, rbind(dlb_select,com_select))),
 write.table(rbind(alz_sum$enriched_bms, rbind(ftd_sum$enriched_bms, rbind(dlb_sum$enriched_bms,com_sum$enriched_bms))),
             file = "all_new_biomarkers.tsv", sep = "\t", quote = F, row.names = F)
 
+### Visualisation of the pathway enrichment overlaps
+
+postfilter <- function(summary) {
+  dplyr::filter(summary[["enriched_bms"]], (DGN_hits + DMaps_hits > 0) & (KEGG_hits + Reactome_hits) > 0)
+}
+
+ftd_narrow <- postfilter(ftd_sum)
+
+kegg_net <- rbind(
+  cbind(alz_sum$kegg$Term, "ALZ"), cbind(ftd_sum$kegg$Term, "FTD"), cbind(dlb_sum$kegg$Term, "DLB")
+)
+
+g <- igraph::graph.edgelist(kegg_net, directed = FALSE)
+plot(g)
+
+reac_net <- rbind(
+  cbind(alz_sum$reac$Description, "ALZ"), cbind(ftd_sum$reac$Description, "FTD"), cbind(dlb_sum$reac$Description, "DLB")
+)
+
+reac_g <- igraph::graph.edgelist(reac_net, directed = FALSE)
+plot(reac_g)
+
+
+
+##  further in-depth study of the disease biomarker candidates
+
 #ftds <- read.table("_notgit/ftd candidates")
 ftds <- read.table(file.path(datasets_root_directory, "Olink/20201216_OLINK_Data/cleaned_VUMC_olink_FTD.tsv"),
                    header = TRUE)
@@ -216,25 +242,3 @@ unique(hpa_ihch_tissues$Gene.name)
 #   dplyr::select(-dplyr::matches("^[A-Z]$")) %>%
 #   dplyr::select(-dplyr::ends_with(c("_exposed", "_netsurfp2", "_UP", "_all", "_MSD")))
 
-
-### To do - visualise pathway enrichment overlaps
-
-# postfilter <- function(summary) {
-#   dplyr::filter(summary[["enriched_bms"]], (DGN_hits + DMaps_hits > 0) & (KEGG_hits + Reactome_hits) > 0)
-# }
-#
-# ftd_narrow <- postfilter(ftd_sum)
-# 
-# kegg_net <- rbind(
-#   cbind(alz_sum$kegg$Term, "ALZ"), cbind(ftd_sum$kegg$Term, "FTD"), cbind(dlb_sum$kegg$Term, "DLB")
-# )
-# 
-# g <- igraph::graph.edgelist(kegg_net, directed = FALSE)
-# plot(g)
-# 
-# reac_net <- rbind(
-#   cbind(alz_reac$Description, "ALZ"), cbind(ftd_reac$Description, "FTD"), cbind(dlb_reac$Description, "DLB")
-# )
-# 
-# reac_g <- igraph::graph.edgelist(reac_net, directed = FALSE)
-# plot(reac_g)
