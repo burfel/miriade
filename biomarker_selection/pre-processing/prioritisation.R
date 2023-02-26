@@ -70,7 +70,7 @@ sort_table <- function(bm_table, dis) {
 alz_bms <- sort_table(annotated_BMs, "ALZ")
 ftd_bms <- sort_table(annotated_BMs, "FTD")
 dlb_bms <- sort_table(annotated_BMs, "DLB")
-com_bms <- sort_table(annotated_BMs, c("ALZ,FTD,DLB","ALZ,FTD","FTD,DLB"))
+com_bms <- sort_table(annotated_BMs, c("ALZ,FTD,DLB","ALZ,DLB","ALZ,FTD","FTD,DLB"))
 
 ###
 ### Tissue location based on the Human Protein Atlas
@@ -79,7 +79,7 @@ com_bms <- sort_table(annotated_BMs, c("ALZ,FTD,DLB","ALZ,FTD","FTD,DLB"))
 # hpa_brain_gtex <- read.table("_notgit/rna_brain_gtex.tsv", sep = "\t", header = T) %>%
 hpa_brain_gtex <- read.table(file.path(datasets_root_directory, "HPA/rna_brain_gtex.tsv"),
                              sep = "\t", header = T) %>%
-  dplyr::filter(!(Brain.region %in% c("amygdala", "pituitary gland", "retina")))
+  dplyr::filter(!(Brain.region %in% c("amygdala", "pituitary gland", "retina"))). ## TODO: READ UP ON THE BIOLOGY
 # hpa_brain_fant <- read.table("_notgit/rna_brain_fantom.tsv", sep = "\t", header = T) %>%
 hpa_brain_fant <- read.table(file.path(datasets_root_directory, "HPA/rna_brain_fantom.tsv"),
                              sep = "\t", header = T) %>%
@@ -157,6 +157,7 @@ combined_analysis <- function(bms, adj.p.cutoff = 0.1) {
   return(list(kegg = kegg, reac = reac, opco = bms_g, enriched_bms = bms))
 }
 
+## TODO: UNDERSTAND (BIOLOGICAL) REASONING HERE
 alz_sum <- combined_analysis(alz_bms)
 alz_select <- dplyr::filter(alz_sum[["enriched_bms"]], SYMBOL %in% c("OLR1", "GLO1", "SNAP29", "KYAT1"))
 ftd_sum <- combined_analysis(ftd_bms)
