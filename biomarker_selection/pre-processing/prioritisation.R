@@ -174,13 +174,13 @@ write.table(rbind(alz_sum$enriched_bms, rbind(ftd_sum$enriched_bms, rbind(dlb_su
 
 #ftds <- read.table("_notgit/ftd candidates")
 
-dplyr::filter(ftd_bms, SYMBOL %in% ftds[,1])
+dplyr::filter(ftd_bms, UniProt %in% ftds[,1])
 
 curl_head <- "curl -X GET --header 'Accept: application/json' 'https://www.ebi.ac.uk/europepmc/annotations_api/annotationsByRelationship?firstEntity="
 curl_tail <- "&secondEntity=dementia'"
 
 eupmc <- lapply(ftd_sum$enriched_bms$SYMBOL, function(g) fromJSON(system(paste0(curl_head,g,curl_tail), intern = T)))
-
+# Assuming gene order is preserved
 ftd_prep_bms <- cbind(ftd_sum$enriched_bms, TM_hits = sapply(eupmc, function(x) length(x$articles$source)))
 
 hitcols <- c("DGN_hits", "DMaps_hits", "KEGG_hits", "Reactome_hits", "TM_hits")
