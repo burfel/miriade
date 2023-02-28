@@ -184,14 +184,24 @@ kegg_net <- rbind(
   cbind(alz_sum$kegg$Term, "ALZ"), cbind(ftd_sum$kegg$Term, "FTD"), cbind(dlb_sum$kegg$Term, "DLB")
 )
 
-g <- igraph::graph.edgelist(kegg_net, directed = FALSE)
-plot(g)
+kegg_g <- igraph::graph.edgelist(kegg_net, directed = FALSE)
+
+color_disease_nodes <- function(pathway_overlap_graph) {
+  diseases <- c("ALZ", "DLB", "FTD")
+  V(pathway_overlap_graph)$color <- "orange"
+  V(pathway_overlap_graph)[V(pathway_overlap_graph)$name %in% diseases]$color <- "green"
+  return(pathway_overlap_graph)
+}
+
+kegg_g <- color_disease_nodes(kegg_g)
+plot(kegg_g)
 
 reac_net <- rbind(
   cbind(alz_sum$reac$Description, "ALZ"), cbind(ftd_sum$reac$Description, "FTD"), cbind(dlb_sum$reac$Description, "DLB")
 )
 
 reac_g <- igraph::graph.edgelist(reac_net, directed = FALSE)
+reac_g <- color_disease_nodes(reac_g)
 plot(reac_g)
 
 
