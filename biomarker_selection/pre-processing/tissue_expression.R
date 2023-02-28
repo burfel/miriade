@@ -38,18 +38,19 @@ aggregated_ich <- normal_tissue_ich %>%
   dplyr::filter(Gene.name %in% annotated_BMs$SYMBOL) %>%
   ### Keep only values 'High' and 'Medium'
   dplyr::filter(Reliability != "Uncertain" & Level %in%  c("High", "Medium")) %>%
-  ### For better comparison, turn categprical 'High' and 'Medium' into numeric '2' and '1'
+  ### For better comparison, turn categorical 'High' and 'Medium' into numeric '2' and '1'
   dplyr::mutate(Level = dplyr::case_when(Level == "High" ~ 2,
                                          TRUE ~ 1)) %>%
   ### Aggregate CNS tissues (see the grouping above)
   dplyr::mutate(Tissue = dplyr::case_when(Tissue %in% hpa_cns_tissues ~ "CNS",
                                           TRUE ~ Tissue)) %>% 
   ### Take the max value for the group
-  dplyr::group_by(Gene.name, Tissue) %>% dplyr::summarise(Level = max(Level)) %>%
+  dplyr::group_by(Gene.name, Tissue) %>%
+  dplyr::summarise(Max_Level = max(Level)) %>%
   ### Summarise on the gene level
-  dplyr::summarise(cns_level_ich = Level[Tissue == "CNS"],
-                   n_entries_hi_mid_ich = n(),
-                   entries_hi_mid_ich = paste(sort(Tissue), collapse = ","))
+  dplyr::summarise(ich_cns_level = Max_Level[Tissue == "CNS"],
+                   ich_num_tissues = n(),
+                   ich_tissues_hi_mid_levels = paste(sort(Tissue), collapse = ","))
 
 ### Filter the HPA RNAseq data per gene symbol and aggregate CNS-related data
 aggregated_rna <- normal_tissue_RNAseq %>%
@@ -65,9 +66,9 @@ aggregated_rna <- normal_tissue_RNAseq %>%
   ### Filter by percentage within gene group
   dplyr::filter(perc_max >= 0.5) %>%
   ### Summarise on the gene level
-  dplyr::summarise(cns_perc_max_rna = perc_max[Tissue == "CNS"],
-                   n_entries_50perc_max_rna = n(),
-                   entries_50perc_max_rna = paste(sort(Tissue), collapse = ","))
+  dplyr::summarise(rna_cns_perc_max = perc_max[Tissue == "CNS"],
+                   rna_n_tissues_50perc_max = n(),
+                   rna_tissues_50perc_max = paste(sort(Tissue), collapse = ","))
 
 ### Load data from Protein DB, if the table does not exist - regenerate
 ### Data acquired from "https://www.proteomicsdb.org"
@@ -112,9 +113,9 @@ aggregated_proteindb <- proteindb_tab %>% mutate(NORMALIZED_INTENSITY = as.numer
   ### Filter by percentage within gene group
   dplyr::filter(perc_max >= 0.5) %>%
   ### Summarise on the gene level
-  dplyr::summarise(cns_perc_max_protdb = perc_max[TISSUE_SAP_SYNONYM == "CNS"],
-                   n_entries_50perc_max_protdb = n(),
-                   entries_50perc_max_protdb = paste(sort(TISSUE_SAP_SYNONYM), collapse = ","))
+  dplyr::summarise(protdb_cns_perc_max = perc_max[TISSUE_SAP_SYNONYM == "CNS"],
+                   protdb_n_tissues_50perc_max = n(),
+                   protdb_tissues_50perc_max = paste(sort(TISSUE_SAP_SYNONYM), collapse = ","))
 ### Chain merge to combine the three tables
 summary_table_tissue_BMs <- merge(annotated_BMs, aggregated_ich, by.x = "SYMBOL", by.y = "Gene.name", all.x = TRUE)
 summary_table_tissue_BMs <- merge(summary_table_tissue_BMs, aggregated_rna, by.x = "SYMBOL", by.y = "Gene.name", all.x = TRUE)
@@ -124,10 +125,10 @@ summary_table_tissue_BMs <- merge(summary_table_tissue_BMs, aggregated_proteindb
 # write.table(summary_table_tissue_BMs, file = "_notgit/summary_tissues_annotated_BM.tsv",
 write.table(summary_table_tissue_BMs, file = file.path(datasets_root_directory, "summary_tissues_annotated_BM.tsv"),
             sep = "\t", col.names = T, row.names = F, quote = F)
-
-tmp <- cbind(is.na(summary_table_tissue_BMs$cns_level_ich),
-             is.na(summary_table_tissue_BMs$cns_perc_max_rna),
-             is.na(summary_table_tissue_BMs$cns_perc_max_protdb))
-
+# NAs check
+tmp <- cbind(is.na(summary_table_tissue_BMs$ich_cns_level),
+             is.na(summary_table_tissue_BMs$rna_cns_perc_max),
+             is.na(summary_table_tissue_BMs$protdb_cns_perc_max))
+# overview: frequencies of 4 groups (#TRUES per row)
 table(rowSums(tmp))
 
