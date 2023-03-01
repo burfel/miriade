@@ -76,4 +76,11 @@ v_random_walk_communities <- igraph::walktrap.community(vertex_intersection_grap
 # v_edge_betweenness_communities <- edge.betweenness.community(vertex_intersection_graph)
 # v_infomap_communities <- igraph:: infomap.community(vertex_intersection_graph)
 
-kegg_communities <- sapply(communities(v_random_walk_communities), community_enrichment)
+enriched_communities <-
+  Filter(is_df_populated,
+         sapply(communities(v_random_walk_communities), community_enrichment))
+# Aggregate according to Gene so that all of its terms are concatenated with ';'
+aggregated_enriched_communities <-
+  lapply(enriched_communities, function(df) df %>% 
+  group_by(Gene) %>% 
+  summarise(Term = paste(Term, collapse = ";")))

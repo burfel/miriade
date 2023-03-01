@@ -275,6 +275,12 @@ extract_vertices_for_all_graphs <- function(
   }
 }
 
+# Auxiliary function to check if dataframe is populated
+is_df_populated <- function(df)
+{
+  return(nrow(df) > 0)
+}
+
 ###########
 # This 
 #
@@ -292,18 +298,24 @@ community_enrichment <- function(community, adj.p.cutoff = 0.1,
   require(enrichR)
   ### KEGG enrichment
   enrc <- enrichR::enrichr(community, databases = pathway_datasets)
-  # kegg <- dplyr::filter(enrc$KEGG_2021_Human, Adjusted.P.value < adj.p.cutoff & !grepl(kegg_reject,Term))
-  enirchments <- bind_rows(lapply(enrc, function(x) dplyr::filter(x, Adjusted.P.value < adj.p.cutoff & !grepl(term_reject,Term))))
+  # Due to a bug where sometimes empty members are of type logical causing
+  # `bind_rows` to fail, we filter empty ones
+  filtered_enrc <-
+    lapply(enrc, function(x) dplyr::filter(x, Adjusted.P.value < adj.p.cutoff &
+                                             !grepl(term_reject,Term)))
+  enrichments <-
+    bind_rows(Filter(is_df_populated, filtered_enrc))
   ### Turn pathway-genes (one-many) association table into a flat pathway-gene (one-one) table
-  if(nrow(enirchments) > 0)
+  if(nrow(enrichments) > 0)
   {
-    return(do.call(rbind, apply(enirchments, 1, function(x) data.frame(Term = x["Term"],
-                                                                Genes = unlist(strsplit(x["Genes"], split = ";")),
-                                                                row.names = NULL))))
+    return((do.call(rbind, apply(enrichments, 1, function(x) data.frame(Term = x["Term"],
+                                                                Gene = unlist(strsplit(x["Genes"], split = ";")),
+                                                                row.names = NULL))) %>%
+             dplyr::group_by(Gene) %>%
+             dplyr::arrange(.by_group = T))[,c(2,1)])
   }
   else
   {
     return(data.frame())
   }
-  
 }
