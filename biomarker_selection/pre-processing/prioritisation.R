@@ -79,7 +79,7 @@ com_bms <- sort_table(annotated_BMs, c("ALZ,FTD,DLB","ALZ,DLB","ALZ,FTD","FTD,DL
 # hpa_brain_gtex <- read.table("_notgit/rna_brain_gtex.tsv", sep = "\t", header = T) %>%
 hpa_brain_gtex <- read.table(file.path(datasets_root_directory, "HPA/rna_brain_gtex.tsv"),
                              sep = "\t", header = T) %>%
-  dplyr::filter(!(Brain.region %in% c("amygdala", "pituitary gland", "retina"))). ## TODO: READ UP ON THE BIOLOGY
+  dplyr::filter(!(Brain.region %in% c("amygdala", "pituitary gland", "retina"))) ## TODO: READ UP ON THE BIOLOGY
 # hpa_brain_fant <- read.table("_notgit/rna_brain_fantom.tsv", sep = "\t", header = T) %>%
 hpa_brain_fant <- read.table(file.path(datasets_root_directory, "HPA/rna_brain_fantom.tsv"),
                              sep = "\t", header = T) %>%

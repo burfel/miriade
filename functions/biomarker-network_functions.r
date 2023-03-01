@@ -117,8 +117,10 @@ extract_type_list_from_vertices_by_types <- function(vertices_by_types) {
 # @param graph
 # @param type_list including the None type
 # @param color_seq the color sequence to be used by this graph
+# @param comm A list derived from a communities object or an empty list
+#             (default) if no communities are to be shown
 #######################################################
-draw_igraph <- function(graph, type_list, color_seq) {
+draw_igraph <- function(graph, type_list, color_seq, comm = list()) {
   # this ensures the starting random position is the same
   # for the layouts that use a random starting position
   set.seed(1492) 
@@ -136,7 +138,8 @@ draw_igraph <- function(graph, type_list, color_seq) {
               vertex.label.cex=0.6, 
               vertex.label.family="Helvetica",
               vertex.label.font=1,
-              vertex.shape="circle",)
+              vertex.shape="circle",
+              mark.groups = comm)
   #edge.arrow.mode=2,)
   #edge.curved=TRUE,)
   
@@ -270,4 +273,37 @@ extract_vertices_for_all_graphs <- function(
   } else {
     return(lapply(interaction_dfs, extract_all_distinct_objects, interaction_columns))
   }
+}
+
+###########
+# This 
+#
+# @param community
+# @param adj.p.cutoff 
+# @param term_reject which terms to reject
+# @param pathway_datasets char vector of pathway databases
+#
+# @return 
+###########
+community_enrichment <- function(community, adj.p.cutoff = 0.1,
+                                      term_reject = "infection|cancer|carcinoma|virus|[v|V]iral|trypanosomiasis|Malaria|Tuberculosis|Melanoma|leukemia|Influenza|disease|Amoebiasis",
+                                      pathway_datasets = c("KEGG_2021_Human", "MSigDB_Hallmark_2020", "Reactome_2022", "HDSigDB_Human_2021", "WikiPathway_2021_Human"))
+{
+  require(enrichR)
+  ### KEGG enrichment
+  enrc <- enrichR::enrichr(community, databases = pathway_datasets)
+  # kegg <- dplyr::filter(enrc$KEGG_2021_Human, Adjusted.P.value < adj.p.cutoff & !grepl(kegg_reject,Term))
+  enirchments <- bind_rows(lapply(enrc, function(x) dplyr::filter(x, Adjusted.P.value < adj.p.cutoff & !grepl(term_reject,Term))))
+  ### Turn pathway-genes (one-many) association table into a flat pathway-gene (one-one) table
+  if(nrow(enirchments) > 0)
+  {
+    return(do.call(rbind, apply(enirchments, 1, function(x) data.frame(Term = x["Term"],
+                                                                Genes = unlist(strsplit(x["Genes"], split = ";")),
+                                                                row.names = NULL))))
+  }
+  else
+  {
+    return(data.frame())
+  }
+  
 }
