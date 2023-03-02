@@ -44,7 +44,7 @@ translate_interactions_using_dictionary <- function(interactions_df,
 # @return a list with all distinct objects from the dataframe
 ################################################################################
 extract_all_distinct_objects <- function(df, object_columns) {
-  all_values <- union(df[[object_columns[[1]]]], df[[object_columns[[2]]]])
+  all_values <- as.character(union(df[[object_columns[[1]]]], df[[object_columns[[2]]]]))
   length = length(object_columns)
   if (length > 2) {
     for (i in 3:length) {
