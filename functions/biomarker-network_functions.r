@@ -175,3 +175,70 @@ unify_graphs <- function(graph_list, vertices_by_type, extended_source_list,
     color_edges_based_on_sources(extended_source_list, color_sequence)
   return(unified_graph)
 }
+
+###############################################################################
+#' Getting all network object interactions that have valid uniprots for the
+#' network objects
+#'
+#' @param dataset_directory The directory where the interactions dataset and
+#'        and the dictionary (network object to uniprot) dataset sit
+#' @param interactions_file The file where the interactions between the
+#'        network objects are
+#' @param dictionary_file The file translating network objects to uniprots
+#' @param interaction_columns The column names of the source and target of
+#'        the interactions
+#' @param dictionary_columns The column names of the network object to uniprot
+#'        translation
+#' @param uniprot_interaction_names The name to give to the uniprot based
+#'        interaction columns
+#' @param return_as_uniprots whether to return the interaction df with uniprots
+#'
+#' @return A df that contains the interactions either as target and source
+#'         network objects or target and source uniprots.
+#'         The rows are unique.
+###############################################################################
+get_all_interactions_that_have_backing_uniprots <- function(
+    dataset_directory,
+    interactions_file,
+    dictionary_file,
+    interaction_columns = c("Network Object \"FROM\"", "Network Object \"TO\""),
+    dictionary_columns = c("Network Object Name", "Input IDs"),
+    uniprot_interaction_names = c("UniProt_FROM", "UniProt_TO"),
+    return_as_uniprots = FALSE)
+{
+  require(dplyr)
+  require(here)
+  dictionary <- readxl::read_xls(here(dataset_directory, dictionary_file), skip = 2) %>%
+    dplyr::select(all_of(dictionary_columns)) %>%
+    # Remove useless "No ID" rows
+    dplyr::filter(!!sym(dictionary_columns[[2]])!="No ID") %>%
+    dplyr::distinct(!!sym(dictionary_columns[[1]]), .keep_all = TRUE) %>%
+    dplyr::filter(!grepl(';', !!sym(dictionary_columns[[2]])))
+
+  interactions <- readxl::read_xls(here(from_metacore_path, interactions_file),
+                                   skip = 2) %>%
+    dplyr::select(all_of(interaction_columns)) %>%
+    dplyr::distinct()
+
+  uniprot_interactions <- translate_interactions_using_dictionary(
+    interactions_df = interactions,
+    interaction_columns = interaction_columns,
+    dictionary_df = dictionary,
+    dictionary_columns = dictionary_columns,
+    new_interaction_names = uniprot_interaction_names,
+    only_interaction_columns = F
+  )
+
+  # After cleaning with the uniprots, let's continue with the network objects
+  # or uniprot, depending on return_as_uniprots
+  if (return_as_uniprots) {
+    returning_columns <- uniprot_interaction_names
+  }
+  else {
+    returning_columns <- interaction_columns
+  }
+
+  return(uniprot_interactions %>%
+    dplyr::select(all_of(returning_columns)) %>%
+    dplyr::distinct())
+}

@@ -3,41 +3,13 @@ library(here)
 source(here("functions", "biomarker-network_functions.R"))
 source(here("functions", "data_processing_functions.R"))
 from_metacore_path <- here("biomarker_selection", "networks", "from-metacore")
-miriade_genes <- readxl::read_xls(here(from_metacore_path, 
-                                        "all-MIRIADE-biomarker-candidates_analyse-networks_genes.xls"), 
-                                        skip = 2) %>%
-  #dplyr::select(`SwissProt IDs`, `Network Object Name`) %>%
-  dplyr::select(`Input IDs`, `Network Object Name`) %>%
-  # Remove useless "No ID" rows
-  #dplyr::filter(`SwissProt IDs`!="No ID") %>%
-  dplyr::filter(`Input IDs`!="No ID") %>%
-  dplyr::distinct(`Network Object Name`, .keep_all = TRUE)
 
-miriade_interactions <- readxl::read_xls(here(from_metacore_path, 
-                                        "all-MIRIADE-biomarker-candidates_analyse-networks_interactions.xls"), 
-                                        skip = 2) %>%
-  dplyr::select(`Network Object \"FROM\"`, `Network Object \"TO\"`) %>%
-  dplyr::distinct() # 5 NAs
-
-miriade_uniprot_interactions <- translate_interactions_using_dictionary(
-        interactions_df = miriade_interactions,
-        interaction_columns = c("Network Object \"FROM\"", "Network Object \"TO\""),
-        dictionary_df = miriade_genes,
-        #dictionary_columns = c("Network Object Name", "SwissProt IDs"),
-        dictionary_columns = c("Network Object Name", "Input IDs"),
-        new_interaction_names = c("UniProt_FROM", "UniProt_TO"),
-        only_interaction_columns = F
-        ) %>%
-  dplyr::filter(!grepl(';', UniProt_FROM)) %>%
-  dplyr::filter(!grepl(';', UniProt_TO))
-# Produce a list of all UniProts in the file
-# uniprots_miriade <- extract_all_distinct_objects(miriade_uniprot_interactions,
-                                     # c("UniProt_TO", "UniProt_FROM"))
-
-# After cleaning with the uniprots, let's continue with the network objects
-miriade_interactions <- miriade_uniprot_interactions %>%
-  dplyr::select(`Network Object \"FROM\"`, `Network Object \"TO\"`) %>%
-  dplyr::distinct()
+miriade_interactions <- get_all_interactions_that_have_backing_uniprots(
+  dataset_directory = from_metacore_path,
+  interactions_file = "all-MIRIADE-biomarker-candidates_analyse-networks_interactions.xls",
+  dictionary_file = "all-MIRIADE-biomarker-candidates_analyse-networks_genes.xls",
+  return_as_uniprots = T
+)
 
 # Produce a list of all network objects
 network_objects_miriade <- extract_all_distinct_objects(miriade_interactions,
