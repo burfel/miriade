@@ -1,6 +1,7 @@
 library(dplyr)
 library(here)
 library(igraph)
+library(future)
 source(here("functions", "biomarker-network_functions.R"))
 source(here("functions", "data_processing_functions.R"))
 from_metacore_path <- here("biomarker_selection", "networks", "from-metacore")
@@ -75,14 +76,14 @@ print(length(Filter(function(x) length(x)>2, communities(random_walk_communities
 # DO NOT USE - The optimal method is causing some memory leak
 # optimal_communities <- igraph::optimal.community(unified_graph)
 # infomap_communities <- igraph:: infomap.community(unified_graph)
-enriched_communities <-
-  Filter(is_df_populated,
-         sapply(communities(random_walk_communities), community_enrichment))
-# Aggregate according to Gene so that all of its terms are concatenated with ';'
-aggregated_enriched_communities <-
-  lapply(enriched_communities, function(df) df %>% 
-           group_by(Gene) %>% 
-           summarise(Term = paste(Term, collapse = ";")))
+
+# Set up a background plan
+plan(multisession)
+# Set it to run async so we can run the rest
+enriched_communities_future <-
+  future(Filter(is_df_populated,
+         sapply(communities(random_walk_communities), community_enrichment)))
+
 
 # Now we take the induced subgraph of only the intersection vertices
 vertex_intersection_graph <- igraph::induced_subgraph(unified_graph, V(unified_graph)[V(unified_graph)$type == "miriade+csf"])
@@ -95,6 +96,13 @@ print(length(Filter(function(x) length(x)>2, communities(v_random_walk_communiti
 v_enriched_communities <-
   Filter(is_df_populated,
          sapply(communities(v_random_walk_communities), community_enrichment))
+#resolving the future and moving on
+enriched_communities <- future::value(enriched_communities_future)
+# Aggregate according to Gene so that all of its terms are concatenated with ';'
+aggregated_enriched_communities <-
+  lapply(enriched_communities, function(df) df %>% 
+           group_by(Gene) %>% 
+           summarise(Term = paste(Term, collapse = ";")))
 # Aggregate according to Gene so that all of its terms are concatenated with ';'
 aggregated_v_enriched_communities <-
   lapply(v_enriched_communities, function(df) df %>% 
