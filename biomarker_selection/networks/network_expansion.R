@@ -1,5 +1,6 @@
 library(dplyr)
 library(here)
+library(igraph)
 source(here("functions", "biomarker-network_functions.R"))
 source(here("functions", "data_processing_functions.R"))
 from_metacore_path <- here("biomarker_selection", "networks", "from-metacore")
@@ -60,7 +61,11 @@ write_graph(unified_graph,
 
 ########################
 # Community detection  #
-######################### Random walk does only 4 step by default, resulting in 662 communities.
+########################
+random_walk_communities <- igraph::walktrap.community(unified_graph, steps = 100)
+# Number of communities with more than two nodes
+print(length(Filter(function(x) length(x)>2, communities(random_walk_communities))))
+# Random walk does only 4 step by default, resulting in 662 communities.
 # With 100 steps, 371 communities are detected
 # random_walk_communities <- igraph::walktrap.community(unified_graph, steps = 100)
 # edge_betweenness_communities <- edge.betweenness.community(unified_graph)
@@ -70,17 +75,28 @@ write_graph(unified_graph,
 # DO NOT USE - The optimal method is causing some memory leak
 # optimal_communities <- igraph::optimal.community(unified_graph)
 # infomap_communities <- igraph:: infomap.community(unified_graph)
-# Now we take the induced subgraph of only the intersection vertices
-vertex_intersection_graph <- igraph::induced_subgraph(unified_graph, V(unified_graph)[V(unified_graph)$type == "miriade+csf"])
-v_random_walk_communities <- igraph::walktrap.community(vertex_intersection_graph, steps = 100)
-# v_edge_betweenness_communities <- edge.betweenness.community(vertex_intersection_graph)
-# v_infomap_communities <- igraph:: infomap.community(vertex_intersection_graph)
-
 enriched_communities <-
   Filter(is_df_populated,
-         sapply(communities(v_random_walk_communities), community_enrichment))
+         sapply(communities(random_walk_communities), community_enrichment))
 # Aggregate according to Gene so that all of its terms are concatenated with ';'
 aggregated_enriched_communities <-
   lapply(enriched_communities, function(df) df %>% 
+           group_by(Gene) %>% 
+           summarise(Term = paste(Term, collapse = ";")))
+
+# Now we take the induced subgraph of only the intersection vertices
+vertex_intersection_graph <- igraph::induced_subgraph(unified_graph, V(unified_graph)[V(unified_graph)$type == "miriade+csf"])
+v_random_walk_communities <- igraph::walktrap.community(vertex_intersection_graph, steps = 100)
+# Number of communities with more than two nodes
+print(length(Filter(function(x) length(x)>2, communities(v_random_walk_communities))))
+# v_edge_betweenness_communities <- edge.betweenness.community(vertex_intersection_graph)
+# v_infomap_communities <- igraph:: infomap.community(vertex_intersection_graph)
+
+v_enriched_communities <-
+  Filter(is_df_populated,
+         sapply(communities(v_random_walk_communities), community_enrichment))
+# Aggregate according to Gene so that all of its terms are concatenated with ';'
+aggregated_v_enriched_communities <-
+  lapply(v_enriched_communities, function(df) df %>% 
   group_by(Gene) %>% 
   summarise(Term = paste(Term, collapse = ";")))

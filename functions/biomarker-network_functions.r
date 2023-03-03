@@ -1,3 +1,4 @@
+library(here)
 source(here("functions", "graph_vertices_functions.R"))
 source(here("functions", "graph_edges_functions.R"))
 source(here("functions", "data_processing_functions.R"))
@@ -296,6 +297,7 @@ community_enrichment <- function(community, adj.p.cutoff = 0.1,
                                       pathway_datasets = c("KEGG_2021_Human", "MSigDB_Hallmark_2020", "Reactome_2022", "HDSigDB_Human_2021", "WikiPathway_2021_Human"))
 {
   require(enrichR)
+  require(dplyr)
   ### KEGG enrichment
   enrc <- enrichR::enrichr(community, databases = pathway_datasets)
   # Due to a bug where sometimes empty members are of type logical causing
@@ -319,3 +321,5 @@ community_enrichment <- function(community, adj.p.cutoff = 0.1,
     return(data.frame())
   }
 }
+
+
