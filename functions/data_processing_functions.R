@@ -208,3 +208,28 @@ convert_age_column_to_age_group_column <-
             breaks = cutting_breaks,
             labels = cutting_labels)))
 }
+
+################################################################################
+#' Named list of collections
+#' 
+#' Creates a named list of collections
+#'
+#' @param names_vector vector of names to give the collections
+#' @param ... variable number of collections
+#'
+#' @return a named list with the collections
+#' @note Throws an exception if the number of names is not the same as
+#'       the number of collections
+################################################################################
+named_list <- function(names_vector, ...) {
+  collection_list <- list(...)
+
+  # Check that the length of names is equal to the number of collections/dfs
+  if (length(names_vector) != length(collection_list)) {
+    stop("Number of names and collections must match")
+  }
+
+  names(collection_list) <- names_vector
+
+  return(collection_list)
+}

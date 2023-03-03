@@ -1,5 +1,6 @@
 source(here("functions", "graph_vertices_functions.R"))
 source(here("functions", "graph_edges_functions.R"))
+source(here("functions", "data_processing_functions.R"))
 ################################################################################
 # Takes an edge dataframe and extracts from it a graph with edges where at
 # least one node is in the vertex_list
@@ -241,4 +242,32 @@ get_all_interactions_that_have_backing_uniprots <- function(
   return(uniprot_interactions %>%
     dplyr::select(all_of(returning_columns)) %>%
     dplyr::distinct())
+}
+
+###############################################################################
+#' Extract vertices for all graphs
+#' 
+#' This function takes the interaction dfs representing edge lists of graphs
+#' and extracts all unique vertices from them
+#'
+#' @param interaction_dfs Named list of interaction dfs
+#' @param interaction_columns Names of source and target of interactions
+#' @param uniprot_interaction_columns Names of uniprot source and target of interactions
+#' @param return_as_uniprots Whether we should return uniprots or not
+#'
+#' @return A named list with the vertices of each interaction df. The names
+#'         from the interaction_dfs are inherited correctly
+###############################################################################
+extract_vertices_for_all_graphs <- function(
+    interaction_dfs,
+    interaction_columns = c("Network Object \"FROM\"", "Network Object \"TO\""),
+    uniprot_interaction_columns = c("UniProt_FROM", "UniProt_TO"),
+    return_as_uniprots = FALSE
+    )
+{
+  if (return_as_uniprots) {
+    return(lapply(interaction_dfs, extract_all_distinct_objects, uniprot_interaction_columns))
+  } else {
+    return(lapply(interaction_dfs, extract_all_distinct_objects, interaction_columns))
+  }
 }
