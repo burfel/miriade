@@ -336,3 +336,80 @@ meld_fractured_dataset <- function(
   }
   return(new_df)
 }
+
+################################################################################
+#' Perform KW Wilcoxon process for grouping based p values
+#'
+#' @param melted_df The melted representation of the data
+#' @param differentiating_feature_symbol a symbol of the column name representing
+#'        the p value targets
+#' @param grouping_feature_symbol a symbol representing the column name for the
+#'        grouping to have the p values calculated for
+#' @param measurement_symbol a symbol representing the column name for the values
+#' @param significance_limit significance limit for the intermediate p values
+#'
+#' @return A df with rows for the values of the differentiating feature with
+#'          values and adjusted pvalues for each one of the grouping comparisons
+################################################################################
+perform_kw_wilcoxon_according_to_grouping <- function(
+    melted_df,
+    differentiating_feature_symbol,
+    grouping_feature_symbol,
+    measurement_symbol,
+    significance_limit
+    )
+{
+  library(here)
+  source(here("functions", "auxiliary_statistical_functions.R"))
+  ### Run Kruskal-Wallis test for all biomarkers grouped by grouping_feature
+  kw_grouped <-
+    sapply(
+      unique(melted_df[[as.character(differentiating_feature_symbol)]]),
+      kruskal_wallis_test_for_sample_groups,
+      melted_df,
+      differentiating_feature_symbol,
+      grouping_feature_symbol,
+      measurement_symbol)
+
+  significant_kw_grouped <-
+    keep_only_significant_entries(
+      melted_df,
+      differentiating_feature_symbol = differentiating_feature_symbol,
+      kw_per_differentiating_feature = kw_grouped,
+      significance_limit = significance_limit)
+
+  if (nrow(significant_kw_grouped) == 0) {
+    message("No significant pvalues were found for the ",
+            as.character(grouping_feature_symbol),
+            " grouping")
+    return(data.frame(Name = character(),
+                      p.val = numeric(),
+                      adj.p = numeric()))
+  }
+
+  kw_wilcoxon_grouped <-
+    test_pairwise_wilcoxon(
+      melted_df,
+      differentiating_feature_symbol,
+      significant_kw_grouped,
+      grouping_feature_symbol,
+      measurement_symbol)
+
+  ### Adjust for measurements
+  kw_wilcoxon_grouped_adj <- matrix(p.adjust(kw_wilcoxon_grouped, method = "BH"), nrow = nrow(kw_wilcoxon_grouped))
+  rownames(kw_wilcoxon_grouped_adj) <- rownames(kw_wilcoxon_grouped)
+  colnames(kw_wilcoxon_grouped_adj) <- colnames(kw_wilcoxon_grouped)
+  
+  # Use lapply() to create a list of data frames for each row in kw_wilcoxon_grouped
+  dfs <- lapply(1:nrow(kw_wilcoxon_grouped), function(i) {
+    data.frame(Name = colnames(kw_wilcoxon_grouped),
+               p.val = t(kw_wilcoxon_grouped)[, i],
+               adj.p = kw_wilcoxon_grouped_adj[i, ]) %>% 
+      dplyr::rename(!!differentiating_feature_symbol := "Name")
+  })
+  
+  # Name the list elements after the row names in kw_wilcoxon_grouped
+  names(dfs) <- row.names(kw_wilcoxon_grouped)
+  
+  return(dfs)
+}

@@ -92,7 +92,7 @@ test_pairwise_wilcoxon <- function(melted_table,
       measurement_symbol,
       grouping_feature_symbol,
       differentiating_feature_symbol, pairs)
-  if(class(result) == "numeric") {
+  if(any(class(result) == "numeric")) {
     result <- as.data.frame(t(result))
     rownames(result) <- names(pairs)
   }
