@@ -51,8 +51,6 @@ dplyr::summarise(mean = mean(median_ab_readout),
                  median = median(median_ab_readout),
                  .by = c(Diagnosis, Age_Group, Gender, HGNC_Symbol))
 
-boxplot(EDN1 ~ Diagnosis, data = kth)
-
 ################################################################################
 # Adjusting to have Diagnosis + age group combined column
 ################################################################################
@@ -76,44 +74,7 @@ mutated_kth <- kth %>%
   dplyr::filter(Diagnosis == "AD" | Diagnosis == "Control") %>%
   dplyr::mutate(Diagnosis_Age_Group = paste(Diagnosis, Age_Group))
 
-create_box_plot <- function(dataframe, x_column, y_column) {
-  x_column_symbol <- sym(x_column)
-  y_column_symbol <- sym(y_column)
-  return(
-    ggplot(dataframe, aes(x = !!x_column_symbol, y = !!y_column_symbol)) +
-      geom_boxplot() +
-      scale_x_discrete() #+
-      #labs(y = y_column)
-  )
-}
-
-create_box_plots_of_all_columns_starting_at_column_number <-
-  function(dataframe, x_column, y_starting_column) {
-  number_of_columns <- length(names(dataframe))
-  y_column_names <- names(dataframe)[y_starting_column:number_of_columns]
-  new_length <- number_of_columns - y_starting_column
-  box_plots <- vector("list", length = new_length)
-  for (i in 1:new_length) { # TODO: Possibly replace with sapply
-    box_plots[[i]] <- create_box_plot(dataframe, x_column, y_column_names[[i]])
-  }
-  return(box_plots)
-}
-create_box_plot(mutated_kth, "Diagnosis_Age_Group", "BDP1")
-boxplot(BDP1 ~ Diagnosis_Age_Group, data = mutated_kth)
-
-boxplot(CHGB ~ Diagnosis_Age_Group, data = mutated_kth)
-
-boxplot(DDAH1 ~ Diagnosis_Age_Group, data = mutated_kth)
-
-boxplot(EDN1 ~ Diagnosis_Age_Group, data = mutated_kth)
-
-boxplot(IL1B ~ Diagnosis_Age_Group, data = mutated_kth)
-
-boxplot(MDH1 ~ Diagnosis_Age_Group, data = mutated_kth)
-
-boxplot(PEBP1 ~ Diagnosis_Age_Group, data = mutated_kth)
-
-boxplot(S100B ~ Diagnosis_Age_Group, data = mutated_kth)
+#create_box_plot(mutated_kth, "Diagnosis_Age_Group", "BDP1")
 
 ################################################################################
 #####################################EMIF#######################################
