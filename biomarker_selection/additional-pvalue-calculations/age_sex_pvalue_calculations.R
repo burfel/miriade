@@ -23,46 +23,27 @@ melted_kth <-
 
 
 ### Run Kruskal-Wallis test for all biomarkers grouped by gender
-kw_per_hgnc_gender_grouped <-
-  sapply(
-    unique(melted_kth$HGNC_Symbol),
-    kruskal_wallis_test_for_sample_groups,
-    melted_kth,
-    sym("HGNC_Symbol"),
-    sym("Gender"),
-    sym("median_ab_readout"))
-
-significant_kw_per_hgnc_gender_grouped <-
-  keep_only_significant_entries(
-    melted_kth,
-    differentiating_feature_symbol = sym("HGNC_Symbol"),
-    kw_per_differentiating_feature = kw_per_hgnc_gender_grouped,
-    significance_limit = 0.1)
+kth_gender_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
+  melted_df = melted_kth,
+  differentiating_feature_symbol = sym("HGNC_Symbol"),
+  grouping_feature_symbol = sym("Gender"),
+  measurement_symbol = sym("median_ab_readout"),
+  significance_limit = 0.05)
 
 ### Age_Group
-kw_per_hgnc_age_group_grouped <-
-  sapply(
-    unique(melted_kth$HGNC_Symbol),
-    kruskal_wallis_test_for_sample_groups,
-    melted_kth,
-    sym("HGNC_Symbol"),
-    sym("Age_Group"),
-    sym("median_ab_readout"))
-
-significant_kw_per_hgnc_age_group_grouped <-
-  keep_only_significant_entries(
-    melted_kth,
-    differentiating_feature_symbol = sym("HGNC_Symbol"),
-    kw_per_differentiating_feature = kw_per_hgnc_age_group_grouped,
-    significance_limit = 0.05)
-
-significant_kw_wilcox_age_group_grouped <-
-  test_pairwise_wilcoxon(
-    melted_kth,
-    sym("HGNC_Symbol"),
-    significant_kw_per_hgnc_age_group_grouped,
-    sym("Age_Group"),
-    sym("median_ab_readout"))
+kth_age_group_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
+  melted_df = melted_kth,
+  differentiating_feature_symbol = sym("HGNC_Symbol"),
+  grouping_feature_symbol = sym("Age_Group"),
+  measurement_symbol = sym("median_ab_readout"),
+  significance_limit = 0.05)
+### Diagnosis
+kth_diagnosis_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
+  melted_df = melted_kth,
+  differentiating_feature_symbol = sym("HGNC_Symbol"),
+  grouping_feature_symbol = sym("Diagnosis"),
+  measurement_symbol = sym("median_ab_readout"),
+  significance_limit = 0.05)
 
 kth_summary <- melted_kth %>%
 dplyr::summarise(mean = mean(median_ab_readout),
@@ -73,38 +54,22 @@ dplyr::summarise(mean = mean(median_ab_readout),
 boxplot(EDN1 ~ Diagnosis, data = kth)
 
 ################################################################################
-# EXPERIMENTAL
+# Adjusting to have Diagnosis + age group combined column
 ################################################################################
 
 supercharged_melt <-
   melted_kth %>%
-  dplyr::filter(Diagnosis == "AD" | Diagnosis == "Control") %>%
+  #dplyr::filter(Diagnosis == "AD" | Diagnosis == "Control") %>%
   dplyr::mutate(Diagnosis_Age_Group = paste(Diagnosis, Age_Group)) %>%
   dplyr::select(Diagnosis_Age_Group, Gender, HGNC_Symbol, median_ab_readout)
 
-kw_per_hgnc_diagnosis_age_group <-
-  sapply(
-    unique(supercharged_melt$HGNC_Symbol),
-    kruskal_wallis_test_for_sample_groups,
-    supercharged_melt,
-    sym("HGNC_Symbol"),
-    sym("Diagnosis_Age_Group"),
-    sym("median_ab_readout"))
-
-signif_kw_per_hgnc_diagnosis_age_group <-
-  keep_only_significant_entries(
-    supercharged_melt,
-    differentiating_feature_symbol = sym("HGNC_Symbol"),
-    kw_per_differentiating_feature = kw_per_hgnc_diagnosis_age_group,
-    significance_limit = 0.05)
-
-signif_kw_wilcox_diagnosis_age_group <-
-  test_pairwise_wilcoxon(
-    supercharged_melt,
-    sym("HGNC_Symbol"),
-    signif_kw_per_hgnc_diagnosis_age_group,
-    sym("Diagnosis_Age_Group"),
-    sym("median_ab_readout"))
+### Diagnosis + age group
+kth_diagnosisage_group_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
+  melted_df = supercharged_melt,
+  differentiating_feature_symbol = sym("HGNC_Symbol"),
+  grouping_feature_symbol = sym("Diagnosis_Age_Group"),
+  measurement_symbol = sym("median_ab_readout"),
+  significance_limit = 0.05)
 
 mutated_kth <- kth %>%
   convert_age_column_to_age_group_column(sym("Age"), sym("Age_Group")) %>%
@@ -204,40 +169,75 @@ emif <-
 melted_emif <-
   reshape2::melt(emif, id = 1:5,
                  variable.name = "UniProt", value.name = "Value") %>%
-  #dplyr::filter(Diagnosis == "AD") %>%
   convert_age_column_to_age_group_column(sym("Age"), sym("Age_Group")) %>%
   dplyr::select(Diagnosis, Age_Group, Gender, UniProt, Value)
 
-### Run Kruskal-Wallis test for all biomarkers grouped by gender
-kw_per_uniprot_gender_grouped <-
-  sapply(
-    unique(melted_emif$UniProt),
-    kruskal_wallis_test_for_sample_groups,
-    melted_emif,
-    sym("UniProt"),
-    sym("Gender"),
-    sym("Value"))
+### Gender
+emif_gender_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
+  melted_df = melted_emif,
+  differentiating_feature_symbol = sym("UniProt"),
+  grouping_feature_symbol = sym("Gender"),
+  measurement_symbol = sym("Value"),
+  significance_limit = 0.05)
+### Age group
+emif_age_group_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
+  melted_df = melted_emif,
+  differentiating_feature_symbol = sym("UniProt"),
+  grouping_feature_symbol = sym("Age_Group"),
+  measurement_symbol = sym("Value"),
+  significance_limit = 0.05)
+### Diagnosis
+emif_age_group_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
+  melted_df = melted_emif,
+  differentiating_feature_symbol = sym("UniProt"),
+  grouping_feature_symbol = sym("Diagnosis"),
+  measurement_symbol = sym("Value"),
+  significance_limit = 0.05)
 
-significant_kw_per_uniprot_gender_grouped <-
-  keep_only_significant_entries(
-    melted_emif,
-    differentiating_feature_symbol = sym("UniProt"),
-    kw_per_differentiating_feature = kw_per_uniprot_gender_grouped,
-    significance_limit = 0.000001)
+################################################################################
+#####################################OLINK######################################
+################################################################################
+olink_dir <- "Olink/OLINK basic data files"
 
-emif_kw_wilcox_gender_grouped <-
-  test_pairwise_wilcoxon(
-    melted_emif,
-    sym("UniProt"),
-    significant_kw_per_uniprot_gender_grouped,
-    sym("Gender"),
-    sym("Value"))
+excludes <- list(
+  c("X","Olink_project", "Olink_plate"),
+  c("sam_ind", "X")
+)
 
-### Adjust for measurements
-emif_kw_wilcox_gender_grouped_adj <- matrix(p.adjust(emif_kw_wilcox_gender_grouped, method = "BH"), nrow = 1)
-rownames(emif_kw_wilcox_gender_grouped_adj) <- rownames(emif_kw_wilcox_gender_grouped)
-colnames(emif_kw_wilcox_gender_grouped_adj) <- colnames(emif_kw_wilcox_gender_grouped)
+olink <-
+  meld_fractured_dataset(
+    dataset_paths = c(
+      file.path(datasets_root_directory, olink_dir,"clin_bl_basic_04022020.csv"),
+      file.path(datasets_root_directory, olink_dir,"protein_data_LODmax_10percent_outliers_rm_missing_imputed_16112020.tsv")),
+    by_columns = setNames(c("SampleId"), c("SampleId")),
+    exclude_columns = excludes)  %>%
+  dplyr::mutate(sex = case_when(sex == 1 ~ 'm', sex == 2 ~ 'f', TRUE ~ sex))
 
-### Construct the final table
-final <- data.frame(Name = colnames(emif_kw_wilcox_gender_grouped),
-                    p.val = t(emif_kw_wilcox_gender_grouped)[,1],
+### Melt the dataframe, so there's only one readout variable
+melted_olink <-
+  reshape2::melt(olink, id = 1:4,
+                 variable.name = "Gene_name", value.name = "Value") %>%
+  convert_age_column_to_age_group_column(sym("age_gr"), sym("Age_Group")) %>%
+  dplyr::select(dx, Age_Group, sex, Gene_name, Value)
+
+### Gender
+olink_gender_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
+  melted_df = melted_olink,
+  differentiating_feature_symbol = sym("Gene_name"),
+  grouping_feature_symbol = sym("sex"),
+  measurement_symbol = sym("Value"),
+  significance_limit = 0.05)
+### Age group
+olink_age_group_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
+  melted_df = melted_olink,
+  differentiating_feature_symbol = sym("Gene_name"),
+  grouping_feature_symbol = sym("Age_Group"),
+  measurement_symbol = sym("Value"),
+  significance_limit = 0.05)
+### Diagnosis
+olink_diagnosis_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
+  melted_df = melted_olink,
+  differentiating_feature_symbol = sym("Gene_name"),
+  grouping_feature_symbol = sym("dx"),
+  measurement_symbol = sym("Value"),
+  significance_limit = 0.05)
