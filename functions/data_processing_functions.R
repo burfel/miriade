@@ -173,7 +173,7 @@ take_only_pre_underscore_substring <- function(str) {
 #' @return A dataframe of the sheet
 ################################################################################
 
-read_password_xlsx <- function(filepath, sheet) {
+read_password_xlsx <- function(filepath, sheet = 1) {
   wb <- XLConnect::loadWorkbook(filepath,
               password = rstudioapi::askForPassword("Enter password for file:"))
 
@@ -232,4 +232,107 @@ named_list <- function(names_vector, ...) {
   names(collection_list) <- names_vector
 
   return(collection_list)
+}
+
+#' Read dataframe from a table file
+#'
+#' @param file_path Path to the file
+#' @param header Whether the first row is a header
+#'
+#' @return Dataframe based on the file
+read_df_from_file <- function(file_path, header = TRUE)
+{
+  if (endsWith(file_path, ".tsv")) {
+    return(read.table(file = file_path, sep = "\t", header = header))
+  } else if (endsWith(file_path, ".csv")) {
+    return(tryCatch({
+      read.table(file = file_path, sep = ",", header = header)
+    }, error = function(e) {
+      read.table(file = file_path, sep = ";", dec = ",", header = header)
+    }))
+  } else if (endsWith(file_path, ".xls")) {
+    readxl::read_xls(file_path)
+  } else if (endsWith(file_path, ".xlsx")) {
+    return(tryCatch({
+      readxl::read_xlsx(path = file_path)
+    }, error = function(e) {
+      read_password_xlsx(filepath = file_path)
+    }))
+  }
+}
+
+################################################################################
+#' Meld together pieces of a dataset spread across several files
+#'
+#' @param dataset_paths 2 or 3 paths of dataset parts
+#' @param by_columns A named vector where the names are the names of the columns
+#'        on the "left" (i.e. lower indexed) file and the values are the names
+#'        of the columns on the "right" (higher indexed) file
+#' @param select_columns Either NULL or a vector of the columns to be selected.
+#'        If explicitly set, will only return the specified cols
+#' @param exclude_columns Either NULL or a list of vectors of col names with the
+#'        same length as `dataset_paths`.
+#'        This one does the exclusion before the join because same named columns
+#'        will have their names suffixed after the join, possibly being missed
+#'        by the exclusion as a result if it was done after the join.
+#'        If explicitly set, will return all cols but those
+#'
+#' @return
+#' @example If we have a data set with "cc1,d,e" columns, one with "c1,c2,c3"
+#'          and a third one with "cc2,f,g", we could meld them like this:
+#'          `melded <- meld_fractured_dataset(`
+#'          ` dataset_paths = c("path1","path2","path3"),`
+#'          ` by_columns(cc1 = "c1", c2 = "cc2"))`.
+#'          To use exclusion in this case, here is an example:
+#'          `exclude_columns = list(c("d"), c(), c("f","g"))`
+#' @note If both `select_columns` and `exclude_columns` are set, `select_columns`
+#'       will take precedence
+################################################################################
+meld_fractured_dataset <- function(
+    dataset_paths,
+    by_columns,
+    select_columns = NULL,
+    exclude_columns = NULL)
+{
+  # Dependencies
+  require(dplyr)
+  # Validation
+  if(length(dataset_paths) < 2 | length(dataset_paths) > 3)
+  {
+    stop("You must only use this for 2 or 3 data files. No more, no less")
+  }
+  if (length(dataset_paths) - 1 != length(by_columns))
+  {
+    stop("The length of `by_columns` must be EXACTLY one less than that of `dataset_paths`")
+  }
+  if(!is.null(exclude_columns)) {
+    # If both `select_columns` and `exclude_columns` are set NULLify
+    # `exclude_columns` since `select_columns` takes precedence
+    if(!is.null(select_columns)) {
+      exclude_columns <- NULL
+    } else if(length(dataset_paths) != length(exclude_columns)) {
+      stop("The length of `exclude_columns` must be EXACTLY that of `dataset_paths`")
+    }
+  }
+  # Melding
+  df1 <- read_df_from_file(dataset_paths[[1]])
+  df2 <- read_df_from_file(dataset_paths[[2]])
+  if(!is.null(exclude_columns)) {
+    df1 <- dplyr::select(df1, -exclude_columns[[1]])
+    df2 <- dplyr::select(df2, -exclude_columns[[2]])
+  }
+  new_df <- dplyr::inner_join(df1, df2,
+                              by = by_columns[1])
+  if (length(dataset_paths) == 3) {
+    df3 <- read_df_from_file(dataset_paths[[3]])
+    if(!is.null(exclude_columns)) {
+      df3 <- dplyr::select(df3, -exclude_columns[[3]])
+    }
+    new_df <- dplyr::inner_join(new_df, df3,
+                                by = by_columns[2])
+  }
+  if(!is.null(select_columns)) {
+    new_df <- dplyr::select(new_df, select_columns)
+  }
+  return(new_df)
 }
