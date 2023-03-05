@@ -153,5 +153,91 @@ boxplot(S100B ~ Diagnosis_Age_Group, data = mutated_kth)
 ################################################################################
 #####################################EMIF#######################################
 ################################################################################
-emif <- read_password_xlsx(file.path(datasets_root_directory,
-                                   "EMIF-AD MBD Study/Clinical_EMIFMBD_MIRIADE.xlsx"), 1)
+if(!file.exists(file.path(datasets_root_directory,
+                          "EMIF-AD MBD Study/dcast_proteins.tsv"))) {
+  melted_proteins <-
+    read_df_from_file(file.path(datasets_root_directory,
+                                "EMIF-AD MBD Study/data_protein.tsv"))
+  casted_proteins <-
+    reshape2::dcast(melted_proteins,
+            Assay.ID ~ PEPTIDE.SEQUENCE,
+            value.var = "VALUE") %>%
+    dplyr::select_if(~!any(is.na(.)))
+  
+  write.table(casted_proteins, file = file.path(datasets_root_directory, "EMIF-AD MBD Study/dcast_proteins.tsv"),
+              sep = "\t", row.names = F)
+}
+
+emif_dir <- "EMIF-AD MBD Study"
+
+excludes <- list(
+  c("Fu","Study","Diag_num", "VisitTime", "Studyname", "Center", "Eduy",
+    "Eduy_IMP", "BL_Diaggroups", "AMYLOIDstatus", "ABmethod",
+    "MMSE", "DateMMSE", "DateBloodCollection", "DateCSFCollection", "DateMRI",
+    "DatePET","FU_available", "LastFU", "LastFU_Date", "LastFU_Diagnosis",
+    "MCI_Convert", "CTR_Convert", "Plasma_ID", "MRI_ID", "CSF_ID", "Local_AB42",
+    "Local_AB42_Abnormal", "Local_AB42_Cutoff", "Local_PTAU", "Local_PTAU_Abnormal",
+    "Local_PTAU_Cutoff", "Local_TTAU", "Local_TTAU_Abnormal", "Local_TTAU_Cutoff",
+    "AmyPET_SUVR", "AmyPET_SUVRAbnormal", "AmyPET_SUVRCutoff", "AmyPET_Method",
+    "AmyPET_Tracer", "AmyPET_Manufacturer", "AB_Zscore", "Ptau_ASSAY_Zscore",
+    "Ttau_ASSAY_Zscore", "Central_CSF_AB40", "Central_CSF_AB42",
+    "Central_CSF_AB4240ratio", "Central_CSF_ratiodich", "Hippo_sum_FS_adj",
+    "LOCAL_CSFAssay", "LOCAL_CSFAssayCompany", "CDR_Global", "IntervalAB_Cog",
+    "IntervalAB_MRI", "IntervalAB_Blood", "IntervalMRI_Blood", "Sel_intervalABCog",
+    "Sel_intervalABMRI", "Sel_intervalABBlood", "Sel_intervalCogMRI",
+    "Sel_intervalCogBlood", "Sel_intervalMRIBlood", "APOEdich", "APOEdich_IMP",
+    "APOE_Allele1", "APOE_Allele2", "APOE_flag"),
+  c("Sample.Type", "Time.Point", "Tissue.Type", "Platform.ID", "Sample.Code"),
+  c())
+
+emif <-
+  meld_fractured_dataset(
+    dataset_paths = c(
+      file.path(datasets_root_directory, emif_dir,"Clinical_EMIFMBD_MIRIADE.xlsx"),
+      file.path(datasets_root_directory, emif_dir,"samples.tsv"),
+      file.path(datasets_root_directory, emif_dir,"dcast_proteins.tsv")),
+    by_columns = setNames(c("Subject.ID","Assay.ID"), c("SubjectId","Assay.ID")),
+    exclude_columns = excludes) %>%
+  dplyr::mutate(Gender = case_when(Gender == 0 ~ 'm', Gender == 1 ~ 'f', TRUE ~ as.character(Gender)))
+
+### Melt the dataframe, so there's only one readout variable
+melted_emif <-
+  reshape2::melt(emif, id = 1:5,
+                 variable.name = "UniProt", value.name = "Value") %>%
+  #dplyr::filter(Diagnosis == "AD") %>%
+  convert_age_column_to_age_group_column(sym("Age"), sym("Age_Group")) %>%
+  dplyr::select(Diagnosis, Age_Group, Gender, UniProt, Value)
+
+### Run Kruskal-Wallis test for all biomarkers grouped by gender
+kw_per_uniprot_gender_grouped <-
+  sapply(
+    unique(melted_emif$UniProt),
+    kruskal_wallis_test_for_sample_groups,
+    melted_emif,
+    sym("UniProt"),
+    sym("Gender"),
+    sym("Value"))
+
+significant_kw_per_uniprot_gender_grouped <-
+  keep_only_significant_entries(
+    melted_emif,
+    differentiating_feature_symbol = sym("UniProt"),
+    kw_per_differentiating_feature = kw_per_uniprot_gender_grouped,
+    significance_limit = 0.000001)
+
+emif_kw_wilcox_gender_grouped <-
+  test_pairwise_wilcoxon(
+    melted_emif,
+    sym("UniProt"),
+    significant_kw_per_uniprot_gender_grouped,
+    sym("Gender"),
+    sym("Value"))
+
+### Adjust for measurements
+emif_kw_wilcox_gender_grouped_adj <- matrix(p.adjust(emif_kw_wilcox_gender_grouped, method = "BH"), nrow = 1)
+rownames(emif_kw_wilcox_gender_grouped_adj) <- rownames(emif_kw_wilcox_gender_grouped)
+colnames(emif_kw_wilcox_gender_grouped_adj) <- colnames(emif_kw_wilcox_gender_grouped)
+
+### Construct the final table
+final <- data.frame(Name = colnames(emif_kw_wilcox_gender_grouped),
+                    p.val = t(emif_kw_wilcox_gender_grouped)[,1],
