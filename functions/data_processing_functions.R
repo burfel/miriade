@@ -44,7 +44,7 @@ translate_interactions_using_dictionary <- function(interactions_df,
 # @return a list with all distinct objects from the dataframe
 ################################################################################
 extract_all_distinct_objects <- function(df, object_columns) {
-  all_values <- union(df[[object_columns[[1]]]], df[[object_columns[[2]]]])
+  all_values <- as.character(union(df[[object_columns[[1]]]], df[[object_columns[[2]]]]))
   length = length(object_columns)
   if (length > 2) {
     for (i in 3:length) {
@@ -207,4 +207,29 @@ convert_age_column_to_age_group_column <-
         cut(!!symbol_to_cut,
             breaks = cutting_breaks,
             labels = cutting_labels)))
+}
+
+################################################################################
+#' Named list of collections
+#' 
+#' Creates a named list of collections
+#'
+#' @param names_vector vector of names to give the collections
+#' @param ... variable number of collections
+#'
+#' @return a named list with the collections
+#' @note Throws an exception if the number of names is not the same as
+#'       the number of collections
+################################################################################
+named_list <- function(names_vector, ...) {
+  collection_list <- list(...)
+
+  # Check that the length of names is equal to the number of collections/dfs
+  if (length(names_vector) != length(collection_list)) {
+    stop("Number of names and collections must match")
+  }
+
+  names(collection_list) <- names_vector
+
+  return(collection_list)
 }
