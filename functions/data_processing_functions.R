@@ -87,22 +87,45 @@ define_datasets_root <- function() {
   return(folder)
 }
 
-################################################################################
-# Preprocess datasets to have the unified format of UniProt and Pvalue, possibly
-# after filtering
-# some of them according to disease.
-# datasets and should_filter_by_disease must be lists/vectors of the same length
-# datasets HAS TO BE A LIST OF DATAFRAMES
-# Any dataframe for which should_filter_by_disease is true needs to have a
-# disease column
-# If any of should_filter_by_disease is true, disease_to_filter_by should be a
-# string that appears in the disease column
-################################################################################
-preprocess_datasets <- function(datasets, should_filter_by_disease,
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#' Preprocess datasets to have the unified format of UniProt and Pvalue, possibly
+#' after filtering
+#' some of them according to disease.
+#' datasets and should_filter_by_disease must be lists/vectors of the same length
+#' datasets HAS TO BE A LIST OF DATAFRAMES
+#' Any dataframe for which should_filter_by_disease is true needs to have a
+#' disease column 
+#'
+#' @param datasets list of datasets
+#' @param should_filter_by_disease logical vector of same length as `datasets`
+#' @param additional_columns A single vetor, list of vectors of same length as
+#'        `datasets` or NULL. If none desired it is NULL by default and can be ignored.
+#'        For non NULL, it is used for column names each dataset should preserve
+#'        in addition to Uniprot and p value.
+#'        If it is a single vector, it is used across all datasets.
+#'        If it is a list of vectors, they each match a dataset.
+#' @param disease_to_filter_by If any of should_filter_by_disease is true,
+#'        disease_to_filter_by should be a
+#'        string that appears in the disease column
+#'
+#' @return
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+preprocess_datasets <- function(datasets,
+                                should_filter_by_disease,
+                                additional_columns = NULL,
                                 disease_to_filter_by = NULL) {
   datasets_length <- length(datasets)
   if (datasets_length != length(should_filter_by_disease)) {
     stop("datasets and should_filter_by_disease must be lists/vectors of the same length")
+  }
+  if (is.null(additional_columns)) {
+    additional_columns <- vector(mode = "list", length = datasets_length)
+  } else if (length(additional_columns) != datasets_length) {
+    if(length(additional_columns) == 1) {
+      additional_columns <- rep(additional_columns, times = datasets_length)
+    } else {
+      stop("If additional_columns is non null and more than one vector, datasets and it must be lists/vectors of the same length")
+    }
   }
   processed_datasets <- vector(mode = "list", length = datasets_length)
   ind <- 1
@@ -110,7 +133,8 @@ preprocess_datasets <- function(datasets, should_filter_by_disease,
     if(should_filter_by_disease[ind]) {
       dataset <- dataset %>% dplyr::filter(disease == disease_to_filter_by)
     }
-    dataset <- dataset %>% dplyr::select(UniProt, p.val)
+    dataset <- dataset %>%
+      dplyr::select(UniProt, p.val, all_of(additional_columns[[ind]]))
     processed_datasets[[ind]] <- dataset
     ind <- ind + 1
   }
