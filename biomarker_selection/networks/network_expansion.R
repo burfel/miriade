@@ -1,5 +1,7 @@
 library(dplyr)
 library(here)
+library(igraph)
+library(future)
 source(here("functions", "biomarker-network_functions.R"))
 source(here("functions", "data_processing_functions.R"))
 from_metacore_path <- here("biomarker_selection", "networks", "from-metacore")
@@ -57,3 +59,52 @@ write_graph(unified_graph,
             here("biomarker_selection", "networks", "/miriade_csf.graphml"),
             format = "graphml")
 # data_framed_graph <- igraph::as_data_frame(unified_graph)
+
+########################
+# Community detection  #
+########################
+random_walk_communities <- igraph::walktrap.community(unified_graph, steps = 100)
+# Number of communities with more than two nodes
+print(length(Filter(function(x) length(x)>2, communities(random_walk_communities))))
+# Random walk does only 4 step by default, resulting in 662 communities.
+# With 100 steps, 371 communities are detected
+# random_walk_communities <- igraph::walktrap.community(unified_graph, steps = 100)
+# edge_betweenness_communities <- edge.betweenness.community(unified_graph)
+# fast_greedy_communities <- fastgreedy.community(unified_graph) # ONLY FOR Undirected Graphs
+# DO NOT USE - Has run for several dozen minutes with no result
+# label_propagation_communities <- label.propagation.community(unified_graph)
+# DO NOT USE - The optimal method is causing some memory leak
+# optimal_communities <- igraph::optimal.community(unified_graph)
+# infomap_communities <- igraph:: infomap.community(unified_graph)
+
+# Set up a background plan
+plan(multisession)
+# Set it to run async so we can run the rest
+enriched_communities_future <-
+  future(Filter(is_df_populated,
+         sapply(communities(random_walk_communities), community_enrichment)))
+
+
+# Now we take the induced subgraph of only the intersection vertices
+vertex_intersection_graph <- igraph::induced_subgraph(unified_graph, V(unified_graph)[V(unified_graph)$type == "miriade+csf"])
+v_random_walk_communities <- igraph::walktrap.community(vertex_intersection_graph, steps = 100)
+# Number of communities with more than two nodes
+print(length(Filter(function(x) length(x)>2, communities(v_random_walk_communities))))
+# v_edge_betweenness_communities <- edge.betweenness.community(vertex_intersection_graph)
+# v_infomap_communities <- igraph:: infomap.community(vertex_intersection_graph)
+
+v_enriched_communities <-
+  Filter(is_df_populated,
+         sapply(communities(v_random_walk_communities), community_enrichment))
+#resolving the future and moving on
+enriched_communities <- future::value(enriched_communities_future)
+# Aggregate according to Gene so that all of its terms are concatenated with ';'
+aggregated_enriched_communities <-
+  lapply(enriched_communities, function(df) df %>% 
+           group_by(Gene) %>% 
+           summarise(Term = paste(Term, collapse = ";")))
+# Aggregate according to Gene so that all of its terms are concatenated with ';'
+aggregated_v_enriched_communities <-
+  lapply(v_enriched_communities, function(df) df %>% 
+  group_by(Gene) %>% 
+  summarise(Term = paste(Term, collapse = ";")))
