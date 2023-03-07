@@ -217,6 +217,7 @@ aggregated_pathway_df <- pathway_df %>%
   dplyr::group_by(Pathway) %>%
   dplyr::summarise(Source = paste(Source, collapse = ";"))
 pathways_in_both <- aggregated_pathway_df %>% dplyr::filter(Source == "Unified graph;Communities")
+
 num_of_pathways_unique_to_communities <-
   length(communities_pathways) - nrow(pathways_in_both)
 pathways_only_in_communities <-
@@ -236,3 +237,20 @@ pathway_overlap_graph <- pathway_df %>%
   graph_from_edge_df_filtered_by_genes(source_col_index = 1, target_col_index = 2) %>%
   color_source_nodes()
 draw_igraph(pathway_overlap_graph)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# TEMP
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+test<-lapply(aggregated_enriched_communities, function(x) nrow(x))
+sum(unlist(test))
+
+test <- community_enrichment(V(vertex_intersection_graph)$name)
+aggr_test <- test %>% 
+  group_by(Gene) %>% 
+  summarise(Term = paste(Term, collapse = ";"))
+
+test2 <- community_enrichment(V(unified_graph)$name)
+aggr_test2 <- test %>% 
+  group_by(Gene) %>% 
+  summarise(Term = paste(Term, collapse = ";"))
