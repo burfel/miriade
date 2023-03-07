@@ -245,12 +245,13 @@ draw_igraph(pathway_overlap_graph)
 test<-lapply(aggregated_enriched_communities, function(x) nrow(x))
 sum(unlist(test))
 
+# Enrichment on intersection graph
 test <- community_enrichment(V(vertex_intersection_graph)$name)
 aggr_test <- test %>% 
   group_by(Gene) %>% 
   summarise(Term = paste(Term, collapse = ";"))
-
+# Enrichment on unified graph
 test2 <- community_enrichment(V(unified_graph)$name)
-aggr_test2 <- test %>% 
+aggr_test2 <- test2 %>% 
   group_by(Gene) %>% 
   summarise(Term = paste(Term, collapse = ";"))
