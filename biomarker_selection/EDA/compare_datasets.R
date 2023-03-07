@@ -95,3 +95,75 @@ alz_emif_kth <- compare_datasets(
   dataset_names = c('emif', 'kth'),
   should_filter_by_disease = c(FALSE, FALSE),
   additional_columns = c("Name"))
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+####                             Venn diagrams                              ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+library(ggvenn)
+
+generate_venn_data <- function(dataset_comparison_list)
+{
+  dataset_names <- dataset_comparison_list$dataset_names
+  result <-
+  sapply(dataset_names,
+         function(dataset_name)
+           dplyr::filter(dataset_comparison_list$raw, Source == dataset_name) %>%
+           dplyr::select(UniProt))
+  names(result) <- dataset_names
+
+  return(result)
+}
+
+# For the colors, we want: Yellow for olink, red for kth, blue for adni,
+# green for emif, and purple for mspec
+alz_olink_and_kth$venn_diagram <-
+  ggvenn(generate_venn_data(alz_olink_and_kth),
+         fill_color = c("yellow", "red")) +
+  labs(title = "Olink and KTH overlap", subtitle = "Alzheimer")
+alz_olink_and_adni$venn_diagram <-
+  ggvenn(generate_venn_data(alz_olink_and_adni),
+         fill_color = c("yellow", "blue")) +
+  labs(title = "Olink and Adni overlap", subtitle = "Alzheimer")
+alz_olink_and_emif$venn_diagram <-
+  ggvenn(generate_venn_data(alz_olink_and_emif),
+         fill_color = c("yellow", "green")) +
+  labs(title = "Olink and Emif overlap", subtitle = "Alzheimer")
+alz_adni_and_emif$venn_diagram <-
+  ggvenn(generate_venn_data(alz_adni_and_emif),
+         fill_color = c("blue", "green")) +
+  labs(title = "Adni and Emif overlap", subtitle = "Alzheimer")
+alz_olink_adni_emif_kth$venn_diagram <-
+  ggvenn(generate_venn_data(alz_olink_adni_emif_kth),
+         fill_color = c("yellow", "blue", "green", "red")) +
+  labs(title = "Olink, Adni, Emif and KTH overlap", subtitle = "Alzheimer")
+alz_olink_adni_emif$venn_diagram <-
+  ggvenn(generate_venn_data(alz_olink_adni_emif),
+         fill_color = c("yellow", "blue", "green")) +
+  labs(title = "Olink, Adni and Emif overlap", subtitle = "Alzheimer")
+dlb_olink_mspec$venn_diagram <-
+  ggvenn(generate_venn_data(dlb_olink_mspec),
+         fill_color = c("yellow", "purple")) +
+  labs(title = "Olink and Mspec overlap", subtitle = "DLB")
+ftd_olink_mspec$venn_diagram <-
+  ggvenn(generate_venn_data(ftd_olink_mspec),
+         fill_color = c("yellow", "purple")) +
+  labs(title = "Olink and Mspec overlap", subtitle = "FTD")
+alz_adni_kth$venn_diagram <-
+  ggvenn(generate_venn_data(alz_adni_kth),
+         fill_color = c("blue", "red")) +
+  labs(title = "Adni and KTH overlap", subtitle = "Alzheimer")
+alz_emif_kth$venn_diagram <-
+  ggvenn(generate_venn_data(alz_emif_kth),
+         fill_color = c("green", "red")) +
+  labs(title = "Emif and KTH overlap", subtitle = "Alzheimer")
+# showing the plots
+alz_olink_and_kth$venn_diagram
+alz_olink_and_adni$venn_diagram
+alz_olink_and_emif$venn_diagram
+alz_adni_and_emif$venn_diagram
+alz_olink_adni_emif_kth$venn_diagram
+alz_olink_adni_emif$venn_diagram
+dlb_olink_mspec$venn_diagram
+ftd_olink_mspec$venn_diagram
+alz_adni_kth$venn_diagram
+alz_emif_kth$venn_diagram
