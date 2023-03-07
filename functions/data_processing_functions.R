@@ -169,12 +169,14 @@ filter_according_to_UniProt_masks <- function(data_frame, masking_frames_vector)
   return(filtered_data_frame)
 }
 
-################################################################################
-# Takes a datafrane with a UniProt column, and extracts the distinct UniProts
-################################################################################
-extract_unique_uniprots <- function(dataframe) {
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Takes a dataframe with a UniProt column, and extracts the distinct UniProts
+# Allows to retain other columns using additional_columns
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+extract_unique_uniprots <- function(dataframe, additional_columns) {
   return(dataframe %>%
-           dplyr::select(UniProt) %>% dplyr::distinct(UniProt))
+           dplyr::distinct(UniProt, .keep_all = TRUE) %>%
+           dplyr::select(UniProt, all_of(additional_columns)))
 }
 
 ################################################################################
