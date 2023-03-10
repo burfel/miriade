@@ -17,9 +17,9 @@ miriade_interactions <- get_all_interactions_that_have_backing_uniprots(
 ) # 5 NAs
 
 
-###########################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # Taking the csf metacore interactions and combining with the miriade ones
-###########################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 csf_interactions <- get_all_interactions_that_have_backing_uniprots(
   dataset_directory = from_metacore_path,
   interactions_file = "pooled-CSF-proteins_network_new_interactions.xls",
@@ -60,9 +60,9 @@ write_graph(unified_graph,
             format = "graphml")
 # data_framed_graph <- igraph::as_data_frame(unified_graph)
 
-########################
-# Community detection  #
-########################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#### Community detection  ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 random_walk_communities <- igraph::walktrap.community(unified_graph, steps = 100)
 # Number of communities with more than two nodes
 print(length(Filter(function(x) length(x)>2, communities(random_walk_communities))))
@@ -108,3 +108,25 @@ aggregated_v_enriched_communities <-
   lapply(v_enriched_communities, function(df) df %>% 
   group_by(Gene) %>% 
   summarise(Term = paste(Term, collapse = ";")))
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#### Removing lonely nodes ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+all_lonely_nodes <- which(degree(vertex_intersection_graph)==0)
+vertex_intersection_no_lonely_graph <- delete.vertices(vertex_intersection_graph, all_lonely_nodes)
+vnl_random_walk_communities <- igraph::walktrap.community(vertex_intersection_no_lonely_graph, steps = 100)
+vnl_enriched_communities <-
+  Filter(is_df_populated,
+         sapply(communities(vnl_random_walk_communities), community_enrichment))
+aggregated_vnl_enriched_communities <-
+  lapply(vnl_enriched_communities, function(df) df %>%
+           group_by(Gene) %>%
+           summarise(Term = paste(Term, collapse = ";")))
+
+pathways<-unique(unlist(lapply(vnl_enriched_communities, function(x) x$Term)))
+
+pathway_related_subgraph <- function(graph, pathway, enriched_vertices)
+{
+  vertices <- lapply(enriched_vertices, function(x) x[x$Term == pathway]$UniProt)
+}
