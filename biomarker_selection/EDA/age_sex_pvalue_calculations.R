@@ -5,6 +5,7 @@ library(dplyr)
 # It also calls to set the dataset root directory
 source(here("biomarker_selection", "EDA", "meld_all_fractured_datasets.R"))
 source(here("functions", "auxiliary_statistical_functions.R"))
+source(here("functions", "boxplot_functions.R"))
 
 ### Read the table
 kth <- readxl::read_xlsx(file.path(datasets_root_directory,
@@ -69,13 +70,6 @@ kth_diagnosisage_group_grouped_pvals <- perform_kw_wilcoxon_according_to_groupin
   measurement_symbol = sym("median_ab_readout"),
   significance_limit = 0.05)
 
-mutated_kth <- kth %>%
-  convert_age_column_to_age_group_column(sym("Age"), sym("Age_Group")) %>%
-  dplyr::filter(Diagnosis == "AD" | Diagnosis == "Control") %>%
-  dplyr::mutate(Diagnosis_Age_Group = paste(Diagnosis, Age_Group))
-
-#create_box_plot(mutated_kth, "Diagnosis_Age_Group", "BDP1")
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ####                                EMIF                                    ####
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
@@ -102,7 +96,7 @@ emif_age_group_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
   measurement_symbol = sym("Value"),
   significance_limit = 0.05)
 ### Diagnosis
-emif_age_group_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
+emif_diagnosis_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
   melted_df = melted_emif,
   differentiating_feature_symbol = sym("UniProt"),
   grouping_feature_symbol = sym("Diagnosis"),
@@ -141,3 +135,52 @@ olink_diagnosis_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
   grouping_feature_symbol = sym("dx"),
   measurement_symbol = sym("Value"),
   significance_limit = 0.05)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#### Box plots for diagnosis + age group combinations ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+# KTH
+mutated_kth <- kth %>%
+  convert_age_column_to_age_group_column(sym("Age"), sym("Age_Group")) %>%
+  dplyr::filter(Diagnosis == "AD" | Diagnosis == "Control") %>%
+  dplyr::mutate(Diagnosis_Age_Group = paste(Diagnosis, Age_Group)) %>%
+  dplyr::select(Diagnosis_Age_Group, Age_Group, everything())
+
+kth_boxplots <-
+  create_box_plots_of_all_columns_starting_at_column_number(mutated_kth, "Diagnosis_Age_Group", 7)
+
+# EMIF
+source(here("functions", "mapping_functions.R"))
+emif_proteins <- data.frame(UniProt = colnames(emif)[6:ncol(emif)]) %>%
+  map_uniprot_to_hgnc_and_cbind("Name") %>%
+  na.omit() %>%
+  dplyr::select(UniProt, Name)
+# use sapply to create a named vector of the hgnc and their new uniprots
+protein_renaming_vector <- sapply(emif_proteins$Name, function(x) {
+  emif_proteins$UniProt[which(emif_proteins$Name == x)]
+})
+mutated_emif <- emif %>%
+  convert_age_column_to_age_group_column(sym("Age"), sym("Age_Group")) %>%
+  dplyr::filter(Diagnosis == "AD" | Diagnosis == "NL") %>%
+  dplyr::mutate(Diagnosis = case_when(Diagnosis == "NL" ~ "Control", TRUE ~ Diagnosis)) %>%
+  dplyr::mutate(Diagnosis_Age_Group = paste(Diagnosis, Age_Group)) %>%
+  dplyr::select(Diagnosis_Age_Group, Age_Group, everything()) %>%
+  dplyr::rename(!!!protein_renaming_vector)
+
+emif_boxplots <-
+  create_box_plots_of_all_columns_starting_at_column_number(mutated_emif, "Diagnosis_Age_Group", 8)
+# Recommended to remove once done because of size
+remove(emif_boxplots)
+# Olink
+mutated_olink <- olink %>%
+  convert_age_column_to_age_group_column(sym("age_gr"), sym("Age_Group")) %>%
+  dplyr::filter(dx == "AD dementia" | dx == "CN") %>%
+  dplyr::mutate(Diagnosis = case_when(dx == "CN" ~ "Control", dx == "AD dementia" ~ "AD", TRUE ~ dx)) %>%
+  dplyr::mutate(Diagnosis_Age_Group = paste(Diagnosis, Age_Group)) %>%
+  dplyr::select(Diagnosis_Age_Group, Diagnosis, Age_Group, everything(), -dx)
+
+olink_boxplots <-
+  create_box_plots_of_all_columns_starting_at_column_number(mutated_olink, "Diagnosis_Age_Group", 7)
+# Recommended to remove once done because of size
+remove(olink_boxplots)
