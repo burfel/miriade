@@ -219,12 +219,12 @@ read_password_xlsx <- function(filepath, sheet = 1) {
 #' @export
 #'
 #' @examples
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 convert_age_column_to_age_group_column <-
   function(table,
            symbol_to_cut,
            target_symbol,
-           cutting_breaks = c(40, 66, 81, 116),
+           cutting_breaks = c(39, 65, 80, 115),
            cutting_labels = c("40-65", "66-80", "81-115")) {
   return(
     mutate(
