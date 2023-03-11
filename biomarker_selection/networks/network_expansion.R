@@ -77,14 +77,6 @@ print(length(Filter(function(x) length(x)>2, communities(random_walk_communities
 # optimal_communities <- igraph::optimal.community(unified_graph)
 # infomap_communities <- igraph:: infomap.community(unified_graph)
 
-# Set up a background plan
-plan(multisession)
-# Set it to run async so we can run the rest
-enriched_communities_future <-
-  future(Filter(is_df_populated,
-         sapply(communities(random_walk_communities), community_enrichment)))
-
-
 # Now we take the induced subgraph of only the intersection vertices
 vertex_intersection_graph <- igraph::induced_subgraph(unified_graph, V(unified_graph)[V(unified_graph)$type == "miriade+csf"])
 v_random_walk_communities <- igraph::walktrap.community(vertex_intersection_graph, steps = 100)
@@ -93,11 +85,58 @@ print(length(Filter(function(x) length(x)>2, communities(v_random_walk_communiti
 # v_edge_betweenness_communities <- edge.betweenness.community(vertex_intersection_graph)
 # v_infomap_communities <- igraph:: infomap.community(vertex_intersection_graph)
 
-v_enriched_communities <-
-  Filter(is_df_populated,
-         sapply(communities(v_random_walk_communities), community_enrichment))
-#resolving the future and moving on
-enriched_communities <- future::value(enriched_communities_future)
+# Vertex intersection graph community enrichment
+datasets_root_directory <<- define_datasets_root()
+vec_filepath <- file.path(datasets_root_directory,
+                          "Enriched_pathways/VertexIntersectionRandomWalkEnrichedCommunities.xlsx")
+if(!file.exists(vec_filepath)) {
+  v_enriched_communities <-
+    Filter(is_df_populated,
+           sapply(communities(v_random_walk_communities), community_enrichment))
+  write_df_list_to_xlsx(v_enriched_communities, vec_filepath)
+} else {
+  require(XLConnect)
+  # Read the Excel file into a workbook object
+  wb <- loadWorkbook(vec_filepath)
+
+  # Get the names of all sheets in the workbook
+  sheet_names <- getSheets(wb)
+
+  # Loop through the sheets and read each one into a data frame
+  v_enriched_communities <- lapply(sheet_names, function(sheet) readWorksheet(wb, sheet = sheet))
+  names(v_enriched_communities) <- sheet_names
+
+  remove(wb, sheet_names)
+}
+
+# Unified graph community enrichment
+uec_filepath <- file.path(datasets_root_directory,
+                          "Enriched_pathways/UnifiedRandomWalkEnrichedCommunities.xlsx")
+if(!file.exists(uec_filepath)) {
+  tryCatch({
+    i <<- length(enriched_communities) + 1
+  }, error = function(e) {
+    enriched_communities <<- vector("list")
+    i <<- 1
+  })
+  enriched_communities <-
+    apply_enrichment_to_communities(communities(random_walk_communities),
+                                    i, enriched_communities)
+  write_df_list_to_xlsx(enriched_communities, uec_filepath)
+} else {
+  require(XLConnect)
+  # Read the Excel file into a workbook object
+  wb <- loadWorkbook(uec_filepath)
+
+  # Get the names of all sheets in the workbook
+  sheet_names <- getSheets(wb)
+
+  # Loop through the sheets and read each one into a data frame
+  enriched_communities <- lapply(sheet_names, function(sheet) readWorksheet(wb, sheet = sheet))
+  names(enriched_communities) <- sheet_names
+
+  remove(wb, sheet_names)
+}
 # Aggregate according to Gene so that all of its terms are concatenated with ';'
 aggregated_enriched_communities <-
   lapply(enriched_communities, function(df) df %>% 
@@ -116,9 +155,34 @@ aggregated_v_enriched_communities <-
 all_lonely_nodes <- which(degree(vertex_intersection_graph)==0)
 vertex_intersection_no_lonely_graph <- delete.vertices(vertex_intersection_graph, all_lonely_nodes)
 vnl_random_walk_communities <- igraph::walktrap.community(vertex_intersection_no_lonely_graph, steps = 100)
-vnl_enriched_communities <-
-  Filter(is_df_populated,
-         sapply(communities(vnl_random_walk_communities), community_enrichment))
+# Unified graph community enrichment
+vnlec_filepath <- file.path(datasets_root_directory,
+                          "Enriched_pathways/VertexIntersectionNoLonelyRandomWalkEnrichedCommunities.xlsx")
+if(!file.exists(vnlec_filepath)) {
+  tryCatch({
+    i <<- length(vnl_enriched_communities) + 1
+  }, error = function(e) {
+    vnl_enriched_communities <<- vector("list")
+    i <<- 1
+  })
+  vnl_enriched_communities <-
+    apply_enrichment_to_communities(communities(vnl_random_walk_communities),
+                                    i, vnl_enriched_communities)
+  write_df_list_to_xlsx(vnl_enriched_communities, vnlec_filepath)
+} else {
+  require(XLConnect)
+  # Read the Excel file into a workbook object
+  wb <- loadWorkbook(vnlec_filepath)
+
+  # Get the names of all sheets in the workbook
+  sheet_names <- getSheets(wb)
+
+  # Loop through the sheets and read each one into a data frame
+  vnl_enriched_communities <- lapply(sheet_names, function(sheet) readWorksheet(wb, sheet = sheet))
+  names(vnl_enriched_communities) <- sheet_names
+
+  remove(wb, sheet_names)
+}
 aggregated_vnl_enriched_communities <-
   lapply(vnl_enriched_communities, function(df) df %>%
            group_by(Gene) %>%
@@ -130,3 +194,20 @@ pathway_related_subgraph <- function(graph, pathway, enriched_vertices)
 {
   vertices <- lapply(enriched_vertices, function(x) x[x$Term == pathway]$UniProt)
 }
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#### enrichment comparison ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+enriched_unified <- community_enrichment(V(unified_graph)$name)
+aggregated_enriched_unified <- enriched_unified %>%
+  group_by(Gene) %>%
+  summarise(Term = paste(Term, collapse = ";"))
+aggregated_enriched_communities <- bind_rows(aggregated_enriched_communities)
+unified_pathways <- unique(enriched_unified$Term)
+communities_pathways <- unique(bind_rows(enriched_communities)$Term)
+pathway_df <- as.data.frame(rbind(cbind(unified_pathways, "Unified graph"), cbind(communities_pathways, "Communities")))
+colnames(pathway_df) <- c("Pathway", "Source")
+aggregated_pathway_df <- pathway_df %>%
+  dplyr::group_by(Pathway) %>%
+  dplyr::summarise(Source = paste(Source, collapse = ";"))
+pathways_in_both <- aggregated_pathway_df %>% dplyr::filter(Source == "Unified graph;Communities")

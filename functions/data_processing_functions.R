@@ -441,3 +441,25 @@ perform_kw_wilcoxon_according_to_grouping <- function(
   
   return(dfs)
 }
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#' Write a list of dfs to an excel file such that each df is its own sheet
+#'
+#' @param df_list List of dfs
+#' @param filepath The path where the file should be written (including extension)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+write_df_list_to_xlsx <- function(df_list, filepath)
+{
+  require(XLConnect)
+  # Create a new Excel workbook
+  wb <- loadWorkbook(filepath, create = TRUE)
+
+  # Loop through the list of data frames and write each one to a new sheet
+  for(i in seq_along(df_list)) {
+    createSheet(wb, name = names(df_list)[i])
+    writeWorksheet(wb, data = df_list[[i]], sheet = names(df_list)[i])
+  }
+
+  # Save the workbook to a file
+  saveWorkbook(wb)
+}

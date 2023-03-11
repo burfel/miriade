@@ -2,7 +2,7 @@ library(here)
 source(here("functions", "graph_vertices_functions.R"))
 source(here("functions", "graph_edges_functions.R"))
 source(here("functions", "data_processing_functions.R"))
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # Takes an edge dataframe and extracts from it a graph with edges where at
 # least one node is in the vertex_list
 #
@@ -12,7 +12,7 @@ source(here("functions", "data_processing_functions.R"))
 # @param target_col_index column number for the target
 #
 # @return an igraph graph with edges containing the vertices
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 graph_from_edge_df_filtered_by_genes <- function(edge_df, vertex_list = NULL, 
                                                  source_col_index,
                                                  target_col_index) {
@@ -45,11 +45,11 @@ generate_coloring_scheme_for_graph <- function(vertices_by_types) {
   return(color_seq)
 }
 
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # Generate a sequence of colors to use in plots.
 # 
 # Thanks https://stackoverflow.com/questions/15282580/how-to-generate-a-number-of-most-distinctive-colors-in-r
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 generate_color_sequence <- function(desired_number_of_colors) {
   set.seed(1493)
   # The general group (or first group in general) should be in a gray color to
@@ -80,7 +80,7 @@ generate_color_sequence <- function(desired_number_of_colors) {
   return(color_list)
 }
 
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # Takes a graph and a list of sets of vertices according to all type combinations
 # and uses that list to assign attributes (e.g. colors) to the vertices and edges 
 # according to type.
@@ -91,19 +91,19 @@ generate_color_sequence <- function(desired_number_of_colors) {
 # @param color_seq the color sequence to be used by this graph
 #
 # @return an igraph graph with edges containing the vertices and proper coloring
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 prepare_graph_attributes_according_to_vertices <- function(graph, vertices_by_types, color_seq) {
   graph <- adjust_vertices_attributes_according_to_type(graph, vertices_by_types, color_seq)
   graph <- color_edges_based_on_vertices(graph, vertices_by_types, color_seq)
   return(graph)
 }
 
-#######################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # Extract a list of all combinations types               #
 #
 # @param vertices_by_types The list of sets of vertices of all combinations
 #        of basic types
-#######################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 extract_type_list_from_vertices_by_types <- function(vertices_by_types) {
   # Use the list of named sets to have an updated type_list
   type_list <- as.list(names(vertices_by_types))
@@ -112,7 +112,7 @@ extract_type_list_from_vertices_by_types <- function(vertices_by_types) {
   return(type_list)
 }
 
-#######################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # Creating graph layout and plotting it               #
 #
 # @param graph
@@ -120,7 +120,7 @@ extract_type_list_from_vertices_by_types <- function(vertices_by_types) {
 # @param color_seq the color sequence to be used by this graph
 # @param comm A list derived from a communities object or an empty list
 #             (default) if no communities are to be shown
-#######################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 draw_igraph <- function(graph, type_list, color_seq, comm = list()) {
   # this ensures the starting random position is the same
   # for the layouts that use a random starting position
@@ -150,7 +150,7 @@ draw_igraph <- function(graph, type_list, color_seq, comm = list()) {
          title = "Vertices")
 }
 
-###########
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # This function takes a list of graphs and generates a unified graph
 # with the correct sources for the edges
 # and the correct coloring of the vertices and edges
@@ -163,7 +163,7 @@ draw_igraph <- function(graph, type_list, color_seq, comm = list()) {
 #
 # @return the graph with the edge sources converged into
 #         one source attribute and the source1&source2 attributes removed
-###########
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 unify_graphs <- function(graph_list, vertices_by_type, extended_source_list,
                          color_sequence) {
   number_of_graphs <- length(graph_list)
@@ -181,7 +181,7 @@ unify_graphs <- function(graph_list, vertices_by_type, extended_source_list,
   return(unified_graph)
 }
 
-###############################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #' Getting all network object interactions that have valid uniprots for the
 #' network objects
 #'
@@ -201,7 +201,7 @@ unify_graphs <- function(graph_list, vertices_by_type, extended_source_list,
 #' @return A df that contains the interactions either as target and source
 #'         network objects or target and source uniprots.
 #'         The rows are unique.
-###############################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 get_all_interactions_that_have_backing_uniprots <- function(
     dataset_directory,
     interactions_file,
@@ -248,7 +248,7 @@ get_all_interactions_that_have_backing_uniprots <- function(
     dplyr::distinct())
 }
 
-###############################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #' Extract vertices for all graphs
 #' 
 #' This function takes the interaction dfs representing edge lists of graphs
@@ -261,7 +261,7 @@ get_all_interactions_that_have_backing_uniprots <- function(
 #'
 #' @return A named list with the vertices of each interaction df. The names
 #'         from the interaction_dfs are inherited correctly
-###############################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 extract_vertices_for_all_graphs <- function(
     interaction_dfs,
     interaction_columns = c("Network Object \"FROM\"", "Network Object \"TO\""),
@@ -282,7 +282,7 @@ is_df_populated <- function(df)
   return(nrow(df) > 0)
 }
 
-###########
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # This 
 #
 # @param community
@@ -291,7 +291,7 @@ is_df_populated <- function(df)
 # @param pathway_datasets char vector of pathway databases
 #
 # @return 
-###########
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 community_enrichment <- function(community, adj.p.cutoff = 0.1,
                                       term_reject = "infection|cancer|carcinoma|virus|[v|V]iral|trypanosomiasis|Malaria|Tuberculosis|Melanoma|leukemia|Influenza|disease|Amoebiasis",
                                       pathway_datasets = c("KEGG_2021_Human", "MSigDB_Hallmark_2020", "Reactome_2022", "HDSigDB_Human_2021", "WikiPathway_2021_Human"))
@@ -322,4 +322,28 @@ community_enrichment <- function(community, adj.p.cutoff = 0.1,
   }
 }
 
-
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#' Apply enrichment to all communities with a fail safe for EnirchR timeouts
+#'
+#' @param communities_list List of communities
+#' @param i The starting index to start appednding enrichments. Either 1 or
+#'          wherever it got stuck if you accidentally stopped it
+#'
+#' @return The (non empty) enriched communities
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+apply_enrichment_to_communities <- function(communities_list, i, enriched_communities) {
+  num_of_communities <- length(communities_list)
+  while (i <= num_of_communities) {
+    cat("Index", i, "\n")
+    tryCatch({enriched_communities[[i]] <-
+      community_enrichment(communities_list[[i]])
+    i <- i + 1},
+    error = function(e) {
+      cat("Got stuck at index", i, "\n")
+    }
+    )
+  }
+  names(enriched_communities) <- 1:num_of_communities
+  enriched_communities <-
+    Filter(is_df_populated, enriched_communities)
+}
