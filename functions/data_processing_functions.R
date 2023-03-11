@@ -1,4 +1,4 @@
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # Takes an interaction dataframe with a "dictionary" dataframe and replace
 # the source and target columns using the translation from the dictionary.
 # Optionally leaves behind only the translated source and target columns.
@@ -14,7 +14,7 @@
 #
 # @return an interaction dataframe between the tranlsated types instead
 #         of the original ones
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 translate_interactions_using_dictionary <- function(interactions_df,
                                                     interaction_columns,
                                                     dictionary_df,
@@ -34,7 +34,7 @@ translate_interactions_using_dictionary <- function(interactions_df,
   return(dplyr::distinct(new_df))
 }
 
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # Takes a dataframe with objects of a certain type and the columns containing
 # those objects to return a list of all objects of the type
 #
@@ -42,7 +42,7 @@ translate_interactions_using_dictionary <- function(interactions_df,
 # @param object_columns names of all columns containing the desired objects
 #
 # @return a list with all distinct objects from the dataframe
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 extract_all_distinct_objects <- function(df, object_columns) {
   all_values <- as.character(union(df[[object_columns[[1]]]], df[[object_columns[[2]]]]))
   length = length(object_columns)
@@ -54,7 +54,7 @@ extract_all_distinct_objects <- function(df, object_columns) {
   return(na.omit(all_values))
 }
 
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #' Define data sets root
 #'
 #' This opens up a dialog to choose the root directory for data sets in one
@@ -64,7 +64,7 @@ extract_all_distinct_objects <- function(df, object_columns) {
 #'    they type in 'y' and press enter
 #'
 #' @return The path for the directory chosen as the root for the data sets
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 define_datasets_root <- function() {
   if(exists("datasets_root_directory")
      && !identical(readline(prompt = "datasets_root_directory already exists. If you want to redefine it, type 'y' and press enter: \n"), 'y')) {
@@ -141,13 +141,13 @@ preprocess_datasets <- function(datasets,
   return(processed_datasets)
 }
 
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # Binds datasets together and produces a dataframe with UniProt p_values and a
 # column for the source of that row
 # TODO: fold the mutate into this function once we realize how to use case_when
 # with expressions built
 # on the fly with indices unknown in advance
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 bind_datasets_together <- function(processed_datasets) {
   # Unfortunately, failed to do the renaming of source here... might have to
   # repeat it
@@ -155,11 +155,11 @@ bind_datasets_together <- function(processed_datasets) {
   )
 }
 
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # This function takes a dataframe with uniprots and p values from more than one
 # source
 # filters and returns according to the list of limiting dataframes
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 filter_according_to_UniProt_masks <- function(data_frame, masking_frames_vector) {
   filtered_data_frame <- data_frame
   for (mask in masking_frames_vector) {
@@ -179,36 +179,36 @@ extract_unique_uniprots <- function(dataframe, additional_columns) {
            dplyr::select(UniProt, all_of(additional_columns)))
 }
 
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #' Strip underscores and following chars from string
 #'
 #' @param str a string to strip
 #'
 #' @return the substring that comes before the underscore
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 take_only_pre_underscore_substring <- function(str) {
   return(strsplit(str, "_")[[1]][1])
 }
 
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #' Function to read password-protected xlsx file with a prompt
 #'
 #' @param filepath path to excel file
 #' @param sheet index or name of the sheer
 #'
 #' @return A dataframe of the sheet
-################################################################################
-
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 read_password_xlsx <- function(filepath, sheet = 1) {
   wb <- XLConnect::loadWorkbook(filepath,
-              password = rstudioapi::askForPassword("Enter password for file:"))
+              password = rstudioapi::askForPassword(
+                paste("Enter password for file ", filepath, ":", sep = "")))
 
   data <- XLConnect::readWorksheet(wb, sheet = sheet)
 
   return(data)
 }
 
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #' Title
 #'
 #' @param table 
@@ -235,7 +235,7 @@ convert_age_column_to_age_group_column <-
             labels = cutting_labels)))
 }
 
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #' Named list of collections
 #' 
 #' Creates a named list of collections
@@ -246,7 +246,7 @@ convert_age_column_to_age_group_column <-
 #' @return a named list with the collections
 #' @note Throws an exception if the number of names is not the same as
 #'       the number of collections
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 named_list <- function(names_vector, ...) {
   collection_list <- list(...)
 
@@ -260,12 +260,14 @@ named_list <- function(names_vector, ...) {
   return(collection_list)
 }
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #' Read dataframe from a table file
 #'
 #' @param file_path Path to the file
 #' @param header Whether the first row is a header
 #'
 #' @return Dataframe based on the file
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 read_df_from_file <- function(file_path, header = TRUE)
 {
   if (endsWith(file_path, ".tsv")) {
@@ -287,7 +289,7 @@ read_df_from_file <- function(file_path, header = TRUE)
   }
 }
 
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #' Meld together pieces of a dataset spread across several files
 #'
 #' @param dataset_paths 2 or 3 paths of dataset parts
@@ -313,7 +315,7 @@ read_df_from_file <- function(file_path, header = TRUE)
 #'          `exclude_columns = list(c("d"), c(), c("f","g"))`
 #' @note If both `select_columns` and `exclude_columns` are set, `select_columns`
 #'       will take precedence
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 meld_fractured_dataset <- function(
     dataset_paths,
     by_columns,
@@ -363,7 +365,7 @@ meld_fractured_dataset <- function(
   return(new_df)
 }
 
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #' Perform KW Wilcoxon process for grouping based p values
 #'
 #' @param melted_df The melted representation of the data
@@ -376,7 +378,7 @@ meld_fractured_dataset <- function(
 #'
 #' @return A df with rows for the values of the differentiating feature with
 #'          values and adjusted pvalues for each one of the grouping comparisons
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 perform_kw_wilcoxon_according_to_grouping <- function(
     melted_df,
     differentiating_feature_symbol,
