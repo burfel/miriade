@@ -64,6 +64,9 @@ emif_proteins <- data.frame(UniProt = colnames(emif)[6:ncol(emif)]) %>%
 protein_renaming_vector <- sapply(emif_proteins$Name, function(x) {
   emif_proteins$UniProt[which(emif_proteins$Name == x)]
 })
+
+emif$Age <- round(emif$Age) # Must round, otherwise the age groups are classified incorrectly
+
 breaks_and_labels <- prepare_breaks_and_labels_by_quantiles(emif$Age, 3)
 
 mutated_emif <- emif %>%
@@ -113,6 +116,60 @@ melted_olink <-
                                          cutting_breaks = breaks_and_labels$Breaks,
                                          cutting_labels = breaks_and_labels$Labels) %>%
   dplyr::select(dx, Age_Group, sex, Gene_name, Value)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+### Combine the datasets ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+#### First, we bring all 3 datasets to a standard form ####
+kth <- kth %>%
+  dplyr::select(-Class) %>%
+  dplyr::mutate(Gender = case_when(Gender == 'M' ~ 'm', Gender == 'F' ~ 'f', TRUE ~ Gender)) %>%
+  dplyr::filter(Diagnosis == "AD" | Diagnosis == "Control")
+
+# Create a mapping rule as a named vector for the diagnosis to have a unified format
+diagnosis_mapping <- c("CN" = "Control",
+                       "NL" = "Control",
+                       "AD dementia" = "AD")
+
+emif <- emif %>%
+  dplyr::select(-SubjectId, -Assay.ID) %>%
+  dplyr::mutate(Diagnosis = recode(Diagnosis, !!!diagnosis_mapping)) %>%
+  dplyr::filter(Diagnosis == "Control" | Diagnosis == "AD") %>%
+  dplyr::rename(!!!protein_renaming_vector)
+
+olink <- olink %>%
+  dplyr::select(-SampleId) %>%
+  dplyr::rename(Age = "age_gr", Diagnosis = "dx", Gender = "sex") %>%
+  dplyr::mutate(Diagnosis = recode(Diagnosis, !!!diagnosis_mapping)) %>%
+  dplyr::filter(Diagnosis == "Control" | Diagnosis == "AD")
+
+#### Now, we bind_rows ####
+combined_df <- bind_rows(kth, emif, olink)
+
+#### Now, mutate and melt
+
+breaks_and_labels <- prepare_breaks_and_labels_by_quantiles(combined_df$Age, 3)
+mutated_combined_df <- combined_df %>%
+  convert_age_column_to_age_group_column(sym("Age"), sym("Age_Group"),
+                                         cutting_breaks = breaks_and_labels$Breaks,
+                                         cutting_labels = breaks_and_labels$Labels) %>%
+  dplyr::mutate(Diagnosis_Age_Group = paste(Diagnosis, Age_Group)) %>%
+  dplyr::select(Diagnosis_Age_Group, Age_Group, everything())
+
+print("The number of patients per age group (in KTH) is:")
+mutated_combined_df %>% dplyr::group_by(Age_Group) %>% dplyr::summarise(n())
+
+
+### Melt the dataframe, so there's only one readout variable
+melted_combined_df <-
+  reshape2::melt(combined_df, id = 1:3,
+                 variable.name = "HGNC_Symbol", value.name = "median_ab_readout") %>%
+  convert_age_column_to_age_group_column(sym("Age"), sym("Age_Group"),
+                                         cutting_breaks = breaks_and_labels$Breaks,
+                                         cutting_labels = breaks_and_labels$Labels) %>%
+  dplyr::select(Diagnosis, Age_Group, Gender, HGNC_Symbol, median_ab_readout) #%>%
+  #na.omit()
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ## KW and wilcoxon ####
@@ -208,6 +265,33 @@ olink_diagnosis_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
   grouping_feature_symbol = sym("dx"),
   measurement_symbol = sym("Value"),
   significance_limit = 0.05)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+### Combined datasets ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+###Gender
+combined_gender_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
+  melted_df = melted_combined_df,
+  differentiating_feature_symbol = sym("HGNC_Symbol"),
+  grouping_feature_symbol = sym("Gender"),
+  measurement_symbol = sym("median_ab_readout"),
+  significance_limit = 0.05)
+
+### Age_Group
+combined_age_group_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
+  melted_df = melted_combined_df,
+  differentiating_feature_symbol = sym("HGNC_Symbol"),
+  grouping_feature_symbol = sym("Age_Group"),
+  measurement_symbol = sym("median_ab_readout"),
+  significance_limit = 0.05)
+### Diagnosis
+combined_diagnosis_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
+  melted_df = melted_combined_df,
+  differentiating_feature_symbol = sym("HGNC_Symbol"),
+  grouping_feature_symbol = sym("Diagnosis"),
+  measurement_symbol = sym("median_ab_readout"),
+  significance_limit = 0.05)
+
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ## Box plots for diagnosis + age group combinations ####
