@@ -211,3 +211,22 @@ aggregated_pathway_df <- pathway_df %>%
   dplyr::group_by(Pathway) %>%
   dplyr::summarise(Source = paste(Source, collapse = ";"))
 pathways_in_both <- aggregated_pathway_df %>% dplyr::filter(Source == "Unified graph;Communities")
+num_of_pathways_unique_to_communities <-
+  length(communities_pathways) - nrow(pathways_in_both)
+pathways_only_in_communities <-
+  dplyr::filter(aggregated_pathway_df, Source == "Communities")$Pathway
+
+color_source_nodes <- function(pathway_overlap_graph,
+                               sources = c("Unified graph", "Communities")) {
+  V(pathway_overlap_graph)$color <- "orange"
+    V(pathway_overlap_graph)[V(pathway_overlap_graph)$name %in% sources]$color <- "green"
+      return(pathway_overlap_graph)
+}
+
+pathway_overlap_graph <- pathway_df %>%
+  dplyr::filter(!(Pathway %in% pathways_only_in_communities)) %>%
+  rbind(c(paste("... and", num_of_pathways_unique_to_communities, "additional pathways"),
+          "Communities")) %>%
+  graph_from_edge_df_filtered_by_genes(source_col_index = 1, target_col_index = 2) %>%
+  color_source_nodes()
+draw_igraph(pathway_overlap_graph)
