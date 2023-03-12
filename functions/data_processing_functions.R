@@ -209,16 +209,17 @@ read_password_xlsx <- function(filepath, sheet = 1) {
 }
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-#' Title
+#' Convert an age column to an age group columns according to the defined breaks
 #'
-#' @param table 
-#' @param symbol_to_cut 
-#' @param target_symbol 
+#' @param table The table to adjust
+#' @param symbol_to_cut The symbol of the name of the original column to cut
+#' @param target_symbol The symbol of the name of the new column to create
+#' @param cutting_breaks The breaks to send to the `cut` function. To be used
+#'        with `cutting_labels`
+#' @param cutting_labels The labels to send to the `cut` function. To be used
+#'        with `cutting_breaks`
 #'
-#' @return
-#' @export
-#'
-#' @examples
+#' @return A table with a new column for the groups
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 convert_age_column_to_age_group_column <-
   function(table,
@@ -229,7 +230,7 @@ convert_age_column_to_age_group_column <-
   return(
     mutate(
       table,
-      !!target_symbol := 
+      !!target_symbol :=
         cut(!!symbol_to_cut,
             breaks = cutting_breaks,
             labels = cutting_labels)))
