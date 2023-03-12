@@ -1,4 +1,4 @@
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #' Kruskal-Wallis test for significant differentiating features
 #' 
 #' A helper function to calculate Kruskal-Wallis for all the grouping
@@ -32,7 +32,7 @@
 #'                 `sym("Diagnosis"), sym("median_ab_readout"))`
 #' @example `kruskal_wallis_test_for_sample_groups("A1BG", tab2, sym("HGNC_Symbol"),`
 #'                  `sym("Diagnosis"), sym("median_ab_readout"))`
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 kruskal_wallis_test_for_sample_groups <- function(tested_differentiating_feature,
                                                   table,
                                                   differentiating_feature_symbol,
@@ -64,13 +64,13 @@ keep_only_significant_entries <- function(melted_table,
   return(dplyr::filter(melted_table, !!differentiating_feature_symbol %in% kw_biomarkers))
 }
 
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # Wilcoxon pairwise comparisons for biomarkers passing the KW test
 #
 # A helper function to calculate pairwise Wilcoxon tests for the given list of
 # group pairs. This function is specific for the variable/value names assigned
 # in reshape2::melt, above
-################################################################################
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 test_pairwise_wilcoxon <- function(melted_table,
                                    differentiating_feature_symbol,
                                    significant_kw,
@@ -144,5 +144,31 @@ perform_wilcoxon_on_pair <- function(pair, df,
   return(stats::wilcox.test(df[[measurement_name]][df[[grouping_feature_symbol]] == pair[1]],
                           df[[measurement_name]][df[[grouping_feature_symbol]] == pair[2]],
                           exact = F))
+}
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#' Prepare the cutting breaks and cutting labels for a conversion from discrete
+#' values to groups based on quantiles
+#'
+#' @param df_column The column planned to be converted
+#' @param desired_num_of_groups The number of groups desired in the final df
+#'
+#' @return A list with the `Breaks` and `Labels` to send to the `cut` method
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+prepare_breaks_and_labels_by_quantiles <- function(df_column,
+                                                   desired_num_of_groups)
+{
+  quantiles <- quantile(df_column, probs = seq(0, 1, 1/desired_num_of_groups),
+                        na.rm = TRUE)
+  breaks <- c(quantiles[1:desired_num_of_groups] - 1,
+              quantiles[desired_num_of_groups + 1])
+  labels <- vector("character", desired_num_of_groups)
+  for(i in 1:desired_num_of_groups) {
+    end_value <- ifelse(i < desired_num_of_groups,
+                        quantiles[[i+1]] - 1,
+                        quantiles[[i+1]])
+    labels[[i]] <- paste(quantiles[[i]], "-", end_value, sep = "")
+  }
+  return(list(Breaks = breaks, Labels = labels))
 }
 # TODO: TO BE CONTINUED
