@@ -148,7 +148,8 @@ mutated_kth <- kth %>%
   dplyr::select(Diagnosis_Age_Group, Age_Group, everything())
 
 kth_boxplots <-
-  create_box_plots_of_all_columns_starting_at_column_number(mutated_kth, "Diagnosis_Age_Group", 7)
+  create_box_plots_of_all_columns_starting_at_column_number(mutated_kth, "KTH",
+                                                            "Diagnosis_Age_Group", 7)
 
 # EMIF
 source(here("functions", "mapping_functions.R"))
@@ -169,7 +170,8 @@ mutated_emif <- emif %>%
   dplyr::rename(!!!protein_renaming_vector)
 
 emif_boxplots <-
-  create_box_plots_of_all_columns_starting_at_column_number(mutated_emif, "Diagnosis_Age_Group", 8)
+  create_box_plots_of_all_columns_starting_at_column_number(mutated_emif, "Emif",
+                                                            "Diagnosis_Age_Group", 8)
 # Recommended to remove once done because of size
 remove(emif_boxplots)
 # Olink
@@ -181,6 +183,7 @@ mutated_olink <- olink %>%
   dplyr::select(Diagnosis_Age_Group, Diagnosis, Age_Group, everything(), -dx)
 
 olink_boxplots <-
-  create_box_plots_of_all_columns_starting_at_column_number(mutated_olink, "Diagnosis_Age_Group", 7)
+  create_box_plots_of_all_columns_starting_at_column_number(mutated_olink, "Olink",
+                                                            "Diagnosis_Age_Group", 7)
 # Recommended to remove once done because of size
 remove(olink_boxplots)
