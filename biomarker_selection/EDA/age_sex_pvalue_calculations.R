@@ -37,19 +37,19 @@ mutated_kth %>% dplyr::group_by(Age_Group) %>% dplyr::summarise(n())
 ### Melt the dataframe, so there's only one readout variable
 melted_kth <-
   reshape2::melt(kth, id = 1:9,
-                 variable.name = "HGNC_Symbol", value.name = "median_ab_readout") %>%
+                 variable.name = "HGNC_Symbol", value.name = "Value") %>%
   convert_age_column_to_age_group_column(sym("Age"), sym("Age_Group"),
                                          cutting_breaks = breaks_and_labels$Breaks,
                                          cutting_labels = breaks_and_labels$Labels) %>%
-  dplyr::select(Diagnosis, Age_Group, Gender, HGNC_Symbol, median_ab_readout)
+  dplyr::select(Diagnosis, Age_Group, Gender, HGNC_Symbol, Value)
 
 #### Adjusting to have Diagnosis + age group combined column                ####
 
-supercharged_melt <-
+supercharged_kth_melt <-
   melted_kth %>%
   dplyr::filter(Diagnosis == "AD" | Diagnosis == "Control") %>%
   dplyr::mutate(Diagnosis_Age_Group = paste(Diagnosis, Age_Group)) %>%
-  dplyr::select(Diagnosis_Age_Group, Gender, HGNC_Symbol, median_ab_readout)
+  dplyr::select(Diagnosis_Age_Group, Gender, HGNC_Symbol, Value)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ### Emif ####
@@ -83,13 +83,21 @@ print("The number of patients per age group (in Emif) is:")
 mutated_emif %>% dplyr::group_by(Age_Group) %>% dplyr::summarise(n())
 
 ### Melt the emif dataframe, so there's only one readout variable
-melted_emif <-
-  reshape2::melt(emif, id = 1:5,
-                 variable.name = "UniProt", value.name = "Value") %>%
+melted_emif <- emif %>%
+  dplyr::rename(!!!protein_renaming_vector) %>%
+  reshape2::melt(id = 1:5,
+                 variable.name = "HGNC_Symbol", value.name = "Value") %>%
   convert_age_column_to_age_group_column(sym("Age"), sym("Age_Group"),
                                          cutting_breaks = breaks_and_labels$Breaks,
                                          cutting_labels = breaks_and_labels$Labels) %>%
-  dplyr::select(Diagnosis, Age_Group, Gender, UniProt, Value)
+  dplyr::select(Diagnosis, Age_Group, Gender, HGNC_Symbol, Value)
+
+supercharged_emif_melt <-
+  melted_emif %>%
+  dplyr::mutate(Diagnosis = case_when(Diagnosis == "NL" ~ "Control", TRUE ~ Diagnosis)) %>%
+  dplyr::filter(Diagnosis == "AD" | Diagnosis == "Control") %>%
+  dplyr::mutate(Diagnosis_Age_Group = paste(Diagnosis, Age_Group)) %>%
+  dplyr::select(Diagnosis_Age_Group, Gender, HGNC_Symbol, Value)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ### Olink ####
@@ -111,11 +119,18 @@ mutated_olink %>% dplyr::group_by(Age_Group) %>% dplyr::summarise(n())
 ### Melt the olink dataframe, so there's only one readout variable
 melted_olink <-
   reshape2::melt(olink, id = 1:4,
-                 variable.name = "Gene_name", value.name = "Value") %>%
+                 variable.name = "HGNC_Symbol", value.name = "Value") %>%
   convert_age_column_to_age_group_column(sym("age_gr"), sym("Age_Group"),
                                          cutting_breaks = breaks_and_labels$Breaks,
                                          cutting_labels = breaks_and_labels$Labels) %>%
-  dplyr::select(dx, Age_Group, sex, Gene_name, Value)
+  dplyr::select(dx, Age_Group, sex, HGNC_Symbol, Value)
+
+supercharged_olink_melt <-
+  melted_olink %>%
+  dplyr::mutate(Diagnosis = case_when(dx == "CN" ~ "Control", dx == "AD dementia" ~ "AD", TRUE ~ dx)) %>%
+  dplyr::filter(Diagnosis == "AD" | Diagnosis == "Control") %>%
+  dplyr::mutate(Diagnosis_Age_Group = paste(Diagnosis, Age_Group)) %>%
+  dplyr::select(Diagnosis_Age_Group, sex, HGNC_Symbol, Value)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ### Combine the datasets ####
@@ -164,11 +179,11 @@ mutated_combined_df %>% dplyr::group_by(Age_Group) %>% dplyr::summarise(n())
 ### Melt the dataframe, so there's only one readout variable
 melted_combined_df <-
   reshape2::melt(combined_df, id = 1:3,
-                 variable.name = "HGNC_Symbol", value.name = "median_ab_readout") %>%
+                 variable.name = "HGNC_Symbol", value.name = "Value") %>%
   convert_age_column_to_age_group_column(sym("Age"), sym("Age_Group"),
                                          cutting_breaks = breaks_and_labels$Breaks,
                                          cutting_labels = breaks_and_labels$Labels) %>%
-  dplyr::select(Diagnosis, Age_Group, Gender, HGNC_Symbol, median_ab_readout) #%>%
+  dplyr::select(Diagnosis, Age_Group, Gender, HGNC_Symbol, Value) #%>%
   #na.omit()
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
@@ -183,7 +198,7 @@ kth_gender_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
   melted_df = melted_kth,
   differentiating_feature_symbol = sym("HGNC_Symbol"),
   grouping_feature_symbol = sym("Gender"),
-  measurement_symbol = sym("median_ab_readout"),
+  measurement_symbol = sym("Value"),
   significance_limit = 0.05)
 
 ### Age_Group
@@ -191,29 +206,32 @@ kth_age_group_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
   melted_df = melted_kth,
   differentiating_feature_symbol = sym("HGNC_Symbol"),
   grouping_feature_symbol = sym("Age_Group"),
-  measurement_symbol = sym("median_ab_readout"),
+  measurement_symbol = sym("Value"),
   significance_limit = 0.05)
 ### Diagnosis
 kth_diagnosis_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
   melted_df = melted_kth,
   differentiating_feature_symbol = sym("HGNC_Symbol"),
   grouping_feature_symbol = sym("Diagnosis"),
-  measurement_symbol = sym("median_ab_readout"),
+  measurement_symbol = sym("Value"),
   significance_limit = 0.05)
 
 kth_summary <- melted_kth %>%
-dplyr::summarise(mean = mean(median_ab_readout),
-                 sd = sd(median_ab_readout),
-                 median = median(median_ab_readout),
+dplyr::summarise(mean = mean(Value),
+                 sd = sd(Value),
+                 median = median(Value),
                  .by = c(Diagnosis, Age_Group, Gender, HGNC_Symbol))
 
 ### Diagnosis + age group
 kth_diagnosis_age_group_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
-  melted_df = supercharged_melt,
+  melted_df = supercharged_kth_melt,
   differentiating_feature_symbol = sym("HGNC_Symbol"),
   grouping_feature_symbol = sym("Diagnosis_Age_Group"),
-  measurement_symbol = sym("median_ab_readout"),
+  measurement_symbol = sym("Value"),
   significance_limit = 0.05)
+
+significant_kth_diagnosis_age_group_proteins <-
+  kth_diagnosis_age_group_grouped_pvals[[1]]$HGNC_Symbol
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###                                EMIF                                    ####
@@ -240,6 +258,16 @@ emif_diagnosis_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
   grouping_feature_symbol = sym("Diagnosis"),
   measurement_symbol = sym("Value"),
   significance_limit = 0.05)
+### Diagnosis + age group
+emif_diagnosis_age_group_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
+  melted_df = supercharged_emif_melt,
+  differentiating_feature_symbol = sym("HGNC_Symbol"),
+  grouping_feature_symbol = sym("Diagnosis_Age_Group"),
+  measurement_symbol = sym("Value"),
+  significance_limit = 0.05)
+
+significant_emif_diagnosis_age_group_proteins <-
+  emif_diagnosis_age_group_grouped_pvals[[1]]$HGNC_Symbol
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ###                                 OLINK                                  ####
@@ -265,6 +293,16 @@ olink_diagnosis_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
   grouping_feature_symbol = sym("dx"),
   measurement_symbol = sym("Value"),
   significance_limit = 0.05)
+### Diagnosis + age group
+olink_diagnosis_age_group_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
+  melted_df = supercharged_olink_melt,
+  differentiating_feature_symbol = sym("HGNC_Symbol"),
+  grouping_feature_symbol = sym("Diagnosis_Age_Group"),
+  measurement_symbol = sym("Value"),
+  significance_limit = 0.05)
+
+significant_olink_diagnosis_age_group_proteins <-
+  olink_diagnosis_age_group_grouped_pvals[[1]]$HGNC_Symbol
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ### Combined datasets ####
@@ -274,7 +312,7 @@ combined_gender_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
   melted_df = melted_combined_df,
   differentiating_feature_symbol = sym("HGNC_Symbol"),
   grouping_feature_symbol = sym("Gender"),
-  measurement_symbol = sym("median_ab_readout"),
+  measurement_symbol = sym("Value"),
   significance_limit = 0.05)
 
 ### Age_Group
@@ -282,14 +320,14 @@ combined_age_group_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
   melted_df = melted_combined_df,
   differentiating_feature_symbol = sym("HGNC_Symbol"),
   grouping_feature_symbol = sym("Age_Group"),
-  measurement_symbol = sym("median_ab_readout"),
+  measurement_symbol = sym("Value"),
   significance_limit = 0.05)
 ### Diagnosis
 combined_diagnosis_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
   melted_df = melted_combined_df,
   differentiating_feature_symbol = sym("HGNC_Symbol"),
   grouping_feature_symbol = sym("Diagnosis"),
-  measurement_symbol = sym("median_ab_readout"),
+  measurement_symbol = sym("Value"),
   significance_limit = 0.05)
 
 
@@ -300,19 +338,24 @@ combined_diagnosis_grouped_pvals <- perform_kw_wilcoxon_according_to_grouping(
 # KTH
 
 kth_boxplots <-
-  create_box_plots_of_all_columns_starting_at_column_number(mutated_kth, "KTH",
-                                                            "Diagnosis_Age_Group", 7)
+  create_box_plots_of_all_columns_starting_at_column_number(
+    mutated_kth %>%
+      dplyr::select(Diagnosis_Age_Group, all_of(significant_kth_diagnosis_age_group_proteins)),
+    "KTH", "Diagnosis_Age_Group", 2)
 
 # EMIF
 
 emif_boxplots <-
-  create_box_plots_of_all_columns_starting_at_column_number(mutated_emif, "Emif",
-                                                            "Diagnosis_Age_Group", 8)
-# Recommended to remove once done because of size
-remove(emif_boxplots)
+  create_box_plots_of_all_columns_starting_at_column_number(
+    mutated_emif %>%
+      dplyr::select(Diagnosis_Age_Group, all_of(significant_emif_diagnosis_age_group_proteins)),
+    "Emif", "Diagnosis_Age_Group", 2)
+
 # Olink
 olink_boxplots <-
-  create_box_plots_of_all_columns_starting_at_column_number(mutated_olink, "Olink",
-                                                            "Diagnosis_Age_Group", 7)
+  create_box_plots_of_all_columns_starting_at_column_number(
+    mutated_olink %>%
+      dplyr::select(Diagnosis_Age_Group, all_of(significant_olink_diagnosis_age_group_proteins)),
+    "Olink", "Diagnosis_Age_Group", 2)
 # Recommended to remove once done because of size
 remove(olink_boxplots)
