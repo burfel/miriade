@@ -37,7 +37,7 @@ create_box_plots_of_all_columns_starting_at_column_number <-
   function(dataframe, dataframe_name, x_column, y_starting_column, with_points = TRUE) {
     number_of_columns <- length(names(dataframe))
     y_column_names <- names(dataframe)[y_starting_column:number_of_columns]
-    new_length <- number_of_columns - y_starting_column
+    new_length <- number_of_columns - y_starting_column + 1
     box_plots <- vector("list", length = new_length)
     for (i in 1:new_length) { # TODO: Possibly replace with sapply
       box_plots[[i]] <- create_box_plot(dataframe, dataframe_name, x_column,
