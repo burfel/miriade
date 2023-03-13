@@ -1,10 +1,11 @@
 library(here)
 library(dplyr)
 
-# This loads the melded emif and olink dataframes to be used later in the file
-# It also calls to set the dataset root directory
-source(here("biomarker_selection", "EDA", "meld_all_fractured_datasets.R"))
-source(here("functions", "auxiliary_statistical_functions.R"))
+# This calls meld_all_fractured_datasets, sets the dataset root directory,
+# and prepares kth (/emif/olink), mutated_kth(/emif/olink),
+# melted_kth(/emif/olink) and supercharged_kth(/emif/olink)_melt to be used
+# in this file 
+source(here("biomarker_selection", "EDA", "prep_datasets_for_kw_wilcoxon.R"))
 source(here("functions", "boxplot_functions.R"))
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
@@ -12,151 +13,20 @@ source(here("functions", "boxplot_functions.R"))
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-### KTH ####
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-### Read the table
-kth <- readxl::read_xlsx(file.path(datasets_root_directory,
-                                   "KTH/KTH AD dataset for MIRIADE biomarker selection sample info and results.xlsx"))
-
-### Change the names into HGNC symbols (prefixes)
-colnames(kth) <- sapply(colnames(kth), take_only_pre_underscore_substring)
-
-breaks_and_labels <- prepare_breaks_and_labels_by_quantiles(kth$Age, 3)
-mutated_kth <- kth %>%
-  convert_age_column_to_age_group_column(sym("Age"), sym("Age_Group"),
-                                         cutting_breaks = breaks_and_labels$Breaks,
-                                         cutting_labels = breaks_and_labels$Labels) %>%
-  dplyr::filter(Diagnosis == "AD" | Diagnosis == "Control") %>%
-  dplyr::mutate(Diagnosis_Age_Group = paste(Diagnosis, Age_Group)) %>%
-  dplyr::select(Diagnosis_Age_Group, Age_Group, everything())
-
-print("The number of patients per age group (in KTH) is:")
-mutated_kth %>% dplyr::group_by(Age_Group) %>% dplyr::summarise(n())
-
-
-### Melt the dataframe, so there's only one readout variable
-melted_kth <-
-  reshape2::melt(kth, id = 1:9,
-                 variable.name = "HGNC_Symbol", value.name = "Value") %>%
-  convert_age_column_to_age_group_column(sym("Age"), sym("Age_Group"),
-                                         cutting_breaks = breaks_and_labels$Breaks,
-                                         cutting_labels = breaks_and_labels$Labels) %>%
-  dplyr::select(Diagnosis, Age_Group, Gender, HGNC_Symbol, Value)
-
-#### Adjusting to have Diagnosis + age group combined column                ####
-
-supercharged_kth_melt <-
-  melted_kth %>%
-  dplyr::filter(Diagnosis == "AD" | Diagnosis == "Control") %>%
-  dplyr::mutate(Diagnosis_Age_Group = paste(Diagnosis, Age_Group)) %>%
-  dplyr::select(Diagnosis_Age_Group, Gender, HGNC_Symbol, Value)
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-### Emif ####
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-
-source(here("functions", "mapping_functions.R"))
-emif_proteins <- data.frame(UniProt = colnames(emif)[6:ncol(emif)]) %>%
-  map_uniprot_to_hgnc_and_cbind("Name") %>%
-  na.omit() %>%
-  dplyr::select(UniProt, Name)
-# use sapply to create a named vector of the hgnc and their new uniprots
-protein_renaming_vector <- sapply(emif_proteins$Name, function(x) {
-  emif_proteins$UniProt[which(emif_proteins$Name == x)]
-})
-
-emif$Age <- round(emif$Age) # Must round, otherwise the age groups are classified incorrectly
-
-breaks_and_labels <- prepare_breaks_and_labels_by_quantiles(emif$Age, 3)
-
-mutated_emif <- emif %>%
-  convert_age_column_to_age_group_column(sym("Age"), sym("Age_Group"),
-                                         cutting_breaks = breaks_and_labels$Breaks,
-                                         cutting_labels = breaks_and_labels$Labels) %>%
-  dplyr::filter(Diagnosis == "AD" | Diagnosis == "NL") %>%
-  dplyr::mutate(Diagnosis = case_when(Diagnosis == "NL" ~ "Control", TRUE ~ Diagnosis)) %>%
-  dplyr::mutate(Diagnosis_Age_Group = paste(Diagnosis, Age_Group)) %>%
-  dplyr::select(Diagnosis_Age_Group, Age_Group, everything()) %>%
-  dplyr::rename(!!!protein_renaming_vector)
-
-print("The number of patients per age group (in Emif) is:")
-mutated_emif %>% dplyr::group_by(Age_Group) %>% dplyr::summarise(n())
-
-### Melt the emif dataframe, so there's only one readout variable
-melted_emif <- emif %>%
-  dplyr::rename(!!!protein_renaming_vector) %>%
-  reshape2::melt(id = 1:5,
-                 variable.name = "HGNC_Symbol", value.name = "Value") %>%
-  convert_age_column_to_age_group_column(sym("Age"), sym("Age_Group"),
-                                         cutting_breaks = breaks_and_labels$Breaks,
-                                         cutting_labels = breaks_and_labels$Labels) %>%
-  dplyr::select(Diagnosis, Age_Group, Gender, HGNC_Symbol, Value)
-
-supercharged_emif_melt <-
-  melted_emif %>%
-  dplyr::mutate(Diagnosis = case_when(Diagnosis == "NL" ~ "Control", TRUE ~ Diagnosis)) %>%
-  dplyr::filter(Diagnosis == "AD" | Diagnosis == "Control") %>%
-  dplyr::mutate(Diagnosis_Age_Group = paste(Diagnosis, Age_Group)) %>%
-  dplyr::select(Diagnosis_Age_Group, Gender, HGNC_Symbol, Value)
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-### Olink ####
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-
-breaks_and_labels <- prepare_breaks_and_labels_by_quantiles(olink$age_gr, 3)
-mutated_olink <- olink %>%
-  convert_age_column_to_age_group_column(sym("age_gr"), sym("Age_Group"),
-                                         cutting_breaks = breaks_and_labels$Breaks,
-                                         cutting_labels = breaks_and_labels$Labels) %>%
-  dplyr::filter(dx == "AD dementia" | dx == "CN") %>%
-  dplyr::mutate(Diagnosis = case_when(dx == "CN" ~ "Control", dx == "AD dementia" ~ "AD", TRUE ~ dx)) %>%
-  dplyr::mutate(Diagnosis_Age_Group = paste(Diagnosis, Age_Group)) %>%
-  dplyr::select(Diagnosis_Age_Group, Diagnosis, Age_Group, everything(), -dx)
-
-print("The number of patients per age group (in Olink) is:")
-mutated_olink %>% dplyr::group_by(Age_Group) %>% dplyr::summarise(n())
-
-### Melt the olink dataframe, so there's only one readout variable
-melted_olink <-
-  reshape2::melt(olink, id = 1:4,
-                 variable.name = "HGNC_Symbol", value.name = "Value") %>%
-  convert_age_column_to_age_group_column(sym("age_gr"), sym("Age_Group"),
-                                         cutting_breaks = breaks_and_labels$Breaks,
-                                         cutting_labels = breaks_and_labels$Labels) %>%
-  dplyr::select(dx, Age_Group, sex, HGNC_Symbol, Value)
-
-supercharged_olink_melt <-
-  melted_olink %>%
-  dplyr::mutate(Diagnosis = case_when(dx == "CN" ~ "Control", dx == "AD dementia" ~ "AD", TRUE ~ dx)) %>%
-  dplyr::filter(Diagnosis == "AD" | Diagnosis == "Control") %>%
-  dplyr::mutate(Diagnosis_Age_Group = paste(Diagnosis, Age_Group)) %>%
-  dplyr::select(Diagnosis_Age_Group, sex, HGNC_Symbol, Value)
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ### Combine the datasets ####
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 #### First, we bring all 3 datasets to a standard form ####
 kth <- kth %>%
-  dplyr::select(-Class) %>%
-  dplyr::mutate(Gender = case_when(Gender == 'M' ~ 'm', Gender == 'F' ~ 'f', TRUE ~ Gender)) %>%
   dplyr::filter(Diagnosis == "AD" | Diagnosis == "Control")
-
-# Create a mapping rule as a named vector for the diagnosis to have a unified format
-diagnosis_mapping <- c("CN" = "Control",
-                       "NL" = "Control",
-                       "AD dementia" = "AD")
 
 emif <- emif %>%
   dplyr::select(-SubjectId, -Assay.ID) %>%
-  dplyr::mutate(Diagnosis = recode(Diagnosis, !!!diagnosis_mapping)) %>%
   dplyr::filter(Diagnosis == "Control" | Diagnosis == "AD") %>%
   dplyr::rename(!!!protein_renaming_vector)
 
 olink <- olink %>%
   dplyr::select(-SampleId) %>%
-  dplyr::rename(Age = "age_gr", Diagnosis = "dx", Gender = "sex") %>%
-  dplyr::mutate(Diagnosis = recode(Diagnosis, !!!diagnosis_mapping)) %>%
   dplyr::filter(Diagnosis == "Control" | Diagnosis == "AD")
 
 #### Now, we bind_rows ####

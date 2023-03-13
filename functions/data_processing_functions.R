@@ -379,6 +379,9 @@ meld_fractured_dataset <- function(
 #'
 #' @return A df with rows for the values of the differentiating feature with
 #'          values and adjusted pvalues for each one of the grouping comparisons
+#'
+#' @note If you do not want to filter out proteins - just set
+#'       `significance_limit` to 1
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 perform_kw_wilcoxon_according_to_grouping <- function(
     melted_df,
