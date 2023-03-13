@@ -55,6 +55,25 @@ diagnosis_mapping <- c("CN" = "Control",
                        "NL" = "Control",
                        "AD dementia" = "AD")
 
+spread_ids <- function(df)
+{
+  # Calculate number of rows for each group
+  n_ad <- sum(df$Diagnosis == "AD")
+  n_control <- sum(df$Diagnosis == "Control")
+  
+  # Calculate maximum range of integers to use
+  max_range <- max(n_ad, n_control)
+  
+  # Add new column with sequence of integers
+  df <- df %>%
+    group_by(Diagnosis) %>%
+    mutate(Id = ifelse(Diagnosis == "AD", 
+                             seq(1, max_range, length.out = n_ad),
+                             seq(1, max_range, length.out = n_control))) %>%
+    ungroup()
+  return(df)
+}
+
 filtered_olink <- olink %>%
   dplyr::select(SampleId, dx, age_gr, sex, all_of(proteins_in_all_three_datasets$Name)) %>%
   dplyr::arrange(age_gr) %>%
@@ -62,14 +81,16 @@ filtered_olink <- olink %>%
   dplyr::rename(!!!protein_renaming_vector) %>%
   dplyr::mutate(Diagnosis = recode(Diagnosis, !!!diagnosis_mapping)) %>%
   dplyr::filter(Diagnosis == "Control" | Diagnosis == "AD") %>%
-  dplyr::mutate(Id = row_number())
+  arrange(Diagnosis != "AD") %>%
+  spread_ids()
 
 filtered_kth <- kth %>%
   dplyr::select(Diagnosis, Age, Gender, all_of(proteins_in_all_three_datasets$Name)) %>%
   dplyr::arrange(Age) %>%
   dplyr::rename(!!!protein_renaming_vector) %>%
   dplyr::filter(Diagnosis == "Control" | Diagnosis == "AD") %>%
-  dplyr::mutate(Id = row_number())
+  arrange(Diagnosis != "AD") %>%
+  spread_ids()
 
 filtered_emif <- emif %>%
   dplyr::select(SubjectId, Diagnosis, Age, Gender, all_of(proteins_in_all_three_datasets$UniProt)) %>%
@@ -77,7 +98,8 @@ filtered_emif <- emif %>%
   dplyr::rename(Subject = "SubjectId") %>%
   dplyr::mutate(Diagnosis = recode(Diagnosis, !!!diagnosis_mapping)) %>%
   dplyr::filter(Diagnosis == "Control" | Diagnosis == "AD") %>%
-  dplyr::mutate(Id = row_number())
+  arrange(Diagnosis != "AD") %>%
+  spread_ids()
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ####               Bind the three datasets and then pivot long              ####
@@ -107,20 +129,55 @@ long_all <- long_all %>%
   mutate(normalized_value = value / mean_value) %>%
   dplyr::select(-mean_value)
 
+source(here("functions", "auxiliary_statistical_functions.R"))
+breaks_and_labels <- prepare_breaks_and_labels_by_quantiles(long_all$Age, 3)
+
+long_all <- long_all %>%
+  convert_age_column_to_age_group_column(sym("Age"), sym("Age_Group"),
+                                         cutting_breaks = breaks_and_labels$Breaks,
+                                         cutting_labels = breaks_and_labels$Labels) %>%
+  dplyr::select(Diagnosis, Age_Group, everything())
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ####                             Plotting                                   ####
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 plot_biomarker_distribution <- function(long_all, uniprot)
 {
+  require(ggplot2)
   uniprot_data <- long_all %>%
     dplyr::filter(UniProt == uniprot)
+  plots <- vector("list")
   
-  ggplot(uniprot_data, aes(x = Id, y = normalized_value, color = Diagnosis)) +
-    geom_line() +
+  plots[["Scatter by cohort"]] <-
+    ggplot(uniprot_data, aes(x = Id, y = normalized_value, color = Diagnosis)) +
+    geom_point() +
     labs(title = paste("Distribution for", uniprot),
-         subtitle = "where the subjects were sorted by age and the Id is the row number") +
+         subtitle = "where the subjects were sorted by age and the Id is the built so the diagnoses are approx. similarly spread") +
+    facet_wrap(~ cohort , ncol = 3, scales = "free_x")
+  
+  plots[["Scatter by cohort and age group"]] <-
+    ggplot(uniprot_data, aes(x = Id, y = normalized_value, color = Diagnosis)) +
+    geom_point() +
+    labs(title = paste("Distribution for", uniprot),
+         subtitle = "where the subjects were sorted by age and the Id is the built so the diagnoses are approx. similarly spread") +
+    facet_wrap(~ cohort + Age_Group, ncol = 3, scales = "free_x")
+  
+  plots[["Boxplot by cohort"]] <-
+    ggplot(uniprot_data, aes(x = Diagnosis, y = normalized_value, color = Diagnosis)) +
+    geom_boxplot() +
+    labs(title = paste("Distribution for", uniprot),
+         subtitle = "where the subjects were sorted by age and the Id is the built so the diagnoses are approx. similarly spread") +
     facet_wrap(~ cohort, ncol = 3, scales = "free_x")
+  
+  plots[["Violin by cohort"]] <-
+    ggplot(uniprot_data, aes(x = Diagnosis, y = normalized_value, color = Diagnosis)) +
+    geom_violin() +
+    labs(title = paste("Distribution for", uniprot),
+         subtitle = "where the subjects were sorted by age and the Id is the built so the diagnoses are approx. similarly spread") +
+    facet_wrap(~ cohort, ncol = 3, scales = "free_x")
+  
+  return(plots)
 }
 
 # Per unique UniProt create a plot
