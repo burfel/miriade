@@ -312,9 +312,11 @@ community_enrichment <- function(community, adj.p.cutoff = 0.1,
   {
     return((do.call(rbind, apply(enrichments, 1, function(x) data.frame(Term = x["Term"],
                                                                 Gene = unlist(strsplit(x["Genes"], split = ";")),
+                                                                p.val = x["P.value"],
+                                                                adj.p.val = x["Adjusted.P.value"],
                                                                 row.names = NULL))) %>%
              dplyr::group_by(Gene) %>%
-             dplyr::arrange(.by_group = T))[,c(2,1)])
+             dplyr::arrange(.by_group = T))[,c(2,1,3,4)])
   }
   else
   {

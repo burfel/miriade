@@ -90,9 +90,15 @@ datasets_root_directory <<- define_datasets_root()
 vec_filepath <- file.path(datasets_root_directory,
                           "Enriched_pathways/VertexIntersectionRandomWalkEnrichedCommunities.xlsx")
 if(!file.exists(vec_filepath)) {
+  tryCatch({
+    i <<- length(v_enriched_communities) + 1
+  }, error = function(e) {
+    v_enriched_communities <<- vector("list")
+    i <<- 1
+  })
   v_enriched_communities <-
-    Filter(is_df_populated,
-           sapply(communities(v_random_walk_communities), community_enrichment))
+    apply_enrichment_to_communities(communities(v_random_walk_communities),
+                                    i, v_enriched_communities)
   write_df_list_to_xlsx(v_enriched_communities, vec_filepath)
 } else {
   require(XLConnect)
