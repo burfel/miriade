@@ -86,7 +86,7 @@ alz_emif_kth <- compare_datasets_redux(
   dataset_names = c('emif', 'kth'))
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-####                             Venn diagrams                              ####
+###                             Venn diagrams                              ####
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 library(ggvenn)
 
@@ -156,3 +156,61 @@ dlb_olink_mspec$venn_diagram
 ftd_olink_mspec$venn_diagram
 alz_adni_kth$venn_diagram
 alz_emif_kth$venn_diagram
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+## Compare new kth ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+new_kth_proteins <- 
+  read_df_from_file(file.path(datasets_root_directory,
+                              "_potential-more-datasets/KTH/KTH_proteins_new.csv")) %>%
+  dplyr::select(-Antibody) %>%
+  unlist() %>% as.data.frame() %>%
+  dplyr::rename(HGNC_Symbol = ".") %>%
+  dplyr::filter(HGNC_Symbol != "")
+
+# Compare olink and kth for AZ
+alz_olink_and_new_kth <- compare_datasets_redux(
+  datasets = list(olink_control_vs_ad_pvals, new_kth_proteins),
+  dataset_names = c('olink', 'kth'))
+
+# All 4 ALZ datasets
+alz_olink_adni_emif_new_kth <- compare_datasets_redux(
+  datasets = list(olink_control_vs_ad_pvals, adni_control_vs_ad, emif_control_vs_ad_pvals, new_kth_proteins),
+  dataset_names = c('olink', 'adni', 'emif', 'kth'))
+
+# Now adni and kth
+alz_adni_new_kth <- compare_datasets_redux(
+  datasets = list(adni_control_vs_ad, new_kth_proteins),
+  dataset_names = c('adni', 'kth'))
+
+# Now emif and kth
+alz_emif_new_kth <- compare_datasets_redux(
+  datasets = list(emif_control_vs_ad_pvals, new_kth_proteins),
+  dataset_names = c('emif', 'kth'))
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+###                             Venn diagrams                              ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+alz_olink_and_new_kth$venn_diagram <-
+  ggvenn(generate_venn_data(alz_olink_and_new_kth),
+         fill_color = c("yellow", "red")) +
+  labs(title = "Olink and new KTH overlap", subtitle = "AD")
+alz_olink_adni_emif_new_kth$venn_diagram <-
+  ggvenn(generate_venn_data(alz_olink_adni_emif_new_kth),
+         fill_color = c("yellow", "blue", "green", "red")) +
+  labs(title = "Olink, Adni, Emif and new KTH overlap", subtitle = "AD")
+alz_adni_new_kth$venn_diagram <-
+  ggvenn(generate_venn_data(alz_adni_new_kth),
+         fill_color = c("blue", "red")) +
+  labs(title = "Adni and new KTH overlap", subtitle = "AD")
+alz_emif_new_kth$venn_diagram <-
+  ggvenn(generate_venn_data(alz_emif_new_kth),
+         fill_color = c("green", "red")) +
+  labs(title = "Emif and new KTH overlap", subtitle = "AD")
+# showing the plots
+alz_olink_and_new_kth$venn_diagram
+alz_olink_adni_emif_new_kth$venn_diagram
+alz_adni_new_kth$venn_diagram
+alz_emif_new_kth$venn_diagram
