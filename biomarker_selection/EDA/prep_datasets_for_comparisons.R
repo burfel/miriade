@@ -69,4 +69,17 @@ supp_control_vs_ad$adj.p[supp_control_vs_ad$Cohort == "EMIF-AD MBD"] <- p.adjust
 adni_control_vs_ad <- dplyr::filter(supp_control_vs_ad, Cohort == "ADNI")
 emif_brain2020_control_vs_ad <- dplyr::filter(supp_control_vs_ad, Cohort == "EMIF-AD MBD")
 
-# TODO: mspec
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+### mspec ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+### Read the results Excel file for FTD
+ftd_mspec <- readxl::read_xlsx(file.path(datasets_root_directory, "VUMC/WBI_CSF_Candidates_FC1.5_P0.05_DP0.5_FTD_DLB.xlsx"), sheet = 1) %>%
+  dplyr::rename(UniProt = Accession, HGNC_Symbol = Gene, p.val = Pval) %>%
+  dplyr::select(UniProt, HGNC_Symbol, p.val) %>%
+  dplyr::mutate(adj.p = p.adjust(p.val, method = "BH"))
+
+### Read the results Excel file for DLB
+dlb_mspec <- readxl::read_xlsx(file.path(datasets_root_directory, "VUMC/WBI_CSF_Candidates_FC1.5_P0.05_DP0.5_FTD_DLB.xlsx"), sheet = 2) %>%
+  dplyr::rename(UniProt = Accession, HGNC_Symbol = Gene, p.val = Pval) %>%
+  dplyr::select(UniProt, HGNC_Symbol, p.val) %>%
+  dplyr::mutate(adj.p = p.adjust(p.val, method = "BH"))
