@@ -1,6 +1,8 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ## Project: MIRIADE
-## Script purpose: Create venn diagrams showing the overlaps between datasets
+## Script purpose: Refine the preparation from `prep_datasets_for_kw_wilcoxon`
+##                 further by performing kw wilcoxon with a significance_limit = 1
+##                 to get p values according to control vs disease
 ## Date: 13.03.2023
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 library(here)
