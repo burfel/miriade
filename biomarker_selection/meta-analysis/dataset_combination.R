@@ -111,3 +111,68 @@ meta_ftd <- dplyr::group_by(combined_ftd, HGNC_Symbol) %>%
                 adj.p.val_bonferroni = p.adjust(p.val_bonferroni, method = "BY"),
                 adj.p.val_tippett = p.adjust(p.val_tippett, method = "BY")) %>%
   dplyr::select(-sources, everything(), sources)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+## Plotting the p values ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+### Alzheimer's ####
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+meta_alz <- meta_alz[order(meta_alz$p.val_fisher),]
+
+meltmeta_alz <- meta_alz %>%
+  dplyr::select(HGNC_Symbol, sources, everything(), -starts_with("adj")) %>%
+  reshape2::melt(id = 1:2,
+                 variable.name = "Method", value.name = "p.val")
+
+# Plot the results
+meltmeta_alz %>%
+  ggplot(aes(x = reorder(HGNC_Symbol,p.val), y = p.val, color = Method)) +
+  geom_point() +
+  labs(title = "p values for Alzheimer's per meta analysis method",
+       x = "Protein", y = "P value") +
+  # remove x-axis tick labels
+  theme(axis.text.x = element_blank())
+
+# plotting it after log10 to the y values
+meltmeta_alz %>%
+  ggplot(aes(x = reorder(HGNC_Symbol,log10(p.val)), y = log10(p.val), color = Method)) +
+  geom_point() +
+  labs(title = "p values for Alzheimer's per meta analysis method",
+       x = "Protein", y = "log10(P value)") +
+  # remove x-axis tick labels
+  theme(axis.text.x = element_blank())
+
+# With facets
+meltmeta_alz %>%
+  ggplot(aes(x = reorder(HGNC_Symbol,p.val), y = p.val, color = Method)) +
+  geom_point() +
+  labs(title = "p values for Alzheimer's per meta analysis method",
+       x = "Protein", y = "P value") +
+  facet_wrap(~Method, ncol = 2) +
+  # remove x-axis tick labels and remove legend
+  theme(axis.text.x = element_blank(), legend.position = "none")
+
+# With facets and log 10
+meltmeta_alz %>%
+  ggplot(aes(x = reorder(HGNC_Symbol,log10(p.val)), y = log10(p.val), color = Method)) +
+  geom_point() +
+  labs(title = "p values for Alzheimer's per meta analysis method",
+       x = "Protein", y = "log10(P value)") +
+  facet_wrap(~Method, ncol = 2) +
+  # remove x-axis tick labels and remove legend
+  theme(axis.text.x = element_blank(), legend.position = "none")
+
+# With facets and adjusted p values
+meta_alz %>%
+  dplyr::select(HGNC_Symbol, sources, everything(), -starts_with("p.")) %>%
+  reshape2::melt(id = 1:2,
+                 variable.name = "Method", value.name = "adj.p") %>%
+  ggplot(aes(x = reorder(HGNC_Symbol, adj.p), y = adj.p, color = Method)) +
+  geom_point() +
+  labs(title = " adj p values for Alzheimer's per meta analysis method",
+       x = "Protein", y = "adj P value") +
+  facet_wrap(~Method, ncol = 2) +
+  # remove x-axis tick labels and remove legend
+  theme(axis.text.x = element_blank(), legend.position = "none")
+
