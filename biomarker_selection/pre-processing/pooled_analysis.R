@@ -124,6 +124,7 @@ candidate_BMs <- rbind(specific_BMs, common_BMs)
 ### Retrieve HGNCs and NCBI gene ids from AnnotationDbi, using UniProt ids
 library(AnnotationDbi)
 # BiocManager::install("org.Hs.eg.db")
+library(org.Hs.eg.db)
 BiocManager::install("org.Hs.eg.db", force = TRUE)
 id_mapping <- AnnotationDbi::select(org.Hs.eg.db, candidate_BMs$UniProt,
                                     columns = c("SYMBOL", "ENTREZID"), keytype = "UNIPROT")
@@ -139,3 +140,10 @@ annotated_BMs <- merge(candidate_BMs, id_mapping, by.x = "UniProt", by.y = "UNIP
 #             sep = "\t", quote = F, row.names = F, col.names = T)
 write.table(annotated_BMs, file = file.path(datasets_root_directory, "annotated_candidate_biomarkers.tsv"),
             sep = "\t", quote = F, row.names = F, col.names = T)
+
+## alternative results:
+## BY,        adj.p <= 0.05:  222 
+## BH / fdr,  adj.p <= 0.05:  472
+## BH / fdr,  adj.p <= 0.1:   589
+## holm,      adj.p <= 0.05:  124
+## holm,      adj.p <= 0.1:   140
