@@ -8,6 +8,7 @@ library(here)
 library(dplyr)
 source(here("functions", "mapping_functions.R"))
 source(here("functions", "comparison_functions.R"))
+source(here("biomarker_selection", "EDA", "prep_datasets_for_comparisons.R"))
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 ## Redux comparison ####
