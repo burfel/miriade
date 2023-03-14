@@ -67,19 +67,13 @@ alz_olink_adni_emif <- compare_datasets_redux(
   dataset_names = c('olink', 'adni', 'emif'))
 
 # Now Olink and mspec
-# dlb_olink_mspec <- compare_datasets_redux(
-#   datasets = list(vumc_ol, mspec),
-#   dataset_names = c('olink', 'mspec'),
-#   should_filter_by_disease = c(TRUE, TRUE),
-#   additional_columns = c("Name"),
-#   disease_to_filter_by = "DLB")
-# 
-# ftd_olink_mspec <- compare_datasets_redux(
-#   datasets = list(vumc_ol, mspec),
-#   dataset_names = c('olink', 'mspec'),
-#   should_filter_by_disease = c(TRUE, TRUE),
-#   additional_columns = c("Name"),
-#   disease_to_filter_by = "FTD")
+dlb_olink_mspec <- compare_datasets_redux(
+  datasets = list(olink_control_vs_dlb_pvals, dlb_mspec),
+  dataset_names = c('olink', 'mspec'))
+
+ftd_olink_mspec <- compare_datasets_redux(
+  datasets = list(olink_control_vs_ftd_pvals, ftd_mspec),
+  dataset_names = c('olink', 'mspec'))
 
 # Now adni and kth
 alz_adni_kth <- compare_datasets_redux(
@@ -135,14 +129,14 @@ alz_olink_adni_emif$venn_diagram <-
   ggvenn(generate_venn_data(alz_olink_adni_emif),
          fill_color = c("yellow", "blue", "green")) +
   labs(title = "Olink, Adni and Emif overlap", subtitle = "AD")
-# dlb_olink_mspec$venn_diagram <-
-#   ggvenn(generate_venn_data(dlb_olink_mspec),
-#          fill_color = c("yellow", "purple")) +
-#   labs(title = "Olink and Mspec overlap", subtitle = "DLB")
-# ftd_olink_mspec$venn_diagram <-
-#   ggvenn(generate_venn_data(ftd_olink_mspec),
-#          fill_color = c("yellow", "purple")) +
-#   labs(title = "Olink and Mspec overlap", subtitle = "FTD")
+dlb_olink_mspec$venn_diagram <-
+  ggvenn(generate_venn_data(dlb_olink_mspec),
+         fill_color = c("yellow", "purple")) +
+  labs(title = "Olink and Mspec overlap", subtitle = "DLB")
+ftd_olink_mspec$venn_diagram <-
+  ggvenn(generate_venn_data(ftd_olink_mspec),
+         fill_color = c("yellow", "purple")) +
+  labs(title = "Olink and Mspec overlap", subtitle = "FTD")
 alz_adni_kth$venn_diagram <-
   ggvenn(generate_venn_data(alz_adni_kth),
          fill_color = c("blue", "red")) +
@@ -158,7 +152,7 @@ alz_olink_and_emif$venn_diagram
 alz_adni_and_emif$venn_diagram
 alz_olink_adni_emif_kth$venn_diagram
 alz_olink_adni_emif$venn_diagram
-# dlb_olink_mspec$venn_diagram
-# ftd_olink_mspec$venn_diagram
+dlb_olink_mspec$venn_diagram
+ftd_olink_mspec$venn_diagram
 alz_adni_kth$venn_diagram
 alz_emif_kth$venn_diagram
