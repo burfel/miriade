@@ -144,10 +144,10 @@ draw_igraph <- function(graph, type_list, color_seq, comm = list()) {
   #edge.arrow.mode=2,)
   #edge.curved=TRUE,)
   
-  legend("topleft",bty = "n",
-         legend=type_list,
-         fill=color_seq, border=NA,
-         title = "Vertices")
+  #legend("topleft",bty = "n",
+  #       legend=type_list,
+  #       fill=color_seq, border=NA,
+  #       title = "Vertices and Edges")
 }
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
@@ -170,7 +170,7 @@ unify_graphs <- function(graph_list, vertices_by_type, extended_source_list,
   unified_graph <- graph_list[[1]]
   if (number_of_graphs > 1) {
     for (i in 2:number_of_graphs) {
-      unified_graph <- union(unified_graph,graph_list[[i]]) %>%
+      unified_graph <- igraph::union(unified_graph,graph_list[[i]]) %>%
         converge_edge_sources()
     }
   }
@@ -282,6 +282,11 @@ is_df_populated <- function(df)
   return(nrow(df) > 0)
 }
 
+is_df_list_populated<- function(df)
+{
+  return(nrow(df$separated) > 0)
+}
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # This 
 #
@@ -310,17 +315,23 @@ community_enrichment <- function(community, adj.p.cutoff = 0.1,
   ### Turn pathway-genes (one-many) association table into a flat pathway-gene (one-one) table
   if(nrow(enrichments) > 0)
   {
-    return((do.call(rbind, apply(enrichments, 1, function(x) data.frame(Term = x["Term"],
-                                                                Gene = unlist(strsplit(x["Genes"], split = ";")),
-                                                                p.val = x["P.value"],
-                                                                adj.p.val = x["Adjusted.P.value"],
-                                                                row.names = NULL))) %>%
-             dplyr::group_by(Gene) %>%
-             dplyr::arrange(.by_group = T))[,c(2,1,3,4)])
+    final <- vector("list")
+    final$raw <- enrichments
+    final$separated <- (do.call(rbind, apply(enrichments, 1, function(x) data.frame(Term = x["Term"],
+                                                                                    Gene = unlist(strsplit(x["Genes"], split = ";")),
+                                                                                    p.val = x["P.value"],
+                                                                                    adj.p.val = x["Adjusted.P.value"],
+                                                                                    row.names = NULL))) %>%
+                          dplyr::group_by(Gene) %>%
+                          dplyr::arrange(.by_group = T))[,c(2,1,3,4)]
+    return(final)
   }
   else
   {
-    return(data.frame())
+    final <- vector("list")
+    final$raw <- data.frame()
+    final$separated <- data.frame()
+    return(final)
   }
 }
 
@@ -347,5 +358,6 @@ apply_enrichment_to_communities <- function(communities_list, i, enriched_commun
   }
   names(enriched_communities) <- 1:num_of_communities
   enriched_communities <-
-    Filter(is_df_populated, enriched_communities)
+    Filter(is_df_list_populated, enriched_communities)
 }
+

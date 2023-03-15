@@ -126,6 +126,7 @@ library(AnnotationDbi)
 # BiocManager::install("org.Hs.eg.db")
 library(org.Hs.eg.db)
 BiocManager::install("org.Hs.eg.db", force = TRUE)
+library(org.Hs.eg.db)
 id_mapping <- AnnotationDbi::select(org.Hs.eg.db, candidate_BMs$UniProt,
                                     columns = c("SYMBOL", "ENTREZID"), keytype = "UNIPROT")
 ### Manual tweaks to the mapping, there are some inconsistencies

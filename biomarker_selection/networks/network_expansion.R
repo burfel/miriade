@@ -201,11 +201,16 @@ pathway_related_subgraph <- function(graph, pathway, enriched_vertices)
   vertices <- lapply(enriched_vertices, function(x) x[x$Term == pathway]$UniProt)
 }
 
+draw_igraph(vertex_intersection_no_lonely_graph, extended_source_list, color_sequence, comm = vnl_random_walk_communities)
+write_graph(vertex_intersection_no_lonely_graph,
+            here("biomarker_selection", "networks", "/miriade_csf_intersection_no_singular.graphml"),
+            format = "graphml")
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 #### enrichment comparison ####
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 enriched_unified <- community_enrichment(V(unified_graph)$name)
-aggregated_enriched_unified <- enriched_unified %>%
+enriched_unified$aggregated <- enriched_unified$separated %>%
   group_by(Gene) %>%
   summarise(Term = paste(Term, collapse = ";"))
 aggregated_enriched_communities <- bind_rows(aggregated_enriched_communities)
@@ -237,12 +242,32 @@ pathway_overlap_graph <- pathway_df %>%
   graph_from_edge_df_filtered_by_genes(source_col_index = 1, target_col_index = 2) %>%
   color_source_nodes()
 draw_igraph(pathway_overlap_graph)
+write_graph(pathway_overlap_graph,
+            here("biomarker_selection", "networks", "/miriade_csf_unified_communities_pathway-enrichment-overlap.graphml"),
+            format = "graphml")
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+# Refusing the genes in enrichment
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+
+fused_enriched_communities <- lapply(enriched_communities,
+                                     function(df) {
+                                       terms <- unique(df$Term)
+                                       final_list <- vector("list")
+                                       for(i in 1:length(terms)) {
+                                         final_list[[i]] <- data.frame(Term = terms[[i]],
+                                                                       Genes = paste(dplyr::filter(df, Term == terms[[i]])$Gene,sep = ";"),
+                                                                       p.val = dplyr::first(dplyr::filter(df, Term == terms[[i]])$p.val),
+                                                                       adj.p.val = dplyr::first(dplyr::filter(df, Term == terms[[i]])$adj.p.val))
+                                       }
+                                       return(bind_rows(final_list))
+                                     })
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 # TEMP
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
-test<-lapply(aggregated_enriched_communities, function(x) nrow(x))
+test<-lapply(aggregated_v_enriched_communities, function(x) nrow(x))
 sum(unlist(test))
 
 # Enrichment on intersection graph

@@ -194,7 +194,7 @@ color_disease_nodes <- function(pathway_overlap_graph) {
 }
 
 kegg_g <- color_disease_nodes(kegg_g)
-plot(kegg_g)
+draw_igraph(kegg_g)
 
 reac_net <- rbind(
   cbind(alz_sum$reac$Description, "ALZ"), cbind(ftd_sum$reac$Description, "FTD"), cbind(dlb_sum$reac$Description, "DLB")
@@ -211,7 +211,7 @@ plot(reac_g)
 ## FTD
 ftds <- read.table(file.path(datasets_root_directory, "Olink/20201216_OLINK_Data/cleaned_VUMC_olink_FTD.tsv"),
                    header = TRUE)
-# Check overlap of FTD bioomarker candidates from combined analysis with Olink
+# Check overlap of FTD biomarker candidates from combined analysis with Olink
 dplyr::filter(ftd_bms, UniProt %in% ftds[,1])
 
 curl_head <- "curl -X GET --header 'Accept: application/json' 'https://www.ebi.ac.uk/europepmc/annotations_api/annotationsByRelationship?firstEntity="
@@ -299,7 +299,7 @@ hpa_ihch_tissues_slim <- dplyr::filter(hpa_ihch_tissues, Reliability != "Uncerta
 unique(hpa_ihch_tissues$Gene.name)
 
 
-## TODO: WHERE IS biomarkers_annotated_EV_features.csv file?
-# dea_preds <- read.table("_notgit/biomarkers_annotated_EV_features.csv", sep = ",", header = T) %>%
-#   dplyr::select(-dplyr::matches("^[A-Z]$")) %>%
-#   dplyr::select(-dplyr::ends_with(c("_exposed", "_netsurfp2", "_UP", "_all", "_MSD")))
+## TODO: biomarkers_annotated_EV_features.csv has only 291 entries -- 1 protein lost?
+dea_preds <- read.table(file.path(datasets_root_directory, "VU/biomarkers_annotated_EV_features.csv"), sep = ",", header = T) %>%
+  dplyr::select(-dplyr::matches("^[A-Z]$")) %>%
+  dplyr::select(-dplyr::ends_with(c("_exposed", "_netsurfp2", "_UP", "_all", "_MSD")))
