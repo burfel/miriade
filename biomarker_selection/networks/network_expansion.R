@@ -280,3 +280,4 @@ test2 <- community_enrichment(V(unified_graph)$name)
 aggr_test2 <- test2 %>% 
   group_by(Gene) %>% 
   summarise(Term = paste(Term, collapse = ";"))
+

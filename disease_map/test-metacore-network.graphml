@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns
+         http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+<!-- Created by igraph -->
+  <key id="v_name" for="node" attr.name="name" attr.type="string"/>
+  <key id="v_color" for="node" attr.name="color" attr.type="string"/>
+  <key id="v_size" for="node" attr.name="size" attr.type="double"/>
+  <key id="v_type" for="node" attr.name="type" attr.type="string"/>
+  <key id="e_color" for="edge" attr.name="color" attr.type="string"/>
+  <graph id="G" edgedefault="directed">
+    <node id="n0">
+      <data key="v_name">B7Z5U6;Q9NTG7;Q9Y6E8</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n1">
+      <data key="v_name">A6NGJ4;Q7Z7H8;Q96B80;Q96Q55</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n2">
+      <data key="v_name">E1P5L6;Q07817;Q5CZ89;Q5TE65;Q92976</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n3">
+      <data key="v_name">Q14573;Q14649;Q5TAQ2</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n4">
+      <data key="v_name">A8CZ64;P28482</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n5">
+      <data key="v_name">D3DN89;P49841;Q9BWH3;Q9UL47</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n6">
+      <data key="v_name">B2RDM2;Q5TCQ0;Q8NBS9;Q8ND33;Q8TCT2;Q9BVH9</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n7">
+      <data key="v_name">A7E2W4;B1AM70;F5H5K0;P02462;Q1P9S9;Q5VWF6;Q86X41;Q8NF88;Q9NYC5</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n8">
+      <data key="v_name">Q06141</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n9">
+      <data key="v_name">O14769;Q53RS2;Q96F36;Q9UKF6</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n10">
+      <data key="v_name">A8K730;B0LPG1;B7Z630;E7ETQ1;L7RT27;O00284;O15472;Q15759;Q2XNF2</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n11">
+      <data key="v_name">A8K4B6;B7Z4Z5;B7Z6M9;B7Z9Q2;F5H383;O09064;O09144;O14510;O35273;P84022;Q92940;Q93002;Q9GKR4</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n12">
+      <data key="v_name">B2R8S4;B3KT79;L0R3I6;L0R4N5;O43474;P78338;Q5T3J8;Q5T3J9;Q8N717;Q9UNP3</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n13">
+      <data key="v_name">B2R6F4;P22223;Q05DI6</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n14">
+      <data key="v_name">P05549;Q13777;Q5TAV5;Q8N1C6</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n15">
+      <data key="v_name">O14746;O14783;Q2XS35;Q8N6C3;Q8NG38;Q8NG46</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n16">
+      <data key="v_name">P31947;Q6FH30;Q6FH51;Q96DH0</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n17">
+      <data key="v_name">A3KMP8;P22681</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n18">
+      <data key="v_name">Q6QA55;Q9UKQ9</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n19">
+      <data key="v_name">A0A024R4G4;Q53ZR3;Q9HBG8;Q9Y337</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n20">
+      <data key="v_name">Q15938;Q9UEG4</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n21">
+      <data key="v_name">O15355</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n22">
+      <data key="v_name">A6NMY8;B7Z815;H0Y3G8;Q93009</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n23">
+      <data key="v_name">P10144;Q8N1D2;Q9UCC1</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n24">
+      <data key="v_name">O14676;Q14790;Q14791;Q14792;Q14793;Q14794;Q14795;Q14796;Q15780;Q15806;Q53TT5;Q8TDI1;Q8TDI2;Q8TDI3;Q8TDI4;Q8TDI5;Q96T22;Q9C0K4;Q9UQ81</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n25">
+      <data key="v_name">O75688;Q461Q2;Q4J6C1;Q4J6C2;Q658R4;Q96ER6;Q9HAY8</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n26">
+      <data key="v_name">A8MXW0;B2R5X1;B4DDD3;B4DUV9;P52565;Q6IBM5</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n27">
+      <data key="v_name">A6NFS3;A6NG28;B3KQ94;P53779;Q15707;Q49AP1</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n28">
+      <data key="v_name">A8K490;B4DNM6;E7EWA6;P55055;Q12970;Q5I0Y1</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n29">
+      <data key="v_name">A7E236;P01024</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n30">
+      <data key="v_name">P42768;Q9BU11;Q9UNJ9</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n31">
+      <data key="v_name">P07737;Q53Y44</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n32">
+      <data key="v_name">B4DTY1;B7ZA01;E3WEB5;E3WEB6;E9PRV2;F5H202;K0KQ18;K0KYZ8;K0L195;K0L1G3;P46937;Q7Z574;Q8IUY9</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n33">
+      <data key="v_name">B2RAB6;P05413;Q5VV93;Q99957</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <node id="n34">
+      <data key="v_name">D3DUQ1;Q02790;Q9UCP1;Q9UCV7</data>
+      <data key="v_color">#CCEBC5</data>
+      <data key="v_size">22</data>
+      <data key="v_type">miriade</data>
+    </node>
+    <edge source="n0" target="n1">
+      <data key="e_color">#B15928</data>
+    </edge>
+    <edge source="n2" target="n3">
+      <data key="e_color">#B15928</data>
+    </edge>
+    <edge source="n4" target="n5">
+      <data key="e_color">#B15928</data>
+    </edge>
+    <edge source="n6" target="n7">
+      <data key="e_color">#B15928</data>
+    </edge>
+    <edge source="n8" target="n9">
+      <data key="e_color">#B15928</data>
+    </edge>
+    <edge source="n10" target="n11">
+      <data key="e_color">#B15928</data>
+    </edge>
+    <edge source="n12" target="n13">
+      <data key="e_color">#B15928</data>
+    </edge>
+    <edge source="n14" target="n15">
+      <data key="e_color">#B15928</data>
+    </edge>
+    <edge source="n12" target="n16">
+      <data key="e_color">#B15928</data>
+    </edge>
+    <edge source="n17" target="n11">
+      <data key="e_color">#B15928</data>
+    </edge>
+    <edge source="n18" target="n19">
+      <data key="e_color">#B15928</data>
+    </edge>
+    <edge source="n12" target="n20">
+      <data key="e_color">#B15928</data>
+    </edge>
+    <edge source="n21" target="n22">
+      <data key="e_color">#B15928</data>
+    </edge>
+    <edge source="n23" target="n24">
+      <data key="e_color">#B15928</data>
+    </edge>
+    <edge source="n25" target="n26">
+      <data key="e_color">#B15928</data>
+    </edge>
+    <edge source="n12" target="n27">
+      <data key="e_color">#B15928</data>
+    </edge>
+    <edge source="n28" target="n29">
+      <data key="e_color">#B15928</data>
+    </edge>
+    <edge source="n30" target="n31">
+      <data key="e_color">#B15928</data>
+    </edge>
+    <edge source="n32" target="n33">
+      <data key="e_color">#B15928</data>
+    </edge>
+    <edge source="n12" target="n34">
+      <data key="e_color">#B15928</data>
+    </edge>
+  </graph>
+</graphml>

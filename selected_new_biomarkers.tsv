@@ -1,0 +1,13 @@
+UniProt	adj.p	disease	sources	SYMBOL	ENTREZID	DGN_hits	DMaps_hits	KEGG_hits	KEGG_pathways	Reactome_hits	Reactome_pathways
+P78380	1.10408629414439e-13	ALZ	ADNI,VUMC Olink	OLR1	4973	0	0	3	Lipid and atherosclerosis,Phagosome,PPAR signaling pathway	2	Cell surface interactions at the vascular wall,Neutrophil degranulation
+Q04760	4.35689437612363e-12	ALZ	VUMC Olink	GLO1	2739	0	2	1	Pyruvate metabolism	0	
+O95721	1.14272931443944e-10	ALZ	VUMC Olink	SNAP29	9342	1	0	1	SNARE interactions in vesicular transport	1	Neutrophil degranulation
+Q16773	3.45661816539255e-09	ALZ	VUMC Olink	KYAT1	883	0	5	1	Cysteine and methionine metabolism	0	
+Q9BZR6	0.000419468786730046	FTD	VUMC Olink	RTN4R	65078	0	1	0		0	
+Q9HCK4	0.00123471823770091	FTD	VUMC Olink	ROBO2	6092	0	0	1	Axon guidance	0	
+P17405	0.00668784448649684	FTD	VUMC Olink	SMPD1	6609	3	0	1	Lysosome	0	
+Q9UBX1	0.0143262246366793	FTD	VUMC Olink	CTSF	8722	0	2	1	Lysosome	0	
+P42785	0.0721797238783679	DLB	VUMC Olink	PRCP	5547	0	0	2	Protein digestion and absorption,Renin-angiotensin system	2	Intrinsic Pathway of Fibrin Clot Formation,Formation of Fibrin Clot (Clotting Cascade)
+P02462	0.0954862903830274	DLB	VUMC Olink	COL4A1	1282	18	0	6	Protein digestion and absorption,Relaxin signaling pathway,ECM-receptor interaction,AGE-RAGE signaling pathway in diabetic complications,Focal adhesion,PI3K-Akt signaling pathway	18	Collagen degradation,Degradation of the extracellular matrix,Anchoring fibril formation,Extracellular matrix organization,Crosslinking of collagen fibrils,Scavenging by Class A Receptors,Laminin interactions,Binding and Uptake of Ligands by Scavenger Receptors,NCAM1 interactions,Collagen chain trimerization,Signaling by PDGF,Non-integrin membrane-ECM interactions,Assembly of collagen fibrils and other multimeric structures,NCAM signaling for neurite out-growth,Collagen biosynthesis and modifying enzymes,ECM proteoglycans,Integrin cell surface interactions,Collagen formation
+Q02790	9.42239940415205e-09	ALZ,FTD	ALZ:VUMC Olink;FTD:VUMC Olink	FKBP4	2288	0	1	0		0	
+Q06830	0.000379848579130055	ALZ,FTD	ALZ:ADNI,EMIF,VUMC Olink;FTD:VUMC Olink	PRDX1	5052	0	4	0		0	

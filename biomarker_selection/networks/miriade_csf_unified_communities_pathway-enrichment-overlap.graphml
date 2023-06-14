@@ -1,0 +1,711 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns
+         http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+<!-- Created by igraph -->
+  <key id="v_name" for="node" attr.name="name" attr.type="string"/>
+  <key id="v_color" for="node" attr.name="color" attr.type="string"/>
+  <graph id="G" edgedefault="directed">
+    <node id="n0">
+      <data key="v_name">Complement and coagulation cascades</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n1">
+      <data key="v_name">Unified graph</data>
+      <data key="v_color">green</data>
+    </node>
+    <node id="n2">
+      <data key="v_name">Coagulation</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n3">
+      <data key="v_name">IL-6/JAK/STAT3 Signaling</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n4">
+      <data key="v_name">Protein Secretion</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n5">
+      <data key="v_name">Selenium Micronutrient Network WP15</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n6">
+      <data key="v_name">Folate Metabolism WP176</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n7">
+      <data key="v_name">Vitamin B12 metabolism WP1533</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n8">
+      <data key="v_name">Apical Junction</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n9">
+      <data key="v_name">Cerebrospinal Fluid Proteome Of WT And HD R6/2 Mice PMID29166617</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n10">
+      <data key="v_name">Association Between Physico-Chemical Features and Toxicity Associated Pathways WP3680</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n11">
+      <data key="v_name">Mechanoregulation and pathology of YAP/TAZ via Hippo and non-Hippo mechanisms WP4534</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n12">
+      <data key="v_name">Focal adhesion</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n13">
+      <data key="v_name">Regulation of actin cytoskeleton</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n14">
+      <data key="v_name">Bacterial invasion of epithelial cells</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n15">
+      <data key="v_name">Arrhythmogenic right ventricular cardiomyopathy</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n16">
+      <data key="v_name">Phagosome</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n17">
+      <data key="v_name">Adherens junction</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n18">
+      <data key="v_name">Hypertrophic cardiomyopathy</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n19">
+      <data key="v_name">Focal Adhesion WP306</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n20">
+      <data key="v_name">Ebola Virus Pathway on Host WP4217</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n21">
+      <data key="v_name">Arrhythmogenic Right Ventricular Cardiomyopathy WP2118</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n22">
+      <data key="v_name">Regulation of Actin Cytoskeleton WP51</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n23">
+      <data key="v_name">Extracellular Matrix Organization R-HSA-1474244</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n24">
+      <data key="v_name">Signaling By EGFR R-HSA-177929</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n25">
+      <data key="v_name">Signaling By Receptor Tyrosine Kinases R-HSA-9006934</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n26">
+      <data key="v_name">Copper homeostasis WP3286</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n27">
+      <data key="v_name">VEGFA-VEGFR2 Signaling Pathway WP3888</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n28">
+      <data key="v_name">Epithelial Mesenchymal Transition</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n29">
+      <data key="v_name">Signaling By ERBB4 R-HSA-1236394</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n30">
+      <data key="v_name">Brain-derived neurotrophic factor (BDNF) signaling pathway WP2380</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n31">
+      <data key="v_name">ErbB signaling pathway</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n32">
+      <data key="v_name">PI3K-Akt signaling pathway</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n33">
+      <data key="v_name">HIF-1 signaling pathway</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n34">
+      <data key="v_name">FLT3 Signaling R-HSA-9607240</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n35">
+      <data key="v_name">Signaling By ERBB2 R-HSA-1227986</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n36">
+      <data key="v_name">Downregulation Of ERBB2 Signaling R-HSA-8863795</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n37">
+      <data key="v_name">Downregulation Of ERBB2:ERBB3 Signaling R-HSA-1358803</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n38">
+      <data key="v_name">Integrin-mediated Cell Adhesion WP185</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n39">
+      <data key="v_name">Nanoparticle-mediated activation of receptor signaling WP2643</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n40">
+      <data key="v_name">Cell migration and invasion through p75NTR WP4561</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n41">
+      <data key="v_name">ErbB signaling pathway WP673</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n42">
+      <data key="v_name">Neural Crest Cell Migration during Development WP4564</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n43">
+      <data key="v_name">Neural Crest Cell Migration in Cancer WP4565</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n44">
+      <data key="v_name">DNA damage response (only ATM dependent) WP710</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n45">
+      <data key="v_name">Chemokine signaling pathway WP3929</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n46">
+      <data key="v_name">Glycolysis and Gluconeogenesis WP534</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n47">
+      <data key="v_name">Computational Model of Aerobic Glycolysis WP4629</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n48">
+      <data key="v_name">Apoptosis</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n49">
+      <data key="v_name">Fragile X Syndrome  WP4549</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n50">
+      <data key="v_name">Reactive Oxygen Species Pathway</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n51">
+      <data key="v_name">Detoxification Of Reactive Oxygen Species R-HSA-3299685</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n52">
+      <data key="v_name">Assembly Of Collagen Fibrils And Other Multimeric Structures R-HSA-2022090</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n53">
+      <data key="v_name">Elastic Fibre Formation R-HSA-1566948</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n54">
+      <data key="v_name">Pertussis</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n55">
+      <data key="v_name">Complement Activation WP545</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n56">
+      <data key="v_name">Complement and Coagulation Cascades WP558</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n57">
+      <data key="v_name">Complement system WP2806</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n58">
+      <data key="v_name">Cells and molecules involved in local acute inflammatory response  WP4493</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n59">
+      <data key="v_name">NCAM Signaling For Neurite Out-Growth R-HSA-375165</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n60">
+      <data key="v_name">Macrophage markers WP4146</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n61">
+      <data key="v_name">ECM-receptor interaction</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n62">
+      <data key="v_name">Integrin Cell Surface Interactions R-HSA-216083</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n63">
+      <data key="v_name">Cell Surface Interactions At Vascular Wall R-HSA-202733</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n64">
+      <data key="v_name">Hippo-Merlin Signaling Dysregulation WP4541</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n65">
+      <data key="v_name">PDGF Pathway WP2526</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n66">
+      <data key="v_name">EGF/EGFR signaling pathway WP437</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n67">
+      <data key="v_name">Laminin Interactions R-HSA-3000157</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n68">
+      <data key="v_name">Primary focal segmental glomerulosclerosis (FSGS) WP2572</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n69">
+      <data key="v_name">Signaling of Hepatocyte Growth Factor Receptor WP313</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n70">
+      <data key="v_name">IL-3 signaling pathway WP286</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n71">
+      <data key="v_name">IL-6 signaling pathway WP364</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n72">
+      <data key="v_name">SHC1 Events In ERBB2 Signaling R-HSA-1250196</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n73">
+      <data key="v_name">Signaling By ERBB2 TMD/JMD Mutants R-HSA-9665686</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n74">
+      <data key="v_name">GRB2 Events In ERBB2 Signaling R-HSA-1963640</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n75">
+      <data key="v_name">Signaling By ERBB2 KD Mutants R-HSA-9664565</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n76">
+      <data key="v_name">PI3K Events In ERBB2 Signaling R-HSA-1963642</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n77">
+      <data key="v_name">Signaling By ERBB2 In Cancer R-HSA-1227990</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n78">
+      <data key="v_name">Signal Transduction By L1 R-HSA-445144</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n79">
+      <data key="v_name">ERBB2 Activates PTK6 Signaling R-HSA-8847993</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n80">
+      <data key="v_name">ERBB2 Regulates Cell Motility R-HSA-6785631</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n81">
+      <data key="v_name">Signaling By ERBB2 ECD Mutants R-HSA-9665348</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n82">
+      <data key="v_name">Constitutive Signaling By Aberrant PI3K In Cancer R-HSA-2219530</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n83">
+      <data key="v_name">EGFR Transactivation By Gastrin R-HSA-2179392</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n84">
+      <data key="v_name">Prolactin Signaling Pathway WP2037</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n85">
+      <data key="v_name">FLT3 Signaling Thru SRC Family Kinases R-HSA-9706374</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n86">
+      <data key="v_name">Alpha 6 Beta 4 signaling pathway WP244</data>
+      <data key="v_color">orange</data>
+    </node>
+    <node id="n87">
+      <data key="v_name">Communities</data>
+      <data key="v_color">green</data>
+    </node>
+    <node id="n88">
+      <data key="v_name">... and 1310 additional pathways</data>
+      <data key="v_color">orange</data>
+    </node>
+    <edge source="n0" target="n1">
+    </edge>
+    <edge source="n2" target="n1">
+    </edge>
+    <edge source="n3" target="n1">
+    </edge>
+    <edge source="n4" target="n1">
+    </edge>
+    <edge source="n5" target="n1">
+    </edge>
+    <edge source="n6" target="n1">
+    </edge>
+    <edge source="n7" target="n1">
+    </edge>
+    <edge source="n8" target="n1">
+    </edge>
+    <edge source="n9" target="n1">
+    </edge>
+    <edge source="n10" target="n1">
+    </edge>
+    <edge source="n11" target="n1">
+    </edge>
+    <edge source="n12" target="n1">
+    </edge>
+    <edge source="n13" target="n1">
+    </edge>
+    <edge source="n14" target="n1">
+    </edge>
+    <edge source="n15" target="n1">
+    </edge>
+    <edge source="n16" target="n1">
+    </edge>
+    <edge source="n17" target="n1">
+    </edge>
+    <edge source="n18" target="n1">
+    </edge>
+    <edge source="n19" target="n1">
+    </edge>
+    <edge source="n20" target="n1">
+    </edge>
+    <edge source="n21" target="n1">
+    </edge>
+    <edge source="n22" target="n1">
+    </edge>
+    <edge source="n23" target="n1">
+    </edge>
+    <edge source="n24" target="n1">
+    </edge>
+    <edge source="n25" target="n1">
+    </edge>
+    <edge source="n26" target="n1">
+    </edge>
+    <edge source="n27" target="n1">
+    </edge>
+    <edge source="n28" target="n1">
+    </edge>
+    <edge source="n29" target="n1">
+    </edge>
+    <edge source="n30" target="n1">
+    </edge>
+    <edge source="n31" target="n1">
+    </edge>
+    <edge source="n32" target="n1">
+    </edge>
+    <edge source="n33" target="n1">
+    </edge>
+    <edge source="n34" target="n1">
+    </edge>
+    <edge source="n35" target="n1">
+    </edge>
+    <edge source="n36" target="n1">
+    </edge>
+    <edge source="n37" target="n1">
+    </edge>
+    <edge source="n38" target="n1">
+    </edge>
+    <edge source="n39" target="n1">
+    </edge>
+    <edge source="n40" target="n1">
+    </edge>
+    <edge source="n41" target="n1">
+    </edge>
+    <edge source="n42" target="n1">
+    </edge>
+    <edge source="n43" target="n1">
+    </edge>
+    <edge source="n44" target="n1">
+    </edge>
+    <edge source="n45" target="n1">
+    </edge>
+    <edge source="n46" target="n1">
+    </edge>
+    <edge source="n47" target="n1">
+    </edge>
+    <edge source="n48" target="n1">
+    </edge>
+    <edge source="n49" target="n1">
+    </edge>
+    <edge source="n50" target="n1">
+    </edge>
+    <edge source="n51" target="n1">
+    </edge>
+    <edge source="n52" target="n1">
+    </edge>
+    <edge source="n53" target="n1">
+    </edge>
+    <edge source="n54" target="n1">
+    </edge>
+    <edge source="n55" target="n1">
+    </edge>
+    <edge source="n56" target="n1">
+    </edge>
+    <edge source="n57" target="n1">
+    </edge>
+    <edge source="n58" target="n1">
+    </edge>
+    <edge source="n59" target="n1">
+    </edge>
+    <edge source="n60" target="n1">
+    </edge>
+    <edge source="n61" target="n1">
+    </edge>
+    <edge source="n62" target="n1">
+    </edge>
+    <edge source="n63" target="n1">
+    </edge>
+    <edge source="n64" target="n1">
+    </edge>
+    <edge source="n65" target="n1">
+    </edge>
+    <edge source="n66" target="n1">
+    </edge>
+    <edge source="n67" target="n1">
+    </edge>
+    <edge source="n68" target="n1">
+    </edge>
+    <edge source="n69" target="n1">
+    </edge>
+    <edge source="n70" target="n1">
+    </edge>
+    <edge source="n71" target="n1">
+    </edge>
+    <edge source="n72" target="n1">
+    </edge>
+    <edge source="n73" target="n1">
+    </edge>
+    <edge source="n74" target="n1">
+    </edge>
+    <edge source="n75" target="n1">
+    </edge>
+    <edge source="n76" target="n1">
+    </edge>
+    <edge source="n77" target="n1">
+    </edge>
+    <edge source="n78" target="n1">
+    </edge>
+    <edge source="n79" target="n1">
+    </edge>
+    <edge source="n80" target="n1">
+    </edge>
+    <edge source="n81" target="n1">
+    </edge>
+    <edge source="n82" target="n1">
+    </edge>
+    <edge source="n83" target="n1">
+    </edge>
+    <edge source="n84" target="n1">
+    </edge>
+    <edge source="n85" target="n1">
+    </edge>
+    <edge source="n86" target="n1">
+    </edge>
+    <edge source="n7" target="n87">
+    </edge>
+    <edge source="n6" target="n87">
+    </edge>
+    <edge source="n5" target="n87">
+    </edge>
+    <edge source="n44" target="n87">
+    </edge>
+    <edge source="n26" target="n87">
+    </edge>
+    <edge source="n10" target="n87">
+    </edge>
+    <edge source="n33" target="n87">
+    </edge>
+    <edge source="n46" target="n87">
+    </edge>
+    <edge source="n47" target="n87">
+    </edge>
+    <edge source="n32" target="n87">
+    </edge>
+    <edge source="n45" target="n87">
+    </edge>
+    <edge source="n61" target="n87">
+    </edge>
+    <edge source="n63" target="n87">
+    </edge>
+    <edge source="n62" target="n87">
+    </edge>
+    <edge source="n23" target="n87">
+    </edge>
+    <edge source="n64" target="n87">
+    </edge>
+    <edge source="n31" target="n87">
+    </edge>
+    <edge source="n12" target="n87">
+    </edge>
+    <edge source="n13" target="n87">
+    </edge>
+    <edge source="n14" target="n87">
+    </edge>
+    <edge source="n25" target="n87">
+    </edge>
+    <edge source="n69" target="n87">
+    </edge>
+    <edge source="n41" target="n87">
+    </edge>
+    <edge source="n19" target="n87">
+    </edge>
+    <edge source="n66" target="n87">
+    </edge>
+    <edge source="n70" target="n87">
+    </edge>
+    <edge source="n17" target="n87">
+    </edge>
+    <edge source="n82" target="n87">
+    </edge>
+    <edge source="n72" target="n87">
+    </edge>
+    <edge source="n73" target="n87">
+    </edge>
+    <edge source="n75" target="n87">
+    </edge>
+    <edge source="n77" target="n87">
+    </edge>
+    <edge source="n35" target="n87">
+    </edge>
+    <edge source="n74" target="n87">
+    </edge>
+    <edge source="n76" target="n87">
+    </edge>
+    <edge source="n79" target="n87">
+    </edge>
+    <edge source="n81" target="n87">
+    </edge>
+    <edge source="n80" target="n87">
+    </edge>
+    <edge source="n83" target="n87">
+    </edge>
+    <edge source="n29" target="n87">
+    </edge>
+    <edge source="n36" target="n87">
+    </edge>
+    <edge source="n24" target="n87">
+    </edge>
+    <edge source="n78" target="n87">
+    </edge>
+    <edge source="n39" target="n87">
+    </edge>
+    <edge source="n20" target="n87">
+    </edge>
+    <edge source="n22" target="n87">
+    </edge>
+    <edge source="n37" target="n87">
+    </edge>
+    <edge source="n84" target="n87">
+    </edge>
+    <edge source="n59" target="n87">
+    </edge>
+    <edge source="n34" target="n87">
+    </edge>
+    <edge source="n85" target="n87">
+    </edge>
+    <edge source="n38" target="n87">
+    </edge>
+    <edge source="n49" target="n87">
+    </edge>
+    <edge source="n68" target="n87">
+    </edge>
+    <edge source="n86" target="n87">
+    </edge>
+    <edge source="n71" target="n87">
+    </edge>
+    <edge source="n65" target="n87">
+    </edge>
+    <edge source="n15" target="n87">
+    </edge>
+    <edge source="n18" target="n87">
+    </edge>
+    <edge source="n67" target="n87">
+    </edge>
+    <edge source="n21" target="n87">
+    </edge>
+    <edge source="n28" target="n87">
+    </edge>
+    <edge source="n52" target="n87">
+    </edge>
+    <edge source="n16" target="n87">
+    </edge>
+    <edge source="n53" target="n87">
+    </edge>
+    <edge source="n0" target="n87">
+    </edge>
+    <edge source="n57" target="n87">
+    </edge>
+    <edge source="n54" target="n87">
+    </edge>
+    <edge source="n11" target="n87">
+    </edge>
+    <edge source="n58" target="n87">
+    </edge>
+    <edge source="n8" target="n87">
+    </edge>
+    <edge source="n48" target="n87">
+    </edge>
+    <edge source="n30" target="n87">
+    </edge>
+    <edge source="n27" target="n87">
+    </edge>
+    <edge source="n40" target="n87">
+    </edge>
+    <edge source="n42" target="n87">
+    </edge>
+    <edge source="n43" target="n87">
+    </edge>
+    <edge source="n3" target="n87">
+    </edge>
+    <edge source="n2" target="n87">
+    </edge>
+    <edge source="n4" target="n87">
+    </edge>
+    <edge source="n56" target="n87">
+    </edge>
+    <edge source="n55" target="n87">
+    </edge>
+    <edge source="n50" target="n87">
+    </edge>
+    <edge source="n51" target="n87">
+    </edge>
+    <edge source="n60" target="n87">
+    </edge>
+    <edge source="n88" target="n87">
+    </edge>
+  </graph>
+</graphml>

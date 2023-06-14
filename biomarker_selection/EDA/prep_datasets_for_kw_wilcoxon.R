@@ -34,8 +34,10 @@ mutated_kth <- kth %>%
   dplyr::select(Diagnosis_Age_Group, Age_Group, everything())
 
 print("The number of patients per age group (in KTH) is:")
-mutated_kth %>% dplyr::group_by(Age_Group) %>% dplyr::summarise(n())
+kth %>% dplyr::group_by(Age_Group) %>% dplyr::summarise(n())
 
+write.table(kth, file = file.path(datasets_root_directory, "KTH/KTH-raw-data.csv"),
+            sep = "\t", quote = F, row.names = F, col.names = T)
 
 ### Melt the dataframe, so there's only one readout variable
 melted_kth <-
@@ -68,6 +70,10 @@ emif <- emif %>%
   dplyr::select(SubjectId, Age_Group, everything())
 # Reomve two rows that have NA as Diagnosis
 emif <- emif[complete.cases(emif$Diagnosis),]
+
+write.table(emif, file = file.path(datasets_root_directory, "EMIF-AD MBD Study/EMIF-raw-data.csv"),
+            sep = "\t", quote = F, row.names = F, col.names = T)
+
 
 source(here("functions", "mapping_functions.R"))
 emif_proteins <- data.frame(UniProt = colnames(emif)[6:ncol(emif)]) %>%
@@ -116,6 +122,9 @@ olink <- olink %>%
                                          cutting_breaks = breaks_and_labels$Breaks,
                                          cutting_labels = breaks_and_labels$Labels) %>%
   dplyr::select(SampleId, Diagnosis, Age_Group, everything(), -dx)
+
+write.table(olink, file = file.path(datasets_root_directory, "Olink/OLINK basic data files/Olink-raw-data.csv"),
+            sep = "\t", quote = F, row.names = F, col.names = T)
 
 mutated_olink <- olink %>%
   dplyr::filter(Diagnosis == "AD" | Diagnosis == "Control") %>%

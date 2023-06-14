@@ -1,0 +1,293 @@
+UniProt	adj.p	disease	sources	SYMBOL	ENTREZID	DGN_hits	DMaps_hits	KEGG_hits	KEGG_pathways	Reactome_hits	Reactome_pathways
+P09104	0	ALZ	ADNI,EMIF,VUMC Olink	ENO2	2026	2	0	2	HIF-1 signaling pathway,Glycolysis / Gluconeogenesis	3	Gluconeogenesis,Glucose metabolism,Glycolysis
+P05107	0	ALZ	VUMC Olink	ITGB2	3689	0	7	11	Complement and coagulation cascades,Rheumatoid arthritis,Cell adhesion molecules,Leukocyte transendothelial migration,Phagosome,Rap1 signaling pathway,Regulation of actin cytoskeleton,Leishmaniasis,Legionellosis,Natural killer cell mediated cytotoxicity,Pertussis	7	Immunoregulatory interactions between a Lymphoid and a non-Lymphoid cell,Signaling by Interleukins,Cell surface interactions at the vascular wall,Neutrophil degranulation,Integrin cell surface interactions,Interleukin-4 and Interleukin-13 signaling,Extracellular matrix organization
+P00519	0	ALZ	VUMC Olink	ABL1	25	0	6	2	Neurotrophin signaling pathway,ErbB signaling pathway	0	
+O94760	0	ALZ	EMIF,KTH,VUMC Olink	DDAH1	23576	0	0	0		0	
+P31431	0	ALZ	VUMC Olink	SDC4	6385	0	0	3	Fluid shear stress and atherosclerosis,Cell adhesion molecules,ECM-receptor interaction	2	Cell surface interactions at the vascular wall,Extracellular matrix organization
+P52888	0	ALZ	VUMC Olink	THOP1	7064	0	0	0		0	
+P78380	1.10408629414439e-13	ALZ	ADNI,VUMC Olink	OLR1	4973	0	0	3	Lipid and atherosclerosis,Phagosome,PPAR signaling pathway	2	Cell surface interactions at the vascular wall,Neutrophil degranulation
+P30086	7.22674665258146e-13	ALZ	EMIF,KTH,VUMC Olink	PEBP1	5037	0	13	0		0	
+Q04760	4.35689437612363e-12	ALZ	VUMC Olink	GLO1	2739	0	2	1	Pyruvate metabolism	0	
+O95721	1.14272931443944e-10	ALZ	VUMC Olink	SNAP29	9342	1	0	1	SNARE interactions in vesicular transport	1	Neutrophil degranulation
+P00441	1.69190183714686e-10	ALZ	ADNI,EMIF,VUMC Olink	SOD1	6647	15	18	1	Pathways of neurodegeneration	3	Signaling by Interleukins,Platelet degranulation ,Response to elevated platelet cytosolic Ca2+
+P04179	1.97369226156986e-10	ALZ	EMIF,VUMC Olink	SOD2	6648	16	5	1	Lipid and atherosclerosis	3	Signaling by Interleukins,FOXO-mediated transcription,FOXO-mediated transcription of oxidative stress, metabolic and neuronal genes
+Q16773	3.45661816539255e-09	ALZ	VUMC Olink	KYAT1	883	0	5	1	Cysteine and methionine metabolism	0	
+P41236	7.32110324078352e-09	ALZ	VUMC Olink	PPP1R2	5504	0	0	0		0	
+Q9H3U7	1.38013310393864e-08	ALZ	VUMC Olink	SMOC2	64094	0	0	0		0	
+O00622	6.19458656192651e-08	ALZ	VUMC Olink	CCN1	3491	0	0	0		0	
+Q9UNK0	3.52448265360471e-07	ALZ	VUMC Olink	STX8	9482	0	0	1	SNARE interactions in vesicular transport	0	
+Q13867	4.16775034868509e-07	ALZ	VUMC Olink	BLMH	642	0	0	0		0	
+P04080	8.53143678008571e-07	ALZ	VUMC Olink	CSTB	1476	4	0	0		1	Neutrophil degranulation
+Q9HCB6	1.79984875159643e-06	ALZ	ADNI,EMIF,VUMC Olink	SPON1	10418	0	0	0		0	
+P11215	2.02556085054233e-06	ALZ	VUMC Olink	ITGAM	3684	0	8	10	Complement and coagulation cascades,Cell adhesion molecules,Leukocyte transendothelial migration,Hematopoietic cell lineage,Phagosome,Rap1 signaling pathway,Regulation of actin cytoskeleton,Leishmaniasis,Legionellosis,Pertussis	6	Signaling by Interleukins,Cell surface interactions at the vascular wall,Neutrophil degranulation,Integrin cell surface interactions,Interleukin-4 and Interleukin-13 signaling,Extracellular matrix organization
+Q03405	2.02556085054233e-06	ALZ	VUMC Olink	PLAUR	5329	0	0	1	Complement and coagulation cascades	2	Dissolution of Fibrin Clot,Neutrophil degranulation
+Q9BXY4	2.02556085054233e-06	ALZ	VUMC Olink	RSPO3	84870	0	0	0		0	
+P14210	3.10709892138462e-06	ALZ	ADNI,VUMC Olink	HGF	3082	3	0	4	MAPK signaling pathway,Rap1 signaling pathway,PI3K-Akt signaling pathway,Focal adhesion	4	Signaling by Interleukins,Platelet degranulation ,Response to elevated platelet cytosolic Ca2+,Interleukin-4 and Interleukin-13 signaling
+O75888	8.59093814186816e-06	ALZ	VUMC Olink	TNFSF13	8741	0	0	3	Cytokine-cytokine receptor interaction,Rheumatoid arthritis,Intestinal immune network for IgA production	2	TNFR2 non-canonical NF-kB pathway,TNFs bind their physiological receptors
+Q8NHL6	9.96367575010316e-06	ALZ	VUMC Olink	LILRB1	10859	0	0	1	Osteoclast differentiation	1	Immunoregulatory interactions between a Lymphoid and a non-Lymphoid cell
+Q9NQ88	1.13279189055885e-05	ALZ	VUMC Olink	TIGAR	57103	0	1	1	Fructose and mannose metabolism	0	
+Q9UKK9	1.77872020956068e-05	ALZ	VUMC Olink	NUDT5	11164	0	0	0		0	
+P10451	2.90576675774937e-05	ALZ	ADNI,EMIF,VUMC Olink	SPP1	6696	2	0	3	ECM-receptor interaction,PI3K-Akt signaling pathway,Focal adhesion	2	Integrin cell surface interactions,Extracellular matrix organization
+O00214	3.1816914170209e-05	ALZ	VUMC Olink	LGALS8	3964	0	0	0		0	
+P46109	6.31464606076206e-05	ALZ	VUMC Olink	CRKL	1399	0	0	7	MAPK signaling pathway,Rap1 signaling pathway,Regulation of actin cytoskeleton,Neurotrophin signaling pathway,Chemokine signaling pathway,Focal adhesion,ErbB signaling pathway	1	Signaling by Interleukins
+Q9Y6Q6	6.31464606076206e-05	ALZ	VUMC Olink	TNFRSF11A	8792	0	0	4	Cytokine-cytokine receptor interaction,Osteoclast differentiation,Rheumatoid arthritis,NF-kappa B signaling pathway	2	TNF receptor superfamily (TNFSF) members mediating non-canonical NF-kB pathway,TNFR2 non-canonical NF-kB pathway
+O14828	7.98254512391908e-05	ALZ	VUMC Olink	SCAMP3	10067	0	0	0		0	
+Q9H2A7	8.69861006650156e-05	ALZ	VUMC Olink	CXCL16	58191	0	0	2	Cytokine-cytokine receptor interaction,Chemokine signaling pathway	1	Chemokine receptors bind chemokines
+P08069	0.000100093128007915	ALZ	VUMC Olink	IGF1R	3480	3	16	6	HIF-1 signaling pathway,MAPK signaling pathway,Rap1 signaling pathway,Oocyte meiosis,PI3K-Akt signaling pathway,Focal adhesion	0	
+O94907	0.000100093128007915	ALZ	VUMC Olink	DKK1	22943	1	5	1	Pathways of neurodegeneration	0	
+P35754	0.000100093128007915	ALZ	VUMC Olink	GLRX	2745	0	3	0		0	
+Q01151	0.000140784536780675	ALZ	VUMC Olink	CD83	9308	0	0	0		0	
+P52564	0.000269848677430273	ALZ	VUMC Olink	MAP2K6	5608	0	8	7	Osteoclast differentiation,Fluid shear stress and atherosclerosis,TNF signaling pathway,Lipid and atherosclerosis,MAPK signaling pathway,Rap1 signaling pathway,Pathways of neurodegeneration	1	Signaling by Interleukins
+Q8N1Q1	0.000291361351549776	ALZ	VUMC Olink	CA13	377677	0	0	0		0	
+P19438	0.000294388466131446	ALZ	VUMC Olink	TNFRSF1A	7132	2	53	11	Cytokine-cytokine receptor interaction,Osteoclast differentiation,Fluid shear stress and atherosclerosis,NF-kappa B signaling pathway,TNF signaling pathway,Lipid and atherosclerosis,MAPK signaling pathway,Necroptosis,Pathways of neurodegeneration,Adipocytokine signaling pathway,Hepatitis C	4	Signaling by Interleukins,TNFR2 non-canonical NF-kB pathway,TNFs bind their physiological receptors,Interleukin-10 signaling
+P13686	0.000379848579130055	ALZ	VUMC Olink	ACP5	54	0	0	2	Osteoclast differentiation,Rheumatoid arthritis	0	
+P35237	0.000379848579130055	ALZ	VUMC Olink	SERPINB6	5269	0	0	0		2	Dissolution of Fibrin Clot,Neutrophil degranulation
+Q9NP84	0.000379848579130055	ALZ	VUMC Olink	TNFRSF12A	51330	0	0	1	Cytokine-cytokine receptor interaction	2	TNF receptor superfamily (TNFSF) members mediating non-canonical NF-kB pathway,TNFR2 non-canonical NF-kB pathway
+Q9Y336	0.000384938885948139	ALZ	VUMC Olink	SIGLEC9	27180	0	0	0		2	Immunoregulatory interactions between a Lymphoid and a non-Lymphoid cell,Neutrophil degranulation
+Q8NI22	0.000442889979608623	ALZ	VUMC Olink	MCFD2	90411	0	0	0		0	
+Q14108	0.000569675877155997	ALZ	VUMC Olink	SCARB2	950	2	6	0		0	
+P35443	0.000612406653604875	ALZ	EMIF,VUMC Olink	THBS4	7060	0	0	4	Phagosome,ECM-receptor interaction,PI3K-Akt signaling pathway,Focal adhesion	0	
+Q8N608	0.000612406653604875	ALZ	VUMC Olink	DPP10	57628	0	0	0		0	
+P15311	0.000810552439344745	ALZ	VUMC Olink	EZR	7430	0	6	2	Leukocyte transendothelial migration,Regulation of actin cytoskeleton	0	
+P40925	0.000858639654233956	ALZ	EMIF,KTH	MDH1	4190	0	0	2	Pyruvate metabolism,Cysteine and methionine metabolism	2	Gluconeogenesis,Glucose metabolism
+O14798	0.000983104844302443	ALZ	VUMC Olink	TNFRSF10C	8794	0	0	1	Cytokine-cytokine receptor interaction	0	
+P09417	0.0012364902278875	ALZ	EMIF,VUMC Olink	QDPR	5860	6	0	0		0	
+Q8IXJ6	0.00130748292522279	ALZ	VUMC Olink	SIRT2	22933	0	5	1	Nicotinate and nicotinamide metabolism	0	
+Q12805	0.00147215323155491	ALZ	ADNI,EMIF,VUMC Olink	EFEMP1	2202	2	0	0		1	Extracellular matrix organization
+Q9NZN5	0.00147215323155491	ALZ	VUMC Olink	ARHGEF12	23365	0	0	1	Regulation of actin cytoskeleton	0	
+P42658	0.00155654295129725	ALZ	VUMC Olink	DPP6	1804	2	0	0		0	
+P04075	0.00170003286778474	ALZ	ADNI,EMIF	ALDOA	226	0	5	3	HIF-1 signaling pathway,Glycolysis / Gluconeogenesis,Fructose and mannose metabolism	6	Gluconeogenesis,Neutrophil degranulation,Glucose metabolism,Platelet degranulation ,Response to elevated platelet cytosolic Ca2+,Glycolysis
+P14618	0.00170003286778474	ALZ	ADNI,EMIF	PKM	5315	0	3	2	Glycolysis / Gluconeogenesis,Pyruvate metabolism	3	Neutrophil degranulation,Glucose metabolism,Glycolysis
+P17677	0.00179552536096691	ALZ	EMIF,KTH	GAP43	2596	1	1	0		0	
+Q9NWQ8	0.00186453025926238	ALZ	VUMC Olink	PAG1	55824	0	0	0		0	
+P13726	0.0021588859756161	ALZ	ADNI,VUMC Olink	F3	2152	0	0	2	Complement and coagulation cascades,AGE-RAGE signaling pathway in diabetic complications	0	
+P00749	0.00216519072367792	ALZ	VUMC Olink	PLAU	5328	7	0	2	Complement and coagulation cascades,NF-kappa B signaling pathway	2	Dissolution of Fibrin Clot,Neutrophil degranulation
+P25445	0.00251747766015778	ALZ	VUMC Olink	FAS	355	1	11	8	Cytokine-cytokine receptor interaction,TNF signaling pathway,Lipid and atherosclerosis,MAPK signaling pathway,Necroptosis,Pathways of neurodegeneration,Natural killer cell mediated cytotoxicity,Hepatitis C	0	
+P05362	0.00298784398544613	ALZ	VUMC Olink	ICAM1	3383	3	12	9	Rheumatoid arthritis,Fluid shear stress and atherosclerosis,NF-kappa B signaling pathway,TNF signaling pathway,Lipid and atherosclerosis,Cell adhesion molecules,Leukocyte transendothelial migration,AGE-RAGE signaling pathway in diabetic complications,Natural killer cell mediated cytotoxicity	6	Immunoregulatory interactions between a Lymphoid and a non-Lymphoid cell,Signaling by Interleukins,Integrin cell surface interactions,Interleukin-4 and Interleukin-13 signaling,Interleukin-10 signaling,Extracellular matrix organization
+Q9UKJ0	0.00314503390849548	ALZ	VUMC Olink	PILRB	29990	0	0	0		1	Immunoregulatory interactions between a Lymphoid and a non-Lymphoid cell
+Q76M96	0.00343163913045115	ALZ	VUMC Olink	CCDC80	151887	0	0	0		0	
+P08833	0.00411214462193306	ALZ	VUMC Olink	IGFBP1	3484	0	0	0		2	FOXO-mediated transcription,FOXO-mediated transcription of oxidative stress, metabolic and neuronal genes
+O43508	0.0049648075910676	ALZ	VUMC Olink	TNFSF12	8742	0	0	1	Cytokine-cytokine receptor interaction	2	TNF receptor superfamily (TNFSF) members mediating non-canonical NF-kB pathway,TNFR2 non-canonical NF-kB pathway
+O95998	0.00715993015071852	ALZ	ADNI,EMIF,VUMC Olink	IL18BP	10068	0	0	0		1	Signaling by Interleukins
+P10646	0.00715993015071852	ALZ	VUMC Olink	TFPI	7035	0	0	1	Complement and coagulation cascades	0	
+P42702	0.00715993015071852	ALZ	VUMC Olink	LIFR	3977	0	0	1	Cytokine-cytokine receptor interaction	1	Signaling by Interleukins
+O43405	0.00848860625471177	ALZ	ADNI,EMIF,VUMC Olink	COCH	1690	3	0	0		0	
+P15086	0.00953532027146843	ALZ	VUMC Olink	CPB1	1360	0	0	0		0	
+P16112	0.00953532027146843	ALZ	VUMC Olink	NA	NA	NA	0	NA	NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA	NA	NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+P01584	0.00972656870871017	ALZ	KTH	IL1B	3553	25	73	15	Cytokine-cytokine receptor interaction,Osteoclast differentiation,Rheumatoid arthritis,Fluid shear stress and atherosclerosis,NF-kappa B signaling pathway,TNF signaling pathway,Lipid and atherosclerosis,MAPK signaling pathway,Hematopoietic cell lineage,Necroptosis,Leishmaniasis,AGE-RAGE signaling pathway in diabetic complications,Legionellosis,Pathways of neurodegeneration,Pertussis	3	Signaling by Interleukins,Interleukin-4 and Interleukin-13 signaling,Interleukin-10 signaling
+O95630	0.00972656870871017	ALZ	VUMC Olink	STAMBP	10617	3	0	0		0	
+Q6GTX8	0.00972656870871017	ALZ	VUMC Olink	LAIR1	3903	0	0	0		2	Immunoregulatory interactions between a Lymphoid and a non-Lymphoid cell,Neutrophil degranulation
+Q6EMK4	0.00985160938247899	ALZ	ADNI,EMIF,KTH	VASN	114990	0	0	0		0	
+Q9UKJ1	0.0103487088994747	ALZ	VUMC Olink	PILRA	29992	0	0	0		1	Immunoregulatory interactions between a Lymphoid and a non-Lymphoid cell
+P16284	0.0106749426153258	ALZ	VUMC Olink	PECAM1	5175	0	0	3	Fluid shear stress and atherosclerosis,Cell adhesion molecules,Leukocyte transendothelial migration	6	Cell surface interactions at the vascular wall,Neutrophil degranulation,Integrin cell surface interactions,Platelet degranulation ,Response to elevated platelet cytosolic Ca2+,Extracellular matrix organization
+A6H8Y1	0.0122803794084255	ALZ	KTH	BDP1	55814	0	0	0		0	
+Q06418	0.0129087914700835	ALZ	VUMC Olink	TYRO3	7301	0	0	0		0	
+P11717	0.0134496798436842	ALZ	VUMC Olink	IGF2R	3482	2	6	0		1	Neutrophil degranulation
+P04271	0.0136218210371245	ALZ	ADNI,KTH	S100B	6285	4	5	0		1	Signaling by Interleukins
+Q86VB7	0.014814823504973	ALZ	EMIF,VUMC Olink	CD163	9332	0	0	0		0	
+Q9Y624	0.0149208737637064	ALZ	VUMC Olink	F11R	50848	0	0	2	Cell adhesion molecules,Leukocyte transendothelial migration	3	Cell surface interactions at the vascular wall,Integrin cell surface interactions,Extracellular matrix organization
+Q92692	0.0154655804945073	ALZ	VUMC Olink	NECTIN2	5819	3	0	1	Cell adhesion molecules	1	Immunoregulatory interactions between a Lymphoid and a non-Lymphoid cell
+P17174	0.017153518820803	ALZ	ADNI,EMIF	GOT1	2805	0	2	1	Cysteine and methionine metabolism	2	Gluconeogenesis,Glucose metabolism
+Q92765	0.0177614451272051	ALZ	EMIF,VUMC Olink	FRZB	2487	0	0	0		0	
+P80723	0.0202152486546694	ALZ	ADNI,EMIF	BASP1	10409	0	0	0		0	
+Q8N423	0.0202152486546694	ALZ	VUMC Olink	LILRB2	10288	0	0	1	Osteoclast differentiation	0	
+Q8TDQ0	0.0202152486546694	ALZ	VUMC Olink	HAVCR2	84868	0	0	0		1	Signaling by Interleukins
+O00592	0.0237016079039779	ALZ	VUMC Olink	PODXL	5420	0	0	0		0	
+P41159	0.0239854300152733	ALZ	ADNI,KTH,VUMC Olink	LEP	3952	5	0	2	Cytokine-cytokine receptor interaction,Adipocytokine signaling pathway	0	
+Q8WX77	0.0257877240794244	ALZ	VUMC Olink	IGFBPL1	347252	0	0	0		0	
+Q9H3S3	0.0261000450166838	ALZ	VUMC Olink	TMPRSS5	80975	0	0	0		0	
+P78423	0.0337202014863663	ALZ	VUMC Olink	CX3CL1	6376	0	4	3	Cytokine-cytokine receptor interaction,TNF signaling pathway,Chemokine signaling pathway	1	Chemokine receptors bind chemokines
+P16083	0.0337899288670676	ALZ	VUMC Olink	NQO2	4835	0	0	0		0	
+Q5KU26	0.0337975840337404	ALZ	EMIF,VUMC Olink	COLEC12	81035	0	0	1	Phagosome	1	Immunoregulatory interactions between a Lymphoid and a non-Lymphoid cell
+P50452	0.0349967038811865	ALZ	VUMC Olink	SERPINB8	5271	0	0	0		1	Dissolution of Fibrin Clot
+P15529	0.0354532085198283	ALZ	VUMC Olink	CD46	4179	0	0	1	Complement and coagulation cascades	0	
+O43927	0.0356738455821632	ALZ	VUMC Olink	CXCL13	10563	0	0	2	Cytokine-cytokine receptor interaction,Chemokine signaling pathway	1	Chemokine receptors bind chemokines
+P13500	0.0363875248804074	ALZ	VUMC Olink	CCL2	6347	12	10	7	Cytokine-cytokine receptor interaction,Rheumatoid arthritis,Fluid shear stress and atherosclerosis,TNF signaling pathway,Lipid and atherosclerosis,AGE-RAGE signaling pathway in diabetic complications,Chemokine signaling pathway	4	Signaling by Interleukins,Interleukin-4 and Interleukin-13 signaling,Interleukin-10 signaling,Chemokine receptors bind chemokines
+P06858	0.037731857221911	ALZ	VUMC Olink	LPL	4023	0	10	1	PPAR signaling pathway	0	
+P15260	0.0380439668522963	ALZ	VUMC Olink	IFNGR1	3459	0	1	6	Cytokine-cytokine receptor interaction,Osteoclast differentiation,HIF-1 signaling pathway,Necroptosis,Leishmaniasis,Natural killer cell mediated cytotoxicity	0	
+Q7Z6M3	0.0396963126477676	ALZ	VUMC Olink	MILR1	284021	0	0	0		0	
+P36941	0.0402022618871967	ALZ	VUMC Olink	LTBR	4055	0	0	4	Cytokine-cytokine receptor interaction,HIF-1 signaling pathway,NF-kappa B signaling pathway,Intestinal immune network for IgA production	2	TNF receptor superfamily (TNFSF) members mediating non-canonical NF-kB pathway,TNFR2 non-canonical NF-kB pathway
+P15509	0.0407981506278523	ALZ	VUMC Olink	CSF2RA	1438	0	0	2	Cytokine-cytokine receptor interaction,Hematopoietic cell lineage	1	Signaling by Interleukins
+P28907	0.0408720686161851	ALZ	VUMC Olink	CD38	952	0	0	2	Hematopoietic cell lineage,Nicotinate and nicotinamide metabolism	0	
+P04792	0.0459170666480645	ALZ	VUMC Olink	HSPB1	3315	4	2	1	MAPK signaling pathway	0	
+Q9Y653	0.0495802504712258	ALZ	VUMC Olink	ADGRG1	9289	2	0	0		0	
+P21757	0.0524246505486754	ALZ	VUMC Olink	MSR1	4481	0	1	1	Phagosome	0	
+Q9Y275	0.0528435256669474	ALZ	VUMC Olink	TNFSF13B	10673	0	0	4	Cytokine-cytokine receptor interaction,Rheumatoid arthritis,NF-kappa B signaling pathway,Intestinal immune network for IgA production	3	TNF receptor superfamily (TNFSF) members mediating non-canonical NF-kB pathway,TNFR2 non-canonical NF-kB pathway,TNFs bind their physiological receptors
+Q9UQM7	0.0552484735877061	ALZ	EMIF	CAMK2A	815	2	9	7	HIF-1 signaling pathway,Lipid and atherosclerosis,Necroptosis,Pathways of neurodegeneration,Neurotrophin signaling pathway,Oocyte meiosis,ErbB signaling pathway	1	Long-term potentiation
+P31150	0.0552484735877061	ALZ	EMIF	GDI1	2664	2	3	0		0	
+P07196	0.0552484735877061	ALZ	ADNI	NEFL	4747	2	1	1	Pathways of neurodegeneration	1	Long-term potentiation
+P06733	0.0552484735877061	ALZ	EMIF	ENO1	2023	1	5	2	HIF-1 signaling pathway,Glycolysis / Gluconeogenesis	3	Gluconeogenesis,Glucose metabolism,Glycolysis
+P62258	0.0552484735877061	ALZ	EMIF	YWHAE	7531	1	1	4	Neurotrophin signaling pathway,Oocyte meiosis,PI3K-Akt signaling pathway,Hepatitis C	0	
+O00300	0.0552484735877061	ALZ	VUMC Olink	TNFRSF11B	4982	1	0	2	Cytokine-cytokine receptor interaction,Osteoclast differentiation	2	TNFR2 non-canonical NF-kB pathway,TNFs bind their physiological receptors
+P10599	0.0552484735877061	ALZ	EMIF	TXN	7295	0	17	1	Fluid shear stress and atherosclerosis	1	FOXO-mediated transcription
+P00558	0.0552484735877061	ALZ	EMIF	PGK1	5230	0	7	2	HIF-1 signaling pathway,Glycolysis / Gluconeogenesis	3	Gluconeogenesis,Glucose metabolism,Glycolysis
+P63104	0.0552484735877061	ALZ	EMIF	YWHAZ	7534	0	3	3	Oocyte meiosis,PI3K-Akt signaling pathway,Hepatitis C	2	Signaling by Interleukins,FOXO-mediated transcription
+Q96F46	0.0552484735877061	ALZ	VUMC Olink	IL17RA	23765	0	2	1	Cytokine-cytokine receptor interaction	1	Signaling by Interleukins
+O00253	0.0552484735877061	ALZ	ADNI,VUMC Olink	AGRP	181	0	0	1	Adipocytokine signaling pathway	2	FOXO-mediated transcription,FOXO-mediated transcription of oxidative stress, metabolic and neuronal genes
+P05413	0.0552484735877061	ALZ	ADNI	FABP3	2170	0	0	1	PPAR signaling pathway	0	
+P08620	0.0552484735877061	ALZ	ADNI	FGF4	2249	0	0	4	MAPK signaling pathway,Rap1 signaling pathway,Regulation of actin cytoskeleton,PI3K-Akt signaling pathway	0	
+P16070	0.0552484735877061	ALZ	EMIF	CD44	960	0	0	2	Hematopoietic cell lineage,ECM-receptor interaction	4	Cell surface interactions at the vascular wall,Neutrophil degranulation,Integrin cell surface interactions,Extracellular matrix organization
+P62328	0.0552484735877061	ALZ	EMIF	TMSB4X	7114	0	0	1	Regulation of actin cytoskeleton	2	Platelet degranulation ,Response to elevated platelet cytosolic Ca2+
+P62937	0.0552484735877061	ALZ	EMIF	PPIA	5478	0	0	1	Necroptosis	5	Signaling by Interleukins,Cell surface interactions at the vascular wall,Neutrophil degranulation,Platelet degranulation ,Response to elevated platelet cytosolic Ca2+
+P80108	0.0552484735877061	ALZ	EMIF	GPLD1	2822	0	0	0		0	
+Q03167	0.0552484735877061	ALZ	EMIF,VUMC Olink	TGFBR3	7049	0	0	0		0	
+Q6YHK3	0.0552484735877061	ALZ	EMIF,VUMC Olink	CD109	135228	0	0	0		2	Platelet degranulation ,Response to elevated platelet cytosolic Ca2+
+Q92686	0.0552484735877061	ALZ	ADNI	NRGN	4900	0	0	0		1	Long-term potentiation
+Q9Y279	0.0552484735877061	ALZ	EMIF	VSIG4	11326	0	0	1	Complement and coagulation cascades	0	
+Q9Y2T3	0.0552484735877061	ALZ	EMIF	GDA	9615	0	0	0		0	
+Q9H6B4	0.0575580215566569	ALZ	VUMC Olink	CLMP	79827	0	0	0		0	
+Q08708	0.058681563804768	ALZ	VUMC Olink	CD300C	10871	0	0	0		1	Immunoregulatory interactions between a Lymphoid and a non-Lymphoid cell
+P47972	0.0621799441356303	ALZ	ADNI,EMIF	NPTX2	4885	0	0	0		0	
+Q8NBS9	0.0621799441356303	ALZ	VUMC Olink	TXNDC5	81567	0	0	0		1	Neutrophil degranulation
+P23582	0.0629075907875312	ALZ	EMIF,VUMC Olink	NPPC	4880	0	0	1	Fluid shear stress and atherosclerosis	0	
+P51693	0.069839863487772	ALZ	EMIF,KTH,VUMC Olink	APLP1	333	0	0	0		0	
+O43464	0.0702732919988317	ALZ	VUMC Olink	HTRA2	27429	2	27	1	Pathways of neurodegeneration	0	
+O75096	0.07544419817295	ALZ	KTH	LRP4	4038	2	0	0		1	Extracellular matrix organization
+P78310	0.0830821269808511	ALZ	VUMC Olink	CXADR	1525	0	0	0		2	Immunoregulatory interactions between a Lymphoid and a non-Lymphoid cell,Cell surface interactions at the vascular wall
+Q16651	0.0882479963565431	ALZ	VUMC Olink	PRSS8	5652	0	0	0		0	
+O43597	0.0946820874693767	ALZ	VUMC Olink	SPRY2	10253	0	5	0		0	
+Q02487	0.0952318108159225	ALZ	EMIF,VUMC Olink	DSC2	1824	0	0	0		0	
+P05067	3.92476986678626e-08	FTD	VUMC Olink	APP	351	22	80	0		7	Post-translational protein phosphorylation,Regulation of Insulin-like Growth Factor (IGF) transport and uptake by Insulin-like Growth Factor Binding Proteins (IGFBPs),Platelet degranulation ,Response to elevated platelet cytosolic Ca2+,Platelet activation, signaling and aggregation,Peptide ligand-binding receptors,Toll-like Receptor Cascades
+Q9NQX5	6.53954283727599e-08	FTD	VUMC Olink	NPDC1	56654	0	0	0		1	Immunoregulatory interactions between a Lymphoid and a non-Lymphoid cell
+Q9HB29	9.01762474828738e-05	FTD	VUMC Olink	IL1RL2	8808	0	0	0		0	
+P09237	0.000221155061909471	FTD	VUMC Olink	MMP7	4316	0	0	0		0	
+Q8WWJ7	0.000364832838748688	FTD	VUMC Olink	ACAN	176	0	0	0		2	Diseases of metabolism,Diseases of glycosylation
+P10144	0.000394667879073749	FTD	VUMC Olink	GZMB	3002	0	1	0		0	
+Q9BZR6	0.000419468786730046	FTD	VUMC Olink	RTN4R	65078	0	1	0		0	
+Q9Y240	0.00053168298310659	FTD	VUMC Olink	CLEC11A	6320	0	0	0		0	
+P01024	0.000602036322307349	FTD	VUMC MSpec	C3	718	3	13	3	Complement and coagulation cascades,Pertussis,Neutrophil extracellular trap formation	7	Regulation of Complement cascade,Post-translational protein phosphorylation,Complement cascade,Regulation of Insulin-like Growth Factor (IGF) transport and uptake by Insulin-like Growth Factor Binding Proteins (IGFBPs),Immunoregulatory interactions between a Lymphoid and a non-Lymphoid cell,Initial triggering of complement,Peptide ligand-binding receptors
+Q8NBP7	0.000896997516286864	FTD	VUMC Olink	PCSK9	255738	0	0	0		2	Post-translational protein phosphorylation,Regulation of Insulin-like Growth Factor (IGF) transport and uptake by Insulin-like Growth Factor Binding Proteins (IGFBPs)
+Q9HCK4	0.00123471823770091	FTD	VUMC Olink	ROBO2	6092	0	0	1	Axon guidance	0	
+P48307	0.0018334100264297	FTD	VUMC Olink	TFPI2	7980	0	0	0		0	
+Q9BQT9	0.0018334100264297	FTD	VUMC Olink	CLSTN3	9746	0	0	0		0	
+Q9BYH1	0.0018334100264297	FTD	VUMC Olink	SEZ6L	23544	0	0	0		0	
+Q92520	0.00195535741218434	FTD	VUMC Olink	FAM3C	10447	0	0	0		3	Platelet degranulation ,Response to elevated platelet cytosolic Ca2+,Platelet activation, signaling and aggregation
+P06681	0.00226106256972068	FTD	VUMC MSpec,VUMC Olink	C2	717	2	2	2	Complement and coagulation cascades,Pertussis	3	Regulation of Complement cascade,Complement cascade,Initial triggering of complement
+Q9HCM2	0.00226106256972068	FTD	VUMC Olink	PLXNA4	91584	0	0	1	Axon guidance	0	
+O95727	0.00235674929777998	FTD	VUMC Olink	CRTAM	56253	0	0	0		1	Immunoregulatory interactions between a Lymphoid and a non-Lymphoid cell
+P56470	0.00235674929777998	FTD	VUMC Olink	LGALS4	3960	0	0	0		0	
+P53634	0.00301733815828514	FTD	VUMC Olink	CTSC	1075	0	0	1	Lysosome	0	
+O43505	0.00316975636681019	FTD	VUMC Olink	B4GAT1	11041	1	0	0		2	Diseases of metabolism,Diseases of glycosylation
+Q9HAN9	0.00316975636681019	FTD	VUMC Olink	NMNAT1	64802	1	0	0		0	
+Q96D42	0.00316975636681019	FTD	VUMC Olink	HAVCR1	26762	0	0	0		0	
+Q14956	0.0032198940508124	FTD	VUMC MSpec,VUMC Olink	GPNMB	10457	0	1	0		0	
+O43155	0.0032198940508124	FTD	VUMC Olink	FLRT2	23768	0	0	0		0	
+P19021	0.00410314063987848	FTD	VUMC Olink	PAM	5066	1	0	0		0	
+Q9H156	0.0049357261901814	FTD	VUMC Olink	SLITRK2	84631	0	0	0		0	
+P17405	0.00668784448649684	FTD	VUMC Olink	SMPD1	6609	3	0	1	Lysosome	0	
+P04217	0.00944590857721328	FTD	VUMC MSpec	A1BG	1	0	0	0		3	Platelet degranulation ,Response to elevated platelet cytosolic Ca2+,Platelet activation, signaling and aggregation
+P41217	0.0104315308470341	FTD	VUMC Olink	CD200	4345	0	2	0		1	Immunoregulatory interactions between a Lymphoid and a non-Lymphoid cell
+P05156	0.011550721446795	FTD	VUMC MSpec	CFI	3426	0	0	1	Complement and coagulation cascades	2	Regulation of Complement cascade,Complement cascade
+P22792	0.0134924617893196	FTD	VUMC MSpec	CPN2	1370	0	0	0		2	Regulation of Complement cascade,Complement cascade
+P00352	0.0136169970405584	FTD	VUMC Olink	ALDH1A1	216	0	4	0		0	
+O75054	0.0136700470889731	FTD	VUMC Olink	IGSF3	3321	0	0	0		0	
+P35052	0.0142310241086256	FTD	VUMC Olink	GPC1	2817	0	0	0		2	Diseases of metabolism,Diseases of glycosylation
+Q9UBX1	0.0143262246366793	FTD	VUMC Olink	CTSF	8722	0	2	1	Lysosome	0	
+Q6NW40	0.0154246226264112	FTD	VUMC Olink	RGMB	285704	0	0	0		0	
+P0CG37	0.0181351220179095	FTD	VUMC Olink	CFC1	55997	0	0	0		0	
+P15151	0.0231565063212873	FTD	VUMC Olink	PVR	5817	1	0	0		2	Immunoregulatory interactions between a Lymphoid and a non-Lymphoid cell,Adherens junctions interactions
+Q99075	0.0234816277641724	FTD	VUMC Olink	HBEGF	1839	0	0	0		4	MAPK1/MAPK3 signaling,MAPK family signaling cascades,RAF/MAP kinase cascade,FLT3 Signaling
+O75787	0.0244027852664359	FTD	VUMC Olink	ATP6AP2	10159	1	0	0		0	
+O75326	0.0247725232480635	FTD	VUMC Olink	SEMA7A	8482	0	0	1	Axon guidance	0	
+O75354	0.0247725232480635	FTD	VUMC Olink	ENTPD6	955	0	0	0		0	
+P21741	0.0247725232480635	FTD	VUMC Olink	MDK	4192	0	0	0		0	
+P16422	0.0248573484057254	FTD	VUMC Olink	EPCAM	4072	0	0	0		0	
+Q08629	0.0248573484057254	FTD	VUMC Olink	SPOCK1	6695	0	0	0		0	
+P35442	0.0257634174656005	FTD	VUMC Olink	THBS2	7058	0	0	0		3	Signaling by PDGF,Diseases of metabolism,Diseases of glycosylation
+Q2VWP7	0.0263496335739096	FTD	VUMC Olink	PRTG	283659	0	0	0		0	
+Q9NZP8	0.0263496335739096	FTD	VUMC MSpec	C1RL	51279	0	0	0		0	
+O75077	0.0296287327891761	FTD	VUMC Olink	ADAM23	8745	0	0	0		0	
+Q9H4D0	0.0296287327891761	FTD	VUMC Olink	CLSTN2	64084	0	0	0		0	
+Q8NFT8	0.0312292609425296	FTD	VUMC Olink	DNER	92737	0	0	0		0	
+P05231	0.0325522609884907	FTD	VUMC Olink	IL6	3569	23	47	1	Pertussis	4	Post-translational protein phosphorylation,Regulation of Insulin-like Growth Factor (IGF) transport and uptake by Insulin-like Growth Factor Binding Proteins (IGFBPs),MAPK1/MAPK3 signaling,MAPK family signaling cascades
+P02763	0.0325522609884907	FTD	VUMC MSpec	ORM1	5004	0	0	0		3	Platelet degranulation ,Response to elevated platelet cytosolic Ca2+,Platelet activation, signaling and aggregation
+O43240	0.0326049242386929	FTD	VUMC Olink	KLK10	5655	0	0	0		0	
+P09668	0.0336316400886521	FTD	VUMC Olink	CTSH	1512	1	0	1	Lysosome	0	
+P18428	0.0341665404775536	FTD	VUMC MSpec	LBP	3929	0	0	0		2	Regulation of TLR by endogenous ligand,Toll-like Receptor Cascades
+P06744	0.0353785794599467	FTD	VUMC MSpec	GPI	2821	0	10	0		0	
+Q14624	0.0371325933056188	FTD	VUMC MSpec	ITIH4	3700	0	0	0		3	Platelet degranulation ,Response to elevated platelet cytosolic Ca2+,Platelet activation, signaling and aggregation
+Q9BUD6	0.0386950831972077	FTD	VUMC Olink	SPON2	10417	0	0	0		2	Diseases of metabolism,Diseases of glycosylation
+P00915	0.0391318917896102	FTD	VUMC Olink	CA1	759	0	0	0		0	
+P19878	0.0404541308391775	FTD	VUMC Olink	NCF2	4688	0	10	1	Neutrophil extracellular trap formation	0	
+Q99717	0.0404541308391775	FTD	VUMC Olink	SMAD5	4090	0	0	0		0	
+Q99727	0.0404541308391775	FTD	VUMC Olink	TIMP4	7079	0	0	0		0	
+P02790	0.0425310614956026	FTD	VUMC MSpec	HPX	3263	0	0	0		0	
+P16870	0.0426519405230208	FTD	VUMC Olink	CPE	1363	0	0	0		0	
+P00750	0.043777556214173	FTD	VUMC Olink	PLAT	5327	11	2	1	Complement and coagulation cascades	1	Signaling by PDGF
+O60609	0.0461482078352075	FTD	VUMC Olink	GFRA3	2676	0	0	0		4	MAPK1/MAPK3 signaling,MAPK family signaling cascades,RAF/MAP kinase cascade,FLT3 Signaling
+P00751	0.0463361067982648	FTD	VUMC MSpec	CFB	629	1	0	1	Complement and coagulation cascades	3	Regulation of Complement cascade,Complement cascade,Initial triggering of complement
+Q08431	0.0463954011286822	FTD	VUMC Olink	MFGE8	4240	0	1	0		2	Post-translational protein phosphorylation,Regulation of Insulin-like Growth Factor (IGF) transport and uptake by Insulin-like Growth Factor Binding Proteins (IGFBPs)
+O00451	0.0468174443099167	FTD	VUMC Olink	GFRA2	2675	0	0	0		4	MAPK1/MAPK3 signaling,MAPK family signaling cascades,RAF/MAP kinase cascade,FLT3 Signaling
+Q8NFP4	0.0468174443099167	FTD	VUMC Olink	MDGA1	266727	0	0	0		0	
+P04083	0.0470119044250185	FTD	VUMC Olink	ANXA1	301	0	0	0		1	Peptide ligand-binding receptors
+P51671	0.0473609709200904	FTD	VUMC Olink	CCL11	6356	0	0	0		1	Peptide ligand-binding receptors
+O75144	0.0479271875037021	FTD	VUMC Olink	ICOSLG	23308	0	0	0		0	
+O43854	0.0502991028841904	FTD	VUMC Olink	EDIL3	10085	0	0	0		0	
+P01031	0.0514811315527864	FTD	VUMC MSpec	C5	727	0	0	3	Complement and coagulation cascades,Pertussis,Neutrophil extracellular trap formation	3	Regulation of Complement cascade,Complement cascade,Peptide ligand-binding receptors
+P40121	0.0573044728333102	FTD	VUMC Olink	CAPG	822	0	0	0		0	
+O15197	0.0578565886428285	FTD	VUMC Olink	EPHB6	2051	0	0	1	Axon guidance	0	
+P31949	0.0606814129660017	FTD	VUMC Olink	S100A11	6282	0	0	0		0	
+P01042	0.06353072676509	FTD	VUMC MSpec	KNG1	3827	1	0	1	Complement and coagulation cascades	8	Post-translational protein phosphorylation,Regulation of Insulin-like Growth Factor (IGF) transport and uptake by Insulin-like Growth Factor Binding Proteins (IGFBPs),Platelet degranulation ,Response to elevated platelet cytosolic Ca2+,Formation of Fibrin Clot (Clotting Cascade),Intrinsic Pathway of Fibrin Clot Formation,Platelet activation, signaling and aggregation,Peptide ligand-binding receptors
+P22223	0.0698795563801881	FTD	VUMC Olink	CDH3	1001	0	0	0		1	Adherens junctions interactions
+Q14520	0.0733794478390787	FTD	VUMC MSpec	HABP2	3026	0	0	0		0	
+P20936	0.07798108089324	FTD	VUMC Olink	RASA1	5921	1	0	1	Axon guidance	5	MAPK1/MAPK3 signaling,MAPK family signaling cascades,Signaling by PDGF,RAF/MAP kinase cascade,FLT3 Signaling
+O95750	0.07798108089324	FTD	VUMC Olink	FGF19	9965	0	0	0		4	MAPK1/MAPK3 signaling,MAPK family signaling cascades,RAF/MAP kinase cascade,FLT3 Signaling
+P00748	0.07798108089324	FTD	VUMC MSpec	F12	2161	0	0	1	Complement and coagulation cascades	2	Formation of Fibrin Clot (Clotting Cascade),Intrinsic Pathway of Fibrin Clot Formation
+P02743	0.07798108089324	FTD	VUMC MSpec	APCS	325	0	0	0		0	
+P05154	0.07798108089324	FTD	VUMC MSpec,VUMC Olink	SERPINA5	5104	0	0	1	Complement and coagulation cascades	3	Formation of Fibrin Clot (Clotting Cascade),Common Pathway of Fibrin Clot Formation,Intrinsic Pathway of Fibrin Clot Formation
+Q9BQR3	0.0792027172052476	FTD	VUMC Olink	PRSS27	83886	0	0	0		0	
+P19957	0.0793187564120955	FTD	VUMC Olink	PI3	5266	0	0	0		0	
+Q5T2D2	0.0793187564120955	FTD	VUMC Olink	TREML2	79865	0	0	0		1	Immunoregulatory interactions between a Lymphoid and a non-Lymphoid cell
+Q9UK55	0.0793187564120955	FTD	VUMC MSpec	SERPINA10	51156	0	0	0		2	Post-translational protein phosphorylation,Regulation of Insulin-like Growth Factor (IGF) transport and uptake by Insulin-like Growth Factor Binding Proteins (IGFBPs)
+P16234	0.0793873538834463	FTD	VUMC Olink	PDGFRA	5156	1	0	0		5	MAPK1/MAPK3 signaling,MAPK family signaling cascades,Signaling by PDGF,RAF/MAP kinase cascade,FLT3 Signaling
+Q86WV1	0.0798371986779578	FTD	VUMC Olink	SKAP1	8631	0	0	0		0	
+P20062	0.0817105849554336	FTD	VUMC Olink	TCN2	6948	1	0	0		1	Diseases of metabolism
+P02675	0.0820940801955003	FTD	VUMC MSpec	FGB	2244	0	0	2	Complement and coagulation cascades,Neutrophil extracellular trap formation	13	Platelet degranulation ,Response to elevated platelet cytosolic Ca2+,Regulation of TLR by endogenous ligand,Formation of Fibrin Clot (Clotting Cascade),MAPK1/MAPK3 signaling,Common Pathway of Fibrin Clot Formation,MAPK family signaling cascades,Platelet activation, signaling and aggregation,RAF/MAP kinase cascade,FLT3 Signaling,GRB2:SOS provides linkage to MAPK signaling for Integrins ,p130Cas linkage to MAPK signaling for integrins,Toll-like Receptor Cascades
+O75509	0.0823930234131643	FTD	VUMC Olink	TNFRSF21	27242	1	23	0		0	
+O00533	0.0823930234131643	FTD	VUMC Olink	CHL1	10752	1	0	0		0	
+P02671	0.0823930234131643	FTD	VUMC MSpec	FGA	2243	1	0	2	Complement and coagulation cascades,Neutrophil extracellular trap formation	15	Post-translational protein phosphorylation,Regulation of Insulin-like Growth Factor (IGF) transport and uptake by Insulin-like Growth Factor Binding Proteins (IGFBPs),Platelet degranulation ,Response to elevated platelet cytosolic Ca2+,Regulation of TLR by endogenous ligand,Formation of Fibrin Clot (Clotting Cascade),MAPK1/MAPK3 signaling,Common Pathway of Fibrin Clot Formation,MAPK family signaling cascades,Platelet activation, signaling and aggregation,RAF/MAP kinase cascade,FLT3 Signaling,GRB2:SOS provides linkage to MAPK signaling for Integrins ,p130Cas linkage to MAPK signaling for integrins,Toll-like Receptor Cascades
+O14793	0.0838782239211499	FTD	VUMC Olink	MSTN	2660	2	0	0		0	
+Q96B86	0.0882438137670981	FTD	VUMC Olink	RGMA	56963	0	0	1	Axon guidance	0	
+P35247	0.0929812716606169	FTD	VUMC Olink	SFTPD	6441	0	0	0		4	Regulation of TLR by endogenous ligand,Immunoregulatory interactions between a Lymphoid and a non-Lymphoid cell,Diseases of metabolism,Toll-like Receptor Cascades
+P55285	0.0959266390593456	FTD	VUMC Olink	CDH6	1004	0	0	0		1	Adherens junctions interactions
+Q16719	0.0981405977001693	FTD	VUMC Olink	KYNU	8942	0	3	0		0	
+Q15846	0.0981405977001693	FTD	VUMC Olink	CLUL1	27098	0	0	0		0	
+P02144	0.0981450467879382	FTD	VUMC Olink	MB	4151	0	0	0		0	
+P03956	0.0139898176586535	DLB	VUMC Olink	MMP1	4312	0	2	5	Relaxin signaling pathway,PPAR signaling pathway,Rheumatoid arthritis,IL-17 signaling pathway,Lipid and atherosclerosis	9	Collagen degradation,Interleukin-4 and Interleukin-13 signaling,Degradation of the extracellular matrix,Extracellular matrix organization,Basigin interactions,Activation of Matrix Metalloproteinases,Signaling by Interleukins,Regulation of Insulin-like Growth Factor (IGF) transport and uptake by Insulin-like Growth Factor Binding Proteins (IGFBPs),Cell surface interactions at the vascular wall
+P06734	0.0334690954811458	DLB	VUMC Olink	FCER2	2208	2	0	1	Hematopoietic cell lineage	5	Interleukin-4 and Interleukin-13 signaling,NOTCH2 intracellular domain regulates transcription,Signaling by NOTCH2,Signaling by Interleukins,Interleukin-10 signaling
+P42785	0.0721797238783679	DLB	VUMC Olink	PRCP	5547	0	0	2	Protein digestion and absorption,Renin-angiotensin system	2	Intrinsic Pathway of Fibrin Clot Formation,Formation of Fibrin Clot (Clotting Cascade)
+P02462	0.0954862903830274	DLB	VUMC Olink	COL4A1	1282	18	0	6	Protein digestion and absorption,Relaxin signaling pathway,ECM-receptor interaction,AGE-RAGE signaling pathway in diabetic complications,Focal adhesion,PI3K-Akt signaling pathway	18	Collagen degradation,Degradation of the extracellular matrix,Anchoring fibril formation,Extracellular matrix organization,Crosslinking of collagen fibrils,Scavenging by Class A Receptors,Laminin interactions,Binding and Uptake of Ligands by Scavenger Receptors,NCAM1 interactions,Collagen chain trimerization,Signaling by PDGF,Non-integrin membrane-ECM interactions,Assembly of collagen fibrils and other multimeric structures,NCAM signaling for neurite out-growth,Collagen biosynthesis and modifying enzymes,ECM proteoglycans,Integrin cell surface interactions,Collagen formation
+P25311	0.0954862903830274	DLB	VUMC MSpec	AZGP1	563	0	0	0		1	Miscellaneous transport and binding events
+P09238	0	ALZ,FTD	ALZ:VUMC Olink;FTD:VUMC Olink	MMP10	4319	0	0	0		0	
+P63313	0	ALZ,FTD	ALZ:EMIF,VUMC Olink;FTD:VUMC Olink	TMSB10	9168	0	0	0		0	
+P20711	1.6466444514376e-21	ALZ,FTD,DLB	ALZ:VUMC Olink;FTD:VUMC Olink;DLB:VUMC Olink	DDC	1644	3	4	2	Phenylalanine metabolism,Tyrosine metabolism	0	
+Q9NY25	2.98103299418985e-13	ALZ,FTD	ALZ:VUMC Olink;FTD:VUMC Olink	CLEC5A	23601	0	0	0		1	Neutrophil degranulation
+P14174	1.49051649709493e-12	ALZ,FTD	ALZ:ADNI,VUMC Olink;FTD:VUMC Olink	MIF	4282	0	4	2	Phenylalanine metabolism,Tyrosine metabolism	1	Neutrophil degranulation
+Q9NP99	4.43414044978906e-10	ALZ,FTD	ALZ:VUMC Olink;FTD:VUMC Olink	TREM1	54210	0	1	0		0	
+Q02790	9.42239940415205e-09	ALZ,FTD	ALZ:VUMC Olink;FTD:VUMC Olink	FKBP4	2288	0	1	0		0	
+Q13231	3.33536085607175e-07	ALZ,FTD	ALZ:VUMC Olink;FTD:VUMC Olink	CHIT1	1118	2	0	0		1	Neutrophil degranulation
+Q99497	5.7239506121094e-07	ALZ,FTD	ALZ:EMIF,VUMC Olink;FTD:VUMC Olink	PARK7	11315	4	47	0		0	
+P20333	6.08309095955549e-07	ALZ,FTD	ALZ:ADNI,VUMC Olink;FTD:VUMC Olink	TNFRSF1B	7133	0	1	1	Cytokine-cytokine receptor interaction	1	Neutrophil degranulation
+P10147	6.5504810502399e-07	ALZ,FTD	ALZ:VUMC Olink;FTD:VUMC Olink	CCL3	6348	1	4	3	Lipid and atherosclerosis,Rheumatoid arthritis,Cytokine-cytokine receptor interaction	0	
+Q07108	1.06817655749351e-06	ALZ,FTD	ALZ:VUMC Olink;FTD:VUMC Olink	CD69	969	0	0	0		0	
+Q6UB28	8.1138050733576e-06	ALZ,FTD	ALZ:VUMC Olink;FTD:VUMC Olink	METAP1D	254042	0	0	0		0	
+P01011	8.61007248400565e-06	FTD,DLB	FTD:VUMC MSpec;DLB:VUMC MSpec	SERPINA3	12	0	0	0		1	Neutrophil degranulation
+P50579	2.05231582456999e-05	ALZ,FTD	ALZ:VUMC Olink;FTD:VUMC Olink	METAP2	10988	0	0	0		0	
+P01241	3.07677244305853e-05	ALZ,DLB	ALZ:VUMC Olink;DLB:VUMC Olink	GH1	2688	10	0	1	Cytokine-cytokine receptor interaction	0	
+P36222	3.80114138928983e-05	ALZ,FTD	ALZ:ADNI,EMIF,VUMC Olink;FTD:VUMC MSpec,VUMC Olink	CHI3L1	1116	0	1	0		1	Neutrophil degranulation
+P12931	5.04993161137008e-05	ALZ,FTD	ALZ:VUMC Olink;FTD:VUMC Olink	SRC	6714	1	9	1	Lipid and atherosclerosis	0	
+Q9BY76	0.000377615667663603	ALZ,FTD	ALZ:VUMC Olink;FTD:VUMC Olink	ANGPTL4	51129	0	0	0		0	
+Q06830	0.000379848579130055	ALZ,FTD	ALZ:ADNI,EMIF,VUMC Olink;FTD:VUMC Olink	PRDX1	5052	0	4	0		0	
+P08254	0.000483696078771344	ALZ,FTD	ALZ:ADNI,VUMC Olink;FTD:VUMC Olink	MMP3	4314	1	11	2	Lipid and atherosclerosis,Rheumatoid arthritis	0	
+Q9Y286	0.000967202910468306	ALZ,FTD	ALZ:VUMC Olink;FTD:VUMC Olink	SIGLEC7	27036	0	0	0		0	
+P06850	0.0048250113417743	ALZ,DLB	ALZ:VUMC Olink;DLB:VUMC Olink	CRH	1392	6	0	0		0	
+Q8NHJ6	0.00494262476785838	ALZ,FTD	ALZ:VUMC Olink;FTD:VUMC Olink	LILRB4	11006	0	0	0		0	
+O75015	0.0075758518333858	ALZ,FTD	ALZ:VUMC Olink;FTD:VUMC MSpec,VUMC Olink	FCGR3B	2215	0	0	1	Systemic lupus erythematosus	1	Neutrophil degranulation
+P02748	0.0101012252777755	FTD,DLB	FTD:VUMC MSpec;DLB:VUMC MSpec	C9	735	2	0	2	Systemic lupus erythematosus,Complement and coagulation cascades	0	
+O15232	0.01520557712035	ALZ,FTD	ALZ:VUMC Olink;FTD:VUMC Olink	MATN3	4148	0	0	0		0	
+O00182	0.0176501874552435	ALZ,FTD	ALZ:VUMC Olink;FTD:VUMC Olink	LGALS9	3965	0	0	0		0	
+P78333	0.028109184220292	ALZ,FTD	ALZ:VUMC Olink;FTD:VUMC Olink	GPC5	2262	0	0	0		0	
+O75356	0.0309939264230481	FTD,DLB	FTD:VUMC Olink;DLB:VUMC Olink	ENTPD5	957	0	0	0		0	
+P56159	0.0337202014863663	ALZ,FTD	ALZ:VUMC Olink;FTD:VUMC Olink	GFRA1	2674	0	5	0		0	
+O94779	0.0449653370979659	ALZ,FTD	ALZ:VUMC Olink;FTD:VUMC Olink	CNTN5	53942	0	0	0		0	
+P0C0L5	0.0601790057092423	FTD,DLB	FTD:VUMC MSpec;DLB:VUMC MSpec	C4B	721	0	0	2	Systemic lupus erythematosus,Complement and coagulation cascades	0	
